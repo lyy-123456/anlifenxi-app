@@ -30,7 +30,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     public static final int REQUEST_EPOSTCODE = 102;
     public static final int REQUEST_CREATE_PKG = 103;
 
-    private TextView  packageIdView;  //包裹编号
+    private EditText  packageIdView;  //包裹编号
     private  EditText sourcePostCodeView;  //打包地邮编
     private EditText endPostCodeView;
     private ImageButton sourcePostCodeBtnView;  //终点站邮编
@@ -47,12 +47,11 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         setContentView(R.layout.activity_package_create);
 
 
-        packageIdView = (TextView) findViewById(R.id.packageId);
+        packageIdView = (EditText) findViewById(R.id.packageId);
         sourcePostCodeView = (EditText)findViewById(R.id.sourcePostCode);
         sourcePostCodeBtnView = (ImageButton) findViewById(R.id.sourcePostCodeBtn);
         endPostCodeView = (EditText)findViewById(R.id.endPostCode);
         endPostCodeBtnView = (ImageButton)findViewById(R.id.endPostCodeBtn);
-        create_pkg_timeView = (TextView)findViewById(R.id.create_pkg_time);
         create_pkg_Btn = (Button)findViewById(R.id.create_pkg_Btn);
 
         findViewById(R.id.action_pk_exp_icon).setOnClickListener(new View.OnClickListener() {
@@ -85,41 +84,67 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
             }
         });
 
-
-        create_pkg_timeView.setText(DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date()));
     }
 
     //创建一个包裹，并跳转到包裹内部页面
     private  void createPkg(){
-//        if(packageIdView.getText() == ""){
+
+        String pkgId = packageIdView.getText().toString();
+        String sourcePostCode = sourcePostCodeView.getText().toString();
+        String endPostCode = endPostCodeView.getText().toString();
+//        Log.d("crearePkg",pkgId);
+//        Log.d("crearePkg",sourcePostCode);
+//        Log.d("crearePkg",endPostCode);
+//        if(pkgId == null || "".equals(pkgId)) {
 //            Toast.makeText(this,"包裹ID不能为空！",Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-        if(sourcePostCodeView.getText().toString() == ""){
-            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(endPostCodeView.getText().toString() == ""){
-            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
-            return ;
-        }
+//
+//        if(sourcePostCode==null || "".equals(sourcePostCode)){
+//            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        if(endPostCode ==null || "".equals(endPostCode)){
+//            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
+//            return ;
+//        }
         //满足要求创建一个包裹,检查包裹是否存在？
         tLoader = new TransPackageLoader(this,this);
         //测试使用
-        if(packageIdView.getText().toString() == ""){
-            tLoader.New("123456789");
-            packageIdView.setText("123456789");
-        }
-        else tLoader.New(packageIdView.getText().toString());
-        //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("transPackage",transPackage);
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
-        //先用this
-        intent.setClass(this, PackageEditActivity.class);
-        startActivityForResult(intent, REQUEST_CREATE_PKG);
+//        if(packageIdView.getText() == null){
+//            tLoader.New("ID12345678910");
+//            packageIdView.setText("ID12345678910");
+//            Log.d("创建一个新的包裹","ID123456789");
+//        }
+//        else tLoader.New(packageIdView.getText().toString());
+
+//        transPackage = new TransPackage();
+//        transPackage.setID(pkgId);
+//        transPackage.setSourceNode(sourcePostCode);
+//        transPackage.setTargetNode(endPostCode);
+//        transPackage.setCreateTime(new Date());
+//        transPackage.setStatus(0);
+//        tLoader.Save(transPackage);
+//
+//
+//        Log.d("创建一个新的包裹",transPackage.toString());
+//        //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
+
+        tLoader.Load("1111112222");
+//        //Log.d("创建一个新的包裹",transPackage.toString());
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("transPackage",transPackage);
+//        Intent intent = new Intent();
+//        intent.putExtras(bundle);
+//
+//        //先用this
+//        intent.setClass(this, PackageEditActivity.class);
+//        Log.d("PackageCreateActivity执行了这个：","startActivityForResult(intent, REQUEST_CREATE_PKG);");
+//        startActivityForResult(intent, REQUEST_CREATE_PKG);
     }
+
+    //扫描条形码
     private void StartCapture(){
         Intent intent = new Intent();
         intent.putExtra("Action","Captrue");
@@ -172,6 +197,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             packageIdView.setText(id);
                         }
                         break;
+                        //源点邮编
                     case REQUEST_SPOSTCODE:
                         String sregionId;
                         if (data.hasExtra("RegionId")) {
@@ -183,6 +209,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                         }
                         sourcePostCodeView.setText(sregionId);
                         break;
+                        //终点邮编
                     case REQUEST_EPOSTCODE:
                         String eregionId;
                         if (data.hasExtra("RegionId")) {
@@ -203,18 +230,32 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     }
 
     @Override
-    public TransPackage getData() {
+    public TransPackage getData()
+    {
+        Log.d("PackageCreateActivity执行了这个：","getData");
         return transPackage;
     }
 
     @Override
     public void setData(TransPackage data) {
+        Log.d("PackageCreateActivity执行了这个：","setData");
         transPackage = data;
+
+
+        //Log.d("创建一个新的包裹",transPackage.toString());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("transPackage",transPackage);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+
+        //先用this
+        intent.setClass(this, PackageEditActivity.class);
+        startActivityForResult(intent, REQUEST_CREATE_PKG);
     }
 
     @Override
     public void notifyDataSetChanged() {
         //刷新界面
-
+        Log.d("PackageCreateActivity执行了这个：","notifyDataSetChanged");
     }
 }

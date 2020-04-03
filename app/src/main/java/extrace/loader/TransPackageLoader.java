@@ -1,6 +1,7 @@
 package extrace.loader;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -31,6 +32,7 @@ public class TransPackageLoader extends HttpAsyncTask {
 		{
 			TransPackage ci = JsonUtils.fromJson(json_data, new TypeToken<TransPackage>(){});
 			adapter.setData(ci);
+			Log.d("TransPackageLoader,onDataReceive",ci.toString());
 			adapter.notifyDataSetChanged();
 		}
 		else if(class_name.equals("R_TransPackage"))		//保存完成
