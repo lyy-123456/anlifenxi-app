@@ -52,7 +52,6 @@ public class ExpressListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (getArguments() != null) {	//另一种读出传入参数的方式
 			mExType = getArguments().getString(ARG_EX_TYPE);
 		}

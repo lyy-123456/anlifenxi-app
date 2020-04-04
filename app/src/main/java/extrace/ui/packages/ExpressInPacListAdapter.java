@@ -80,22 +80,18 @@ public class ExpressInPacListAdapter extends ArrayAdapter<ExpressSheet> implemen
 
         ExpressSheet es = getItem(position);
 
-        String stText = "";
-
-        switch(es.getStatus()){
-            case ExpressSheet.STATUS.STATUS_CREATED:
-                stText = "正在创建";
-                break;
-
-            case ExpressSheet.STATUS.STATUS_TRANSPORT:
-                stText = "运送途中";
-                break;
-
-            case ExpressSheet.STATUS.STATUS_DELIVERIED:
-                stText = "已交付";
-                break;
-
+        if(es.getSender() != null){
+            hd.name.setText(es.getSender().getName());			//发送者姓名
+            hd.telCode.setText(es.getSender().getTelCode());
+            hd.address.setText(es.getSender().getAddress());
         }
+        if(es.getAccepteTime() != null){
+            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+            hd.time.setText(DateFormat.format("MM月dd日 hh:mm",es.getAccepteTime()));
+        }
+        String stText = "还没写";
+
+
         hd.status.setText(stText);
         return v;
     }
