@@ -40,9 +40,10 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         transPackage = (TransPackage) bundle.getSerializable("transPackage");
+        bundle.putString("Action","Init");
         //Toast.makeText(this,transPackage.toString(),Toast.LENGTH_SHORT).show();
 
-        expressInPacListFragment= ExpressInPacListFragment.instance(null);//创建fragment对象
+        expressInPacListFragment= ExpressInPacListFragment.instance(bundle);//创建fragment对象
         FragmentTransaction tran= getSupportFragmentManager().beginTransaction();//创建提交事务对象
         tran.add(R.id.layout,expressInPacListFragment);//添加
         tran.commit();//提交
@@ -105,6 +106,7 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
         Bundle bundle = new Bundle();
         bundle.putString("Action","ReservePackage");
         expressInPacListFragment.setArguments(bundle);
+        expressInPacListFragment.RefreshList();
     }
     //添加快件-》扫描快件条形码-》根据条形码获取快件信息-》加入listfragment里面-》刷新fragment
 

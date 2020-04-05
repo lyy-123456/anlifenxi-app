@@ -22,6 +22,8 @@ import java.util.Set;
 
 import extrace.loader.ExpressListLoader;
 import extrace.misc.model.ExpressSheet;
+import extrace.misc.model.TransPackage;
+import extrace.net.IDataAdapter;
 
 public class ExpressInPacListFragment extends ListFragment {
 
@@ -32,6 +34,7 @@ public class ExpressInPacListFragment extends ListFragment {
     private ExpressSheet selectItem;
     private int selectPosition;
 
+    private TransPackage transPackage;
     private Intent eIntent;
     private  String e_type; //标记采用什么方法
 
@@ -56,7 +59,9 @@ public class ExpressInPacListFragment extends ListFragment {
 
         setEmptyText("请往该包裹里添加快件");
 
+
         eAdapter = new ExpressInPacListAdapter(new ArrayList<ExpressSheet>(),this.getActivity());
+        eLoader = new ExpressListLoader(eAdapter,this.getActivity());
         setListAdapter(eAdapter);
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -71,26 +76,59 @@ public class ExpressInPacListFragment extends ListFragment {
             e_type = bundle.getString("Action");
             switch (e_type)
             {
+                case "Init":
+                    transPackage =(TransPackage) bundle.getSerializable("transPackage");
+                    Log.d("ExpressInPacListFragment执行了这个：Init为",transPackage.toString());
+                    break;
                 case "AddExpressToPackage":
                     ExpressSheet es = (ExpressSheet) bundle.getSerializable("ExpressSheet");
                     Log.d("ExpressInPacListFragment执行了这个：ExpressSheet为",es.toString());
 
                     listExpress.add(es.toString());
+                    //包裹内有了该快件吗？
                     if(isRepeat()){
+                        listExpress.remove(es.toString()); //先将他删除
                         Toast.makeText(this.getContext(),"该快件已存在这个包裹内,请勿重复添加",Toast.LENGTH_SHORT).show();
                     }
-                    else{
+                    //是不是去往同一个目的地的？
+                    else if(isToEnd()){
                         eAdapter.getData().add(es);
                         eAdapter.notifyDataSetChanged();
                     }
+                    //不是去往同一个目的地的
+                    else{
+                        Toast.makeText(this.getContext(),"该快件不是去往目的地转运中心的,请勿错误添加",Toast.LENGTH_SHORT).show();
+                    }
                     break;
+                    //保存包裹内容
                 case "ReservePackage":
-
+                    ReservePackage();
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    private void ReservePackage() {
+        Log.d("ExpressInPacListFragment执行了这个：","ReservePackage");
+        if(eAdapter.getData() == null){
+            Log.d("调试：","eadpter数据为空");
+            return;
+        }
+        Log.d("ExpressInPacListFragment执行了这个：ReservePackage:transPackage",transPackage.toString());
+        int i = 1;
+        for(ExpressSheet es: eAdapter.getData()){
+            Log.d("调试：",es.toString());
+
+            eLoader.MoveExpressIntoPackage(es.getID(),transPackage.getID());
+            Log.d("调试："," "+i);
+            i = i+1;
+        }
+    }
+
+    private boolean isToEnd() {
+        return true;
     }
 
     //判断包裹内部是否重复,有问题需要重写

@@ -31,6 +31,11 @@ public class ExpressListLoader extends HttpAsyncTask {
 	@Override
 	//接收数据
 	public void onDataReceive(String class_data, String json_data) {
+		if(class_data.equals("MoveExpressIntoPackage")){
+			if(json_data.equals("true")){
+				Toast.makeText(context, "包裹信息已保存!", Toast.LENGTH_SHORT).show();
+			}
+		}else
 		if(json_data.equals("Deleted")){
 			//adapter.getData().remove(0);	//这个地方不好处理
 			Toast.makeText(context, "快件信息已删除!", Toast.LENGTH_SHORT).show();
@@ -57,4 +62,14 @@ public class ExpressListLoader extends HttpAsyncTask {
 		}
 	}
 
+	//向包裹中添加运单
+	public void MoveExpressIntoPackage(String id,String pkgId)
+	{
+		url += "MoveExpressIntoPackage/"+id+"/"+pkgId+"?_type=json";
+		try {
+			execute(url, "GET");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
