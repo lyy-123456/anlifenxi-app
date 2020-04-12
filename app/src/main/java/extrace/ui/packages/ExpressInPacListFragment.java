@@ -1,6 +1,7 @@
 package extrace.ui.packages;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,8 +29,12 @@ import extrace.loader.ExpressLoader;
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.domain.ExpressEditActivity;
+import extrace.ui.misc.CustomerEditActivity;
 
 public class ExpressInPacListFragment extends ListFragment {
+
+    private final int EXPRESS_EDIT  = 110;
 
     private ExpressInPacListAdapter eAdapter;
     private ExpressListLoader elistLoader;
@@ -42,6 +47,7 @@ public class ExpressInPacListFragment extends ListFragment {
     private TransPackage transPackage;
     private Intent eIntent;
     private  String e_type; //标记采用什么方法
+    private Context eContext;
 
     public static ExpressInPacListFragment instance(Bundle bundle)
     {
@@ -57,6 +63,16 @@ public class ExpressInPacListFragment extends ListFragment {
         Log.d("ExpressInPacListFragment执行了这个：","ExpressInPacListFragment");
     }
 
+    public void setData(List<ExpressSheet> data){
+        Log.d("ExpressInPacListFragment执行了这个：","setData");
+        eAdapter.setData(data);
+        for(ExpressSheet es : eAdapter.getData()){
+            listExpress.add(es.toString());
+        }
+    }
+    public void notifyDataSetChanged(){
+        eAdapter.notifyDataSetChanged();
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.d("ExpressInPacListFragment执行了这个：","onActivityCreated");
@@ -100,6 +116,7 @@ public class ExpressInPacListFragment extends ListFragment {
                     else if(isToEnd()){
                         eAdapter.getData().add(es);
                         eAdapter.notifyDataSetChanged();
+                        elistLoader = new ExpressListLoader(eAdapter,this.getActivity());
                         elistLoader.MoveExpressIntoPackage(es.getID(),transPackage.getID()); //加入
                     }
                     //不是去往同一个目的地的
@@ -111,10 +128,21 @@ public class ExpressInPacListFragment extends ListFragment {
                 case "ReservePackage":
                     ReservePackage();
                     break;
+                case "RefreshList":
+                    ReloadList();
+                    eAdapter.getData();
+                    eAdapter.notifyDataSetChanged();
+                    break;
                 default:
                     break;
             }
         }
+    }
+    public void ReloadList() {
+        eAdapter.getData().clear();
+        listExpress.clear();
+        elistLoader = new ExpressListLoader(eAdapter,this.getActivity());
+        elistLoader.getExpressListInPackage(transPackage.getID());
     }
 
     private void ReservePackage() {
@@ -154,25 +182,36 @@ public class ExpressInPacListFragment extends ListFragment {
 
         selectItem = eAdapter.getItem(info.position);
         selectPosition = info.position;
-        menu.setHeaderTitle("发件人: "+selectItem.getSender());
-        menu.add(info.position, 1, 0, "选择");
-        menu.add(info.position, 2, 1, "修改");
-        menu.add(info.position, 3, 2, "删除");
+        menu.setHeaderTitle("发件人: "+selectItem.getSender().toString());
+        menu.add(info.position, 1, 0, "修改");
+        menu.add(info.position, 2, 1, "删除");
+
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getTitle().equals("选择")) {
-            //SelectOk();	//返回给上层
-        } else if (item.getTitle().equals("修改")) {
-           // EditItem();	//编辑客户
+        if (item.getTitle().equals("修改")) {
+            Log.d("ExpressInPacListFragment执行了这个：","点击了修改");
+            EditItem();	//编辑快件
         } else if (item.getTitle().equals("删除")) {
-            DeleteItem();	//删除客户
+            DeleteItem();	//删除快件
         }
         return super.onContextItemSelected(item);
     }
 
+    private void EditItem() {
+        Log.d("ExpressInPacListFragment执行了这个：","EditItem");
+        Intent intent = new Intent();
+        intent.putExtra("Action","Edit");
+        intent.putExtra("ExpressSheet",selectItem);
+        intent.setClass(eContext, ExpressEditActivity.class);
+        Activity activity = (Activity)eContext;
+        activity.startActivityForResult(intent,EXPRESS_EDIT );	//编辑之后
+    }
+
     private void DeleteItem() {
+        listExpress.remove(selectItem.toString()); //先将他删除
+        elistLoader = new ExpressListLoader(eAdapter,this.getActivity());
         elistLoader.MoveExpressFromPackage(selectItem.getID(),transPackage.getID());
         eAdapter.getData().remove(selectItem);
         eAdapter.notifyDataSetChanged();
@@ -180,11 +219,14 @@ public class ExpressInPacListFragment extends ListFragment {
 
     /**
      * fragmment和activity产生关联时候执行的函数
-     * @param activity
+     * @param //activity
      */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    //@Overrides
+    public void onAttach(Context context) {
+        Log.d("ExpressInPacListFragment执行了这个：","onAttach");
+        super.onAttach(context);
+        Activity activity = (Activity)context;
+        eContext = context;
         eIntent = activity.getIntent();
     }
 

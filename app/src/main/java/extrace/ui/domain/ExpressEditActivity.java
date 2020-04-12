@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("ExpressEditActivity执行了这个：","onCreate");
 		setContentView(R.layout.activity_express_edit);
 
 		final ActionBar actionBar = getSupportActionBar();
@@ -89,8 +91,10 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			}
 			else if(mIntent.getStringExtra("Action").equals("Edit")){
 				ExpressSheet es;
+
 				if (mIntent.hasExtra("ExpressSheet")) {
 					es = (ExpressSheet) mIntent.getSerializableExtra("ExpressSheet");
+					Log.d("ExpressEditActivity执行了这个：",es.toString());
 					Refresh(es.getID());
 				} else {
 					this.setResult(RESULT_CANCELED, mIntent);
@@ -141,12 +145,21 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			}
 			return true;
 		case (android.R.id.home):
+			Log.d("ExpressEditActivity","点击了返回键");
 	        mIntent.putExtra("ExpressSheet",mItem);  
 			this.setResult(RESULT_OK, mIntent);
 			this.finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Log.d("ExpressEditActivity","点击了返回键1");
+		this.setResult(RESULT_OK);
+		this.finish();
 	}
 
 	@Override

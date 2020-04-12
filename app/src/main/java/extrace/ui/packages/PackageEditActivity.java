@@ -21,12 +21,14 @@ import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.domain.ExpressListAdapter;
+import extrace.ui.main.MainActivity;
 import extrace.ui.main.R;
 import zxing.util.CaptureActivity;
 
 public class PackageEditActivity extends AppCompatActivity implements IDataAdapter<ExpressSheet> {
 
     private  final  int REQUEST_CAPTURE = 100;
+    private final int EXPRESS_EDIT  = 110;
 
     private TransPackage transPackage;
     private ExpressInPacListFragment expressInPacListFragment;
@@ -79,6 +81,8 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
 //                    //Refresh(mItem.getID());
 //                }
                 Log.d("package","选中了刷新");
+                Toast.makeText(this,"包裹信息已刷新！",Toast.LENGTH_SHORT).show();
+                expressInPacListFragment.ReloadList();
                 return true;
             case R.id.action_new:
                 Log.d("package","选中了新建");
@@ -103,10 +107,12 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
     }
 
     private void ReservePackage() {
-        Bundle bundle = new Bundle();
-        bundle.putString("Action","ReservePackage");
-        expressInPacListFragment.setArguments(bundle);
-        expressInPacListFragment.RefreshList();
+        Toast.makeText(this,"包裹信息已保存！",Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, MainActivity.class));
+//        Bundle bundle = new Bundle();
+//        bundle.putString("Action","ReservePackage");
+//        expressInPacListFragment.setArguments(bundle);
+//        expressInPacListFragment.RefreshList();
     }
     //添加快件-》扫描快件条形码-》根据条形码获取快件信息-》加入listfragment里面-》刷新fragment
 
@@ -147,9 +153,28 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
                             }
                         }
                         break;
-
+                    case EXPRESS_EDIT:
+                        Log.d("PackageEditActivity执行了这个：","编辑快件返回");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("Action","RefreshList");
+                        expressInPacListFragment.setArguments(bundle);
+                        expressInPacListFragment.RefreshList();
+                        break;
+                    default:
+                        Log.d("PackageEditActivity执行了这个：","其他返回");
+                         break;
                 }
                 break;
+            case RESULT_CANCELED:
+                switch (requestCode){
+                    case EXPRESS_EDIT:
+                        Log.d("PackageEditActivity执行了这个：","编辑快件返回");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("Action","RefreshList");
+                        expressInPacListFragment.setArguments(bundle);
+                        expressInPacListFragment.RefreshList();
+                        break;
+                }
             default:
                 break;
         }
@@ -162,9 +187,15 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
         return eItem;
     }
 
+    public void setData(List<ExpressSheet> data){
+        Log.d("PackageEditActivity执行了这个：","setData1");
+        expressInPacListFragment.setData(data);
+    }
+
+
     @Override
     public void setData(ExpressSheet data) {
-        Log.d("PackageEditActivity执行了这个：","setData");
+        Log.d("PackageEditActivity执行了这个：","setData2");
         eItem = data;
 
         //如果查询来的数据为空，说明不存在该快件
@@ -186,6 +217,6 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
     @Override
     public void notifyDataSetChanged() {
         Log.d("PackageEditActivity执行了这个：","notifyDataSetChanged");
-
+        expressInPacListFragment.notifyDataSetChanged();
     }
 }

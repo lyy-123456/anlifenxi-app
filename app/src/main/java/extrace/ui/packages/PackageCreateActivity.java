@@ -95,20 +95,20 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
 //        Log.d("crearePkg",pkgId);
 //        Log.d("crearePkg",sourcePostCode);
 //        Log.d("crearePkg",endPostCode);
-//        if(pkgId == null || "".equals(pkgId)) {
-//            Toast.makeText(this,"包裹ID不能为空！",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(sourcePostCode==null || "".equals(sourcePostCode)){
-//            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(endPostCode ==null || "".equals(endPostCode)){
-//            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
-//            return ;
-//        }
+        if(pkgId == null || "".equals(pkgId)) {
+            Toast.makeText(this,"包裹ID不能为空！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(sourcePostCode==null || "".equals(sourcePostCode)){
+            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(endPostCode ==null || "".equals(endPostCode)){
+            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
+            return ;
+        }
         //满足要求创建一个包裹,检查包裹是否存在？
         tLoader = new TransPackageLoader(this,this);
         transPackage = new TransPackage();
@@ -122,18 +122,6 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
 
         Log.d("创建一个新的包裹",transPackage.toString());
         //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
-
-        //tLoader.Load("1111112222");
-//        //Log.d("创建一个新的包裹",transPackage.toString());
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("transPackage",transPackage);
-//        Intent intent = new Intent();
-//        intent.putExtras(bundle);
-//
-//        //先用this
-//        intent.setClass(this, PackageEditActivity.class);
-//        Log.d("PackageCreateActivity执行了这个：","startActivityForResult(intent, REQUEST_CREATE_PKG);");
-//        startActivityForResult(intent, REQUEST_CREATE_PKG);
     }
 
     //扫描条形码

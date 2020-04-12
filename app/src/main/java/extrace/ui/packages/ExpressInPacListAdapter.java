@@ -36,6 +36,9 @@ public class ExpressInPacListAdapter extends ArrayAdapter<ExpressSheet> implemen
         return 0;
     }
 
+    public void removeExpressfromList(String id){
+
+    }
     public ExpressSheet getItem(int position) {
         if (itemList != null)
             return itemList.get(position);

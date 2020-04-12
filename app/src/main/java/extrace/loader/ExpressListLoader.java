@@ -56,6 +56,7 @@ public class ExpressListLoader extends HttpAsyncTask {
 	{
 		url += "getExpressListInPackage/PackageId/"+pkgId+"?_type=json";
 		try {
+
 			execute(url, "GET");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,6 +76,14 @@ public class ExpressListLoader extends HttpAsyncTask {
 //		}
 //
 //	}
+	public void getExpressListInPackage(String pkgID){
+		url += "getExpressListInPackage/PackageId/"+pkgID+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	public  void MoveExpressFromPackage(String id, String pkgId){
 		url += "MoveExpressFromPackage/"+id+"/"+pkgId+"?_type=json";
