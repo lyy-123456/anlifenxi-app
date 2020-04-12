@@ -111,27 +111,19 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
 //        }
         //满足要求创建一个包裹,检查包裹是否存在？
         tLoader = new TransPackageLoader(this,this);
-        //测试使用
-//        if(packageIdView.getText() == null){
-//            tLoader.New("ID12345678910");
-//            packageIdView.setText("ID12345678910");
-//            Log.d("创建一个新的包裹","ID123456789");
-//        }
-//        else tLoader.New(packageIdView.getText().toString());
+        transPackage = new TransPackage();
+        transPackage.setID(pkgId);
+        transPackage.setSourceNode(sourcePostCode);
+        transPackage.setTargetNode(endPostCode);
+        transPackage.setCreateTime(new Date());
+        transPackage.setStatus(0);
+        tLoader.New(transPackage);
 
-//        transPackage = new TransPackage();
-//        transPackage.setID(pkgId);
-//        transPackage.setSourceNode(sourcePostCode);
-//        transPackage.setTargetNode(endPostCode);
-//        transPackage.setCreateTime(new Date());
-//        transPackage.setStatus(0);
-//        tLoader.Save(transPackage);
-//
-//
-//        Log.d("创建一个新的包裹",transPackage.toString());
-//        //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
 
-        tLoader.Load("1111112222");
+        Log.d("创建一个新的包裹",transPackage.toString());
+        //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
+
+        //tLoader.Load("1111112222");
 //        //Log.d("创建一个新的包裹",transPackage.toString());
 //        Bundle bundle = new Bundle();
 //        bundle.putSerializable("transPackage",transPackage);
@@ -181,6 +173,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         catch(Exception e){
             e.printStackTrace();
         }
+
         startActivityForResult(intent, REQUEST_EPOSTCODE);
     }
 

@@ -2,6 +2,7 @@ package extrace.loader;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -43,8 +44,9 @@ public class TransPackageLoader extends HttpAsyncTask {
 			adapter.notifyDataSetChanged();
 			Toast.makeText(context, "包裹信息保存完成!", Toast.LENGTH_SHORT).show();
 		}
-		else
+		else if(class_name.equals("E_TransPackage"))
 		{
+			Toast.makeText(context, "包裹信息已存在", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -65,11 +67,12 @@ public class TransPackageLoader extends HttpAsyncTask {
 	}
 
 	//新建一个包裹
-	public void New(String id)
+	public void New(TransPackage transPackage)
 	{
-		url+= "newTransPackage/id/"+id+"?_type=json";
+		String jsonObj = JsonUtils.toJson(transPackage,true);
+		url+= "newTransPackage";
 		try{
-			execute(url,"GET");
+			execute(url,"POST",jsonObj);
 		}catch (Exception e){
 			e.printStackTrace();
 		}

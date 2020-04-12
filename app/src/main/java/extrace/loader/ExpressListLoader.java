@@ -62,6 +62,28 @@ public class ExpressListLoader extends HttpAsyncTask {
 		}
 	}
 
+//	//像包裹中添加运单列表
+//	public void MoveExpressListIntoPackage(List<ExpressSheet> esList,String pkgId)
+//	{
+//		//转换为json数据
+//		String jsonObj = JsonUtils.toJson(esList, true);
+//		url += "MoveExpressListIntoPackage";
+//		try{
+//			execute(url,"POST", jsonObj,pkgId);
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
+//
+//	}
+
+	public  void MoveExpressFromPackage(String id, String pkgId){
+		url += "MoveExpressFromPackage/"+id+"/"+pkgId+"?_type=json";
+		try {
+			execute(url, "GET");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	//向包裹中添加运单
 	public void MoveExpressIntoPackage(String id,String pkgId)
 	{

@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import extrace.loader.ExpressListLoader;
+import extrace.loader.ExpressLoader;
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
@@ -28,7 +32,8 @@ import extrace.net.IDataAdapter;
 public class ExpressInPacListFragment extends ListFragment {
 
     private ExpressInPacListAdapter eAdapter;
-    private ExpressListLoader eLoader;
+    private ExpressListLoader elistLoader;
+    private ExpressLoader eLoader;
 
     private List<String> listExpress = new ArrayList<String>();
     private ExpressSheet selectItem;
@@ -47,6 +52,7 @@ public class ExpressInPacListFragment extends ListFragment {
         return list;
     }
 
+
     public  ExpressInPacListFragment(){
         Log.d("ExpressInPacListFragment执行了这个：","ExpressInPacListFragment");
     }
@@ -61,7 +67,7 @@ public class ExpressInPacListFragment extends ListFragment {
 
 
         eAdapter = new ExpressInPacListAdapter(new ArrayList<ExpressSheet>(),this.getActivity());
-        eLoader = new ExpressListLoader(eAdapter,this.getActivity());
+        elistLoader = new ExpressListLoader(eAdapter,this.getActivity());
         setListAdapter(eAdapter);
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -94,6 +100,7 @@ public class ExpressInPacListFragment extends ListFragment {
                     else if(isToEnd()){
                         eAdapter.getData().add(es);
                         eAdapter.notifyDataSetChanged();
+                        elistLoader.MoveExpressIntoPackage(es.getID(),transPackage.getID()); //加入
                     }
                     //不是去往同一个目的地的
                     else{
@@ -116,15 +123,6 @@ public class ExpressInPacListFragment extends ListFragment {
             Log.d("调试：","eadpter数据为空");
             return;
         }
-        Log.d("ExpressInPacListFragment执行了这个：ReservePackage:transPackage",transPackage.toString());
-        int i = 1;
-        for(ExpressSheet es: eAdapter.getData()){
-            Log.d("调试：",es.toString());
-
-            eLoader.MoveExpressIntoPackage(es.getID(),transPackage.getID());
-            Log.d("调试："," "+i);
-            i = i+1;
-        }
     }
 
     private boolean isToEnd() {
@@ -142,6 +140,42 @@ public class ExpressInPacListFragment extends ListFragment {
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        Log.d("ExpressInPacListFragment执行了这个：","onListItemClick");
+        selectItem = eAdapter.getItem(position);
+        selectPosition = position;
+        Log.d("ExpressInPacListFragment执行了这个：",selectItem.toString());
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        //onListItemClick(null,null,info.position,0);
+
+        selectItem = eAdapter.getItem(info.position);
+        selectPosition = info.position;
+        menu.setHeaderTitle("发件人: "+selectItem.getSender());
+        menu.add(info.position, 1, 0, "选择");
+        menu.add(info.position, 2, 1, "修改");
+        menu.add(info.position, 3, 2, "删除");
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        if (item.getTitle().equals("选择")) {
+            //SelectOk();	//返回给上层
+        } else if (item.getTitle().equals("修改")) {
+           // EditItem();	//编辑客户
+        } else if (item.getTitle().equals("删除")) {
+            DeleteItem();	//删除客户
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void DeleteItem() {
+        elistLoader.MoveExpressFromPackage(selectItem.getID(),transPackage.getID());
+        eAdapter.getData().remove(selectItem);
+        eAdapter.notifyDataSetChanged();
     }
 
     /**
