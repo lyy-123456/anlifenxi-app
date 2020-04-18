@@ -1,5 +1,6 @@
 package extrace.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -8,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.domain.ExpressEditActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
+import extrace.ui.zhuanyun.ZhuanyunActivity;
 
 public class MainFragment  extends Fragment {
 	
@@ -27,6 +31,7 @@ public class MainFragment  extends Fragment {
     }
 
     public MainFragment() {
+
     }
 
     @Override
@@ -128,10 +133,29 @@ public class MainFragment  extends Fragment {
 					}
 				});
 
-
+        //包裹确认
+        rootView.findViewById(R.id.action_pkg_acc_icon).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartAccPackage();
+			}
+		});
+        rootView.findViewById(R.id.action_pkg_acc).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartAccPackage();
+			}
+		});
         return rootView;
     }
 
+    //扫描员确认
+	private void StartAccPackage() {
+    	Intent intent = new Intent();
+    	intent.putExtra("Action","Accept");
+    	intent.setClass(this.getActivity(), PackageAccActivity.class);
+    	startActivity(intent);
+	}
     //包裹打包
     private void StartCreatePackage() {
         Intent intent = new Intent();

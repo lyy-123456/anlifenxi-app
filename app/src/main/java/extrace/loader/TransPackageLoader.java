@@ -87,4 +87,8 @@ public class TransPackageLoader extends HttpAsyncTask {
 			e.printStackTrace();
 		}
 	}
+	public void pkgAcc(TransPackage transPackage){
+		//改变包裹状态
+	}
+
 }

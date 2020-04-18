@@ -7,7 +7,7 @@
     <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 获取网络状态，根据网络状态切换进行数据请求网络转换 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -18,18 +18,22 @@
     <application
         android:name=".ExTraceApplication"
         android:allowBackup="true"
+        android:appComponentFactory="12"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-
-        android:appComponentFactory="12"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.packages.PackageEditActivity"></activity>
+        <activity android:name="extrace.ui.accPkg.PackageAccActivity"></activity>
+        <activity android:name="extrace.ui.packages.PackageEditActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="wtAGf5NcONBHQtlBH0wR7jWSWfMjCNiS" />
 
         <activity
             android:name=".MainActivity"
@@ -42,7 +46,10 @@
         </activity>
         <activity
             android:name="extrace.ui.packages.PackageCreateActivity"
-            android:label="包裹打包"></activity>
+            android:label="包裹打包" />
+        <activity
+            android:name="extrace.ui.zhuanyun.ZhuanyunActivity"
+            android:label="转运" />
         <activity
             android:name="extrace.ui.misc.CustomerListActivity"
             android:label="@string/title_activity_customer_list">

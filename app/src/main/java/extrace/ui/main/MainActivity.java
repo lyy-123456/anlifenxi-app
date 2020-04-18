@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import extrace.ui.domain.ExpressListFragment;
 import extrace.ui.domain.ExpressListFragment.OnFragmentInteractionListener;
+import extrace.ui.zhuanyun.ZhuanyunActivity;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener,OnFragmentInteractionListener {
 
@@ -80,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         int id = item.getItemId();
         switch(id){
         case R.id.action_login:
-
+            Intent intent1 = new Intent();
+            intent1.setClass(this, ZhuanyunActivity.class);
+            startActivity(intent1);
             return true;
         case R.id.action_logout:
             return true;

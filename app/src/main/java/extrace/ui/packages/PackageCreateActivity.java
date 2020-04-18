@@ -31,12 +31,13 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     public static final int REQUEST_CREATE_PKG = 103;
 
     private EditText  packageIdView;  //包裹编号
-    private  EditText sourcePostCodeView;  //打包地邮编
+    private  EditText sourcePostCodeView;  //打包地网点编号
     private EditText endPostCodeView;
-    private ImageButton sourcePostCodeBtnView;  //终点站邮编
+    private ImageButton sourcePostCodeBtnView;  //终点站网点编号
     private ImageButton endPostCodeBtnView;   //获取地址的按钮
-    private TextView create_pkg_timeView;  //包裹创建时间
     private Button create_pkg_Btn; //提交按钮
+    private EditText sourceName;   //本站信息
+    private  EditText endName;     //终点站信息
 
     private TransPackage transPackage;
 
@@ -46,7 +47,8 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_create);
 
-
+        sourceName =(EditText)findViewById(R.id.sourceName);
+        endName=(EditText)findViewById(R.id.endName);
         packageIdView = (EditText) findViewById(R.id.packageId);
         sourcePostCodeView = (EditText)findViewById(R.id.sourcePostCode);
         sourcePostCodeBtnView = (ImageButton) findViewById(R.id.sourcePostCodeBtn);
@@ -64,14 +66,14 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         sourcePostCodeBtnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("packagecreate","点击选择始发地按钮");
+                Log.d("packagecreate","点击选择始发站按钮");
                 getSourceRegion();
             }
         });
         endPostCodeBtnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("packagecreate","点击选择终点地按钮");
+                Log.d("packagecreate","点击选择终点站按钮");
                 getEndRegion();
 
             }
@@ -132,7 +134,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         startActivityForResult(intent, REQUEST_CAPTURE);
     }
 
-    //得到源站的邮编
+    //得到源站的网点编号
     private void getSourceRegion() {
         Intent intent = new Intent();
         intent.setClass(this, RegionListActivity.class);
@@ -189,6 +191,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             //regionString = "";
                         }
                         sourcePostCodeView.setText(sregionId);
+                        searchSource(sregionId); //查询源站信息
                         break;
                         //终点邮编
                     case REQUEST_EPOSTCODE:
@@ -208,6 +211,11 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
             default:
                 break;
         }
+    }
+
+    //查询源站信息
+    private void searchSource(String regionCode) {
+
     }
 
     @Override
