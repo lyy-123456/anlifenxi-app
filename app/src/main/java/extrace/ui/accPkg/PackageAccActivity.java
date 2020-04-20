@@ -10,20 +10,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import extrace.loader.ExpressLoader;
+import java.util.Set;
+
 import extrace.loader.TransPackageLoader;
+import extrace.loader.TransHistoryListLoader;
+import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
 import zxing.util.CaptureActivity;
 
-public class PackageAccActivity extends AppCompatActivity implements IDataAdapter<TransPackage> {
+public class PackageAccActivity extends AppCompatActivity implements IDataAdapter<TransPackage>{
 
     private Intent mIntent;
     private final int REQUEST_CAPTURE = 100;
     private TransPackage transPackage;
     private TextView pkg_textView;
     private Button pkg_acc_button;
+    private Set<TransHistory> transHistorySet;
+    public final int PKG_NEW = 0;  //新建
+    public final int PKG_PACKED = 1; //已打包
+    public final int PKG_TRSNSIT = 2; //运输中
+    public final int PKG_ACCED = 3; //转运中心（已扫描）
+    public final int PKG_ACHIEVED = 4; //以达到achieved
+    public final int PKG_UNPACKED = 5;
+
+
+    TransPackageLoader transPackageLoader;
+    TransHistoryListAdapter transHistoryListAdapter;
+    TransHistoryListLoader transhistoryListLoader;
+    ExTraceApplication app;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +85,25 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     //包裹从某一营业网点转到下一网点，下一网点的扫描员扫描确认包裹，将包裹状态改为4（表示到达转运中心）
     //根据扫描员自身的营业网点信息写入包裹历史，需要写的表packageroute和transhistory
     private void pkgAcc() {
+        Log.d("PackageAccActivity执行了：","包裹确认方法");
         //看一下他的状态是不是运输中
-        if(transPackage.getStatus() == 4){
-            TransPackageLoader transPackageLoader = new TransPackageLoader(this,this);
-            transPackageLoader.pkgAcc(transPackage);  //改变包裹状态
-            //包裹历史添加一条数据
+        if( transPackage.getStatus() == PKG_TRSNSIT ){
+            Log.d("PackageAccActivity执行了：","包裹状态运输中");
+            transPackageLoader = new TransPackageLoader(this,this);
+            transPackageLoader.pkgAcc(transPackage.getID());  //改变包裹状态为
+            //包裹历史添加一条数据,transhistory里面添加一条，并且改变package的状态为4转运中心（已确认），
+            TransHistory transHistory = new TransHistory();
+            transPackage.setStatus(PKG_ACHIEVED);
+            transHistory.setPkg(transPackage);
+            app = (ExTraceApplication)getApplicationContext();
+            transHistory.setUIDFrom(app.getLoginUser().getUID());  //得到登陆者的UID
 
+            Log.d("PackageAccActivity执行了：", String.valueOf(app.getLoginUser().getUID()));
+            transHistory.setUIDTo(PKG_ACHIEVED);  //状态设为转运中心已确认
+
+            transHistoryListAdapter = new TransHistoryListAdapter(transHistorySet,this);
+            transhistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter,this);
+            transhistoryListLoader.AddOneTransHistory(transHistory);
         }
     }
     private void StartCapture(){
@@ -87,6 +117,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     public TransPackage getData() {
         return transPackage;
     }
+
 
     @Override
     public void setData(TransPackage data) {

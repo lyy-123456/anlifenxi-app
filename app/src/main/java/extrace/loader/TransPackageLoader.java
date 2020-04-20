@@ -31,6 +31,7 @@ public class TransPackageLoader extends HttpAsyncTask {
 	public void onDataReceive(String class_name, String json_data) {
 		if(class_name.equals("TransPackage"))
 		{
+			//Toast.makeText(context,json_data,Toast.LENGTH_LONG).show();
 			TransPackage ci = JsonUtils.fromJson(json_data, new TypeToken<TransPackage>(){});
 			adapter.setData(ci);
 			Log.d("TransPackageLoader,onDataReceive",ci.toString());
@@ -87,8 +88,17 @@ public class TransPackageLoader extends HttpAsyncTask {
 			e.printStackTrace();
 		}
 	}
-	public void pkgAcc(TransPackage transPackage){
+
+	//lyy 新增
+	public void pkgAcc(String pkgId){
 		//改变包裹状态
+		//Toast.makeText(context,"执行了pkgAcc方法",Toast.LENGTH_LONG).show();
+		url += "accPkgAndChangStatus/"+pkgId+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -13,6 +13,8 @@
  */
 package extrace.misc.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,14 +26,14 @@ public class TransHistory implements Serializable {
 
 	public TransHistory() {
 	}
-	
-	private int SN;
-	private TransPackage pkg;
-	private Date actTime;
-	private int UIDFrom;
-	private int UIDTo;
-	private Float x;
-	private Float y;
+
+	@Expose private int SN;
+	@Expose private TransPackage pkg;
+	@Expose private Date actTime;
+	@Expose private int UIDFrom;
+	@Expose private int UIDTo;
+	@Expose private Float x;
+	@Expose private Float y;
 	
 	public void setSN(int value) {
 		this.SN = value;
