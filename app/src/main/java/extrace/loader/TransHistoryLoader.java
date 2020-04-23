@@ -3,29 +3,24 @@ package extrace.loader;
 import android.app.Activity;
 import android.widget.Toast;
 
-import java.util.List;
-import java.util.Set;
-
 import extrace.misc.model.TransHistory;
-import extrace.misc.model.TransPackage;
+import extrace.misc.model.TransNode;
 import extrace.net.HttpAsyncTask;
 import extrace.net.HttpResponseParam;
 import extrace.net.IDataAdapter;
 import extrace.net.JsonUtils;
-import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.main.ExTraceApplication;
 
-public class TransHistoryListLoader extends HttpAsyncTask {
+public class TransHistoryLoader extends HttpAsyncTask {
     String url;
-    IDataAdapter<Set<TransHistory>> adapter;
+    IDataAdapter<TransHistory> adapter;
     private Activity context;
-    public TransHistoryListLoader(IDataAdapter<Set<TransHistory>> adpt, Activity context) {
+    public TransHistoryLoader(IDataAdapter<TransHistory> adapter,Activity context) {
         super(context);
-        this.adapter = adpt;
+        this.adapter = adapter;
         this.context = context;
         url+= ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
     }
-
 
     @Override
     public void onDataReceive(String class_name, String json_data) {
@@ -37,12 +32,20 @@ public class TransHistoryListLoader extends HttpAsyncTask {
         }
     }
 
+    //lyy 往历史里添加一个数据
+    public  void AddOneTransHistory(TransHistory transHistory){
 
-
+        String json_data = JsonUtils.toJson(transHistory,true);
+        Toast.makeText(context,"TranshistoryListLoader执行了AddOneTransHistory方法"+json_data,Toast.LENGTH_LONG).show();
+        url += "addOneTransHistory";
+        try{
+            execute(url,"POST",json_data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {
 
     }
-
-
 }

@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.accPkg.PackageAccActivity"></activity>
+        <activity android:name="extrace.ui.accPkg.PackageAccActivity"/>
         <activity android:name="extrace.ui.packages.PackageEditActivity" />
 
         <uses-library

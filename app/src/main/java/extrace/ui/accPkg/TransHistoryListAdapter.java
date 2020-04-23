@@ -1,6 +1,7 @@
 package extrace.ui.accPkg;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Set;
@@ -21,11 +22,14 @@ public class TransHistoryListAdapter implements IDataAdapter<Set<TransHistory>> 
     }
     @Override
     public Set<TransHistory> getData() {
+
+        Log.d("TransHistoryListAdapter：", "getData");
         return transHistorySet;
     }
 
     @Override
     public void setData(Set<TransHistory> data) {
+        Log.d("TransHistoryListAdapter：", "setData");
         transHistorySet = data;
     }
 
