@@ -74,7 +74,7 @@ public class TransNodeListAdapter extends ArrayAdapter<TransNode> implements IDa
         }
         TransNode node = getItem(position);
         hd.node_id.setText(node.getID());
-        hd.node_type.setText(node.getNodeType());
+        hd.node_type.setText(String.valueOf(node.getNodeType()));
         hd.node_name.setText(node.getNodeName());
         return v;
 

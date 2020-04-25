@@ -52,8 +52,9 @@ public class CustomerListActivity extends AppCompatActivity {
             fm.beginTransaction().add(android.R.id.content, list_fg).commit();
         }
 	}
-	
-	@Override
+
+
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		list_fg.onActivityResult(requestCode, resultCode, data);

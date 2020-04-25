@@ -2,12 +2,16 @@ package extrace.loader;
 
 import android.app.Activity;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.util.List;
 
+import extrace.misc.model.CustomerInfo;
 import extrace.misc.model.TransNode;
 import extrace.net.HttpAsyncTask;
 import extrace.net.HttpResponseParam;
 import extrace.net.IDataAdapter;
+import extrace.net.JsonUtils;
 import extrace.ui.main.ExTraceApplication;
 
 public class TransNodeListLoader extends HttpAsyncTask {
@@ -23,12 +27,14 @@ public class TransNodeListLoader extends HttpAsyncTask {
 
     @Override
     public void onDataReceive(String class_name, String json_data) {
-
+        List<TransNode> cstm = JsonUtils.fromJson(json_data, new TypeToken<List<TransNode>>(){});
+        adapter.setData(cstm);
+        adapter.notifyDataSetChanged();
     }
 
     //lyy 通过区域码获取TransNode
     public void getTransNodeByRegion(String region){
-        url += "/getTransNodeByRegionCode/"+region+"?_type=json";
+        url += "getTransNodeByRegion/"+region+"?_type=json";
         try{
             execute(url,"GET");
         }catch (Exception e){
@@ -38,7 +44,7 @@ public class TransNodeListLoader extends HttpAsyncTask {
 
     //lyy 通过id号查询TranNode
     public void getTransNodeById(String id){
-        url += "/getTransNodeById/"+id+"?_type=json";
+        url += "getTransNodeById/"+id+"?_type=json";
         try{
             execute(url,"GET");
         }catch (Exception e){
@@ -47,7 +53,7 @@ public class TransNodeListLoader extends HttpAsyncTask {
     }
     //lyy 通过网点名称查询TranNode
     public void getTransNodeByNodeName(String nodeName){
-        url += "/getTransNodeByNodeName/"+nodeName+"?_type=json";
+        url += "getTransNodeByNodeName/"+nodeName+"?_type=json";
         try{
             execute(url,"GET");
         }catch (Exception e){

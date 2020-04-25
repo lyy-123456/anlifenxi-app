@@ -11,12 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import extrace.loader.ExpressLoader;
 import extrace.loader.TransPackageLoader;
+import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
@@ -34,6 +36,7 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
     private ListView zhuanyun_pkg_list;
     private PackageListAdapter packageListAdapter;
     private List<TransPackage> itemList;
+    private TransNode nextTransNode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,7 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d("PackageEditActivity执行了这个：","onActivityResult"+requestCode+"|"+resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
             case RESULT_OK:
@@ -89,15 +93,48 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
                             String id = data.getStringExtra("BarCode");
                             try {
                                 TransPackageLoader transPackageLoader  =new TransPackageLoader( this,this);
-                                transPackageLoader.Load(id); //得到这个包裹id
+                                if(!isRepeat(id)){
+                                    transPackageLoader.Load(id); //得到这个包裹id
+                                }
+                                else{
+                                    Toast.makeText(this,"该包裹已添加，请勿重复添加",Toast.LENGTH_SHORT).show();
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                         break;
+                    case REQUEST_GET_NODE:
+                        Log.d("PackageEditActivity执行了这个：onActivityResult返回了：","sd");
+                        Bundle bundle = data.getExtras();
+                        TransNode transNode = (TransNode) bundle.getSerializable("TransNode");
+                        if(transNode != null){
+                            nextTransNode = transNode;
+                            //Toast.makeText(this,transNode.toString(),Toast.LENGTH_SHORT).show();
+                            Log.d("PackageEditActivity执行了这个：onActivityResult返回了：",transNode.toString());
+                            RefreshUI();
+                        }
+                        break;
                 }
         }
     }
+
+    private boolean isRepeat(String id) {
+        for(TransPackage transPackage : itemList){
+            if(transPackage.getID().equals(id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void RefreshUI() {
+        if (nextTransNode != null){
+            zhuanyun_nextNode_edt .setText(nextTransNode.getNodeName());
+        }
+
+    }
+
 
     @Override
     public TransPackage getData() {
