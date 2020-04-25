@@ -1,0 +1,54 @@
+package extrace.loader;
+
+import android.app.Activity;
+import android.widget.Toast;
+
+import extrace.misc.model.TransHistory;
+import extrace.misc.model.TransNode;
+import extrace.net.HttpAsyncTask;
+import extrace.net.HttpResponseParam;
+import extrace.net.IDataAdapter;
+import extrace.net.JsonUtils;
+import extrace.ui.main.ExTraceApplication;
+
+public class TransHistoryLoader extends HttpAsyncTask {
+    String url;
+    IDataAdapter<TransHistory> adapter;
+    private Activity context;
+    public TransHistoryLoader(IDataAdapter<TransHistory> adapter,Activity context) {
+        super(context);
+        this.adapter = adapter;
+        this.context = context;
+        url = ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
+    }
+
+    @Override
+    public void onDataReceive(String class_name, String json_data) {
+        if(class_name.equals("N_TransPackage")){
+            Toast.makeText(context,"包裹信息不存在",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(context,"成功",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //lyy 往历史里添加一个数据
+    public  void AddOneTransHistory(TransHistory transHistory){
+
+        String json_data = JsonUtils.toJson(transHistory,true);
+        //Toast.makeText(context,"TranshistoryListLoader执行了AddOneT
+        //
+        // ransHistory方法"+json_data,Toast.LENGTH_LONG).show();
+        url += "addOneTransHistory";
+        Toast.makeText(context,"TranshistoryListLoader执行了AddOneTransHistory方法"+url,Toast.LENGTH_LONG).show();
+        try{
+            execute(url,"POST",json_data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {
+
+    }
+}
