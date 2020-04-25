@@ -43,7 +43,7 @@ public class TransPackageLoader extends HttpAsyncTask {
 			adapter.getData().setID(ci.getID());
 			adapter.getData().onSave();
 			adapter.notifyDataSetChanged();
-			Toast.makeText(context, "包裹信息保存完成!", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(context, "包裹信息保存完成!", Toast.LENGTH_SHORT).show();
 		}
 		else if(class_name.equals("E_TransPackage"))
 		{

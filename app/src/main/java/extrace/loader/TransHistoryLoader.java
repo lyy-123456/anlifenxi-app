@@ -19,7 +19,7 @@ public class TransHistoryLoader extends HttpAsyncTask {
         super(context);
         this.adapter = adapter;
         this.context = context;
-        url+= ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
+        url = ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
     }
 
     @Override
@@ -36,8 +36,11 @@ public class TransHistoryLoader extends HttpAsyncTask {
     public  void AddOneTransHistory(TransHistory transHistory){
 
         String json_data = JsonUtils.toJson(transHistory,true);
-        Toast.makeText(context,"TranshistoryListLoader执行了AddOneTransHistory方法"+json_data,Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,"TranshistoryListLoader执行了AddOneT
+        //
+        // ransHistory方法"+json_data,Toast.LENGTH_LONG).show();
         url += "addOneTransHistory";
+        Toast.makeText(context,"TranshistoryListLoader执行了AddOneTransHistory方法"+url,Toast.LENGTH_LONG).show();
         try{
             execute(url,"POST",json_data);
         }catch (Exception e){

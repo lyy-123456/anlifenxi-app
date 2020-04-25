@@ -11,14 +11,12 @@ import com.baidu.mapapi.map.MapView;
 
 import extrace.ui.main.R;
 
-public class ZhuanyunActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity {
     private MapView mMapView = null;
     private TextView mpaThing;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.test);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);

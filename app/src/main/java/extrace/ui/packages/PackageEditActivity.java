@@ -17,9 +17,11 @@ import java.util.List;
 
 import extrace.loader.ExpressListLoader;
 import extrace.loader.ExpressLoader;
+import extrace.loader.TransPackageLoader;
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.domain.ExpressListAdapter;
 import extrace.ui.main.MainActivity;
 import extrace.ui.main.R;
@@ -77,30 +79,18 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
                 ReservePackage();
                 return true;
             case R.id.action_refresh:
-//                if (mItem != null) {
-//                    //Refresh(mItem.getID());
-//                }
                 Log.d("package","选中了刷新");
                 Toast.makeText(this,"包裹信息已刷新！",Toast.LENGTH_SHORT).show();
                 expressInPacListFragment.ReloadList();
                 return true;
+
             case R.id.action_new:
                 Log.d("package","选中了新建");
                 StartCapture();
                 //addExpressToPackage();
                 return true;
             case (android.R.id.home):
-                /*将选中的对象赋值给Intent*/
-//	        Bundle bundle = new Bundle();
-//	        bundle.putSerializable("CustomerInfo",mItem);
-//			mIntent.putExtras(bundle);
-
-                //mIntent.putExtra("CustomerInfo",mItem);
-                //this.setResult(RESULT_OK, mIntent);
                 this.finish();
-//			Intent intent = new Intent(this, CustomerListActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -108,14 +98,31 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
 
     private void ReservePackage() {
         Toast.makeText(this,"包裹信息已保存！",Toast.LENGTH_SHORT).show();
+        transPackage.setStatus(TransPackage.PKG_PACKED);  //状态改变为已打包
+        InPackageEditActivity inPackageEditActivity = new InPackageEditActivity();
+        TransPackageLoader transPackageLoader = new TransPackageLoader(inPackageEditActivity,this);
+        transPackageLoader.Save(transPackage);
+
         startActivity(new Intent(this, MainActivity.class));
-//        Bundle bundle = new Bundle();
-//        bundle.putString("Action","ReservePackage");
-//        expressInPacListFragment.setArguments(bundle);
-//        expressInPacListFragment.RefreshList();
     }
     //添加快件-》扫描快件条形码-》根据条形码获取快件信息-》加入listfragment里面-》刷新fragment
+    class InPackageEditActivity implements IDataAdapter<TransPackage>{
 
+        @Override
+        public TransPackage getData() {
+            return transPackage;
+        }
+
+        @Override
+        public void setData(TransPackage data) {
+            transPackage = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     private void StartCapture(){
         Log.d("PackageEditActivity执行了这个：","StartCapture");
         Intent intent = new Intent();
@@ -200,6 +207,7 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
 
         //如果查询来的数据为空，说明不存在该快件
         if(eItem == null){
+            Toast.makeText(this,"不存在该快件",Toast.LENGTH_SHORT).show();
             Log.d("PackageEditActivity执行了这个：","不能存在该快件");
         }else{
             //将它加到包裹里的快件列表里

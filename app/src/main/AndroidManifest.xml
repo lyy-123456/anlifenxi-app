@@ -24,7 +24,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.accPkg.PackageAccActivity"/>
+        <activity android:name="extrace.ui.misc.TransNodeEditActivity"></activity>
+        <activity android:name="extrace.ui.misc.TransNodeListActivity" />
+        <activity android:name="extrace.ui.zhuanyun.ZhuanyunCreateActivity" />
+        <activity android:name="extrace.ui.accPkg.PackageAccActivity" />
         <activity android:name="extrace.ui.packages.PackageEditActivity" />
 
         <uses-library
@@ -49,10 +52,9 @@
             android:label="包裹打包" />
         <activity
             android:name="extrace.ui.packageopenning.PackageOpenActivity"
-            android:label="包裹拆包">
-        </activity>
+            android:label="包裹拆包" />
         <activity
-            android:name="extrace.ui.zhuanyun.ZhuanyunActivity"
+            android:name="extrace.ui.zhuanyun.TestActivity"
             android:label="转运" />
         <activity
             android:name="extrace.ui.misc.CustomerListActivity"

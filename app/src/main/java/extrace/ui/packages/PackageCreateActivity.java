@@ -118,7 +118,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         transPackage.setSourceNode(sourcePostCode);
         transPackage.setTargetNode(endPostCode);
         transPackage.setCreateTime(new Date());
-        transPackage.setStatus(0);
+        transPackage.setStatus(TransPackage.PKG_NEW);
         tLoader.New(transPackage);
 
 

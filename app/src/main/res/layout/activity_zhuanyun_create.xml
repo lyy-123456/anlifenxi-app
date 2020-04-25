@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="extrace.ui.zhuanyun.ZhuanyunCreateActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="请添加将要转运的包裹！">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dip"
+            android:paddingLeft="5dip"
+            android:paddingTop="4dip" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="请选择包裹下一站："
+                android:layout_marginLeft="6dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16dip">
+            </TextView>
+            <EditText
+                android:id="@+id/zhuanyun_nextNode_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20dip">
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/zhuanyun_nextNode_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_menu_search">
+            </ImageButton>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/red" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ListView
+                android:id="@+id/zhuanyun_pkg_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </ListView>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        >
+
+        <Button
+            android:id="@+id/zhuanyun_addpkg_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="添加包裹">
+
+        </Button>
+
+        <Button
+            android:id="@+id/zhuanyun_start_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="20dp"
+            android:text="开始转运"></Button>
+    </LinearLayout>
+
+</LinearLayout>

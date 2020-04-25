@@ -1,6 +1,5 @@
 package extrace.ui.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -14,7 +13,7 @@ import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.domain.ExpressEditActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
-import extrace.ui.zhuanyun.ZhuanyunActivity;
+import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 
 public class MainFragment  extends Fragment {
 	
@@ -146,9 +145,29 @@ public class MainFragment  extends Fragment {
 				StartAccPackage();
 			}
 		});
+
+        //包裹转运
+		rootView.findViewById(R.id.action_pkg_zhuanyun_icon).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartZhuanyunPackage();
+			}
+		});
+		rootView.findViewById(R.id.action_pkg_zhuanyun).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartZhuanyunPackage();
+			}
+		});
         return rootView;
     }
 
+    //包裹转运
+	private void StartZhuanyunPackage() {
+    	Intent intent = new Intent();
+    	intent.setClass(this.getActivity(), ZhuanyunCreateActivity.class);
+    	startActivityForResult(intent,0);
+	}
     //扫描员确认
 	private void StartAccPackage() {
     	Intent intent = new Intent();

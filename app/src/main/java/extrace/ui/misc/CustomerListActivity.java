@@ -162,37 +162,7 @@ public class CustomerListActivity extends AppCompatActivity {
 						return true;
 					}
 				});
-//				SearchViewCompat.setOnQueryTextListener(searchView,
-//						new SearchViewCompat.OnQueryTextListenerCompat() {
-//							@Override
-//							public boolean onQueryTextChange(String newText) {
-//								// Called when the action bar search text has
-//								// changed. Since this
-//								// is a simple array adapter, we can just have
-//								// it do the filtering.
-//								return true;
-//							}
-//
-//							@Override
-//							public boolean onQueryTextSubmit(String query) {
-//								if (!TextUtils.isEmpty(query)) {
-//									RefreshList(query);
-//									SearchViewCompat.setQuery(searchView, null,true);
-//								}
-//								return true;
-//							}
-//						});
-//				SearchViewCompat.setOnCloseListener(searchView,
-//						new SearchViewCompat.OnCloseListenerCompat() {
-//							@Override
-//							public boolean onClose() {
-//								if (!TextUtils.isEmpty(SearchViewCompat.getQuery(searchView))) {
-//									SearchViewCompat.setQuery(searchView, null,true);
-//								}
-//								return true;
-//							}
-//
-//						});
+
 
 				MenuItemCompat.setActionView(item, searchView);
 			}
