@@ -11,24 +11,24 @@ import extrace.misc.model.TransHistory;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
 
-public class TransHistoryListAdapter implements IDataAdapter<Set<TransHistory>> {
-    private  Set<TransHistory> transHistorySet;
+public class TransHistoryListAdapter implements IDataAdapter<List<TransHistory>> {
+    private  List<TransHistory> transHistorySet;
     private  Context context;
 
-    public TransHistoryListAdapter(Set<TransHistory> transHistorySet, Context ctx) {
+    public TransHistoryListAdapter(List<TransHistory> transHistorySet, Context ctx) {
         //super(ctx, android.R.layout.simple_list_item_single_choice, itemList);
         this.transHistorySet = transHistorySet;
         this.context = ctx;
     }
     @Override
-    public Set<TransHistory> getData() {
+    public List<TransHistory> getData() {
 
         Log.d("TransHistoryListAdapter：", "getData");
         return transHistorySet;
     }
 
     @Override
-    public void setData(Set<TransHistory> data) {
+    public void setData(List<TransHistory> data) {
         Log.d("TransHistoryListAdapter：", "setData");
         transHistorySet = data;
     }

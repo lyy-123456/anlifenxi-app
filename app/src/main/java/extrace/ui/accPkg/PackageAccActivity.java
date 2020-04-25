@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import extrace.loader.TransHistoryLoader;
@@ -32,7 +33,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         private TransPackage transPackage;
         private TextView pkg_textView;
         private Button pkg_acc_button;
-        private Set<TransHistory> transHistorySet;
+        private List<TransHistory> transHistoryList;
 
 
         TransPackageLoader transPackageLoader;

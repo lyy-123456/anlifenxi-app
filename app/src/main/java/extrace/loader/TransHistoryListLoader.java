@@ -17,13 +17,13 @@ import extrace.ui.main.ExTraceApplication;
 
 public class TransHistoryListLoader extends HttpAsyncTask {
     String url;
-    IDataAdapter<Set<TransHistory>> adapter;
+    IDataAdapter<List<TransHistory>> adapter;
     private Activity context;
-    public TransHistoryListLoader(IDataAdapter<Set<TransHistory>> adpt, Activity context) {
+    public TransHistoryListLoader(IDataAdapter<List<TransHistory>> adpt, Activity context) {
         super(context);
         this.adapter = adpt;
         this.context = context;
-        url+= ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
+        url = ((ExTraceApplication)context.getApplication()).getDomainServiceUrl();
     }
 
 
@@ -32,13 +32,23 @@ public class TransHistoryListLoader extends HttpAsyncTask {
         if(class_name.equals("N_TransPackage")){
             Toast.makeText(context,"包裹信息不存在",Toast.LENGTH_SHORT).show();
         }
-        else {
+        else if(class_name.equals("successed")){
             Toast.makeText(context,"成功",Toast.LENGTH_SHORT).show();
         }
     }
 
+    //lyy 新增一次性写一堆的transhistory
+    public void saveTranHistoryList(List<TransHistory> transHistoryList){
+        String jsonObj = JsonUtils.toJson(transHistoryList);
+        Toast.makeText(context,jsonObj,Toast.LENGTH_SHORT).show();
+        url += "saveTranHistoryList";
+        try{
+            execute(url,"POST",jsonObj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-
+    }
     @Override
     public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {
 

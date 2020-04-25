@@ -1,5 +1,6 @@
 package extrace.ui.zhuanyun;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,10 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import extrace.loader.ExpressLoader;
+import extrace.loader.TransHistoryListLoader;
+import extrace.loader.TransHistoryLoader;
+import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageLoader;
+import extrace.loader.UserInfoLoader;
+import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
+import extrace.misc.model.UserInfo;
 import extrace.net.IDataAdapter;
+import extrace.ui.accPkg.TransHistoryListAdapter;
+import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
 import extrace.ui.misc.TransNodeListActivity;
 import zxing.util.CaptureActivity;
@@ -36,7 +45,13 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
     private ListView zhuanyun_pkg_list;
     private PackageListAdapter packageListAdapter;
     private List<TransPackage> itemList;
+    private UserInfo nextManger; //下一站的负责人
     private TransNode nextTransNode;
+    private TransNode nowTranNode;
+    private TransPackageLoader transPackageLoader;
+    private TransHistoryLoader transHistoryLoader;
+    private UserInfoLoader userInfoLoader;
+    private List<TransHistory> transHistoryList = new ArrayList<TransHistory>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +70,13 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
             }
         });
 
+        //开始转运
+        zhuanyun_start_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartZhuanYun();
+            }
+        });
         //网点信息获取：
         zhuanyun_nextNode_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +87,12 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         //适配器初始化
         packageListAdapter = new PackageListAdapter(itemList,this);
         zhuanyun_pkg_list.setAdapter(packageListAdapter);
+
+        //刚加载时获取司机的站点
+        String nodeID = ((ExTraceApplication)this.getApplication()).getLoginUser().getDptID();
+        InZhuanyunActivityTranNode inZhuanyunActivityTranNode = new InZhuanyunActivityTranNode();
+        TransNodeLoader transNodeLoader = new TransNodeLoader(inZhuanyunActivityTranNode,this);
+        transNodeLoader.Load(nodeID);
     }
     //得到网点信息
     private void GetNextNode() {
@@ -72,7 +100,40 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         intent.setClass(this, TransNodeListActivity.class);
         startActivityForResult(intent,REQUEST_GET_NODE);
     }
+    //开始转运
+    private void StartZhuanYun(){
+        if(itemList.size() == 0 || nextManger == null){
+            Toast.makeText(this,"包裹列表或下一站为空,请确认信息是否完整后重试",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("PackageEditActivity执行了这个：","StartZhuanYun开始转运");
 
+        transHistoryList.clear();
+        //1,开始转运写transhistory历史
+        //①得到司机的id，然后写入。加上下一站的负责人的uid写入
+        int uidfrom = ((ExTraceApplication)this.getApplication()).getLoginUser().getUID();
+        if(nextManger == null) return;
+        int uidto = nextManger.getUID();
+        for(TransPackage item:itemList){
+            TransHistory transHistory = new TransHistory();
+            transHistory.setUIDFrom(uidfrom);
+            transHistory.setUIDTo(uidto);
+            transHistory.setPkg(item);
+            transHistory.setX(nowTranNode.getX());
+            transHistory.setY(nowTranNode.getY());
+            transHistoryList.add(transHistory);
+//            InZhuanyunActivityTransHistory inZhuanyunActivityTransHistory = new InZhuanyunActivityTransHistory();
+//            transHistoryLoader = new TransHistoryLoader(inZhuanyunActivityTransHistory,this);
+//            transHistoryLoader.AddOneTransHistory();
+        }
+        //打包成一个列表一次性写入
+        if(transHistoryList.size() != 0){
+            TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(),this);
+            TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter,this);
+            transHistoryListLoader.saveTranHistoryList(transHistoryList);
+        }
+
+    }
     private void StartCapture(){
         Log.d("PackageEditActivity执行了这个：","StartCapture");
         Intent intent = new Intent();
@@ -92,7 +153,7 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
                         if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
                             String id = data.getStringExtra("BarCode");
                             try {
-                                TransPackageLoader transPackageLoader  =new TransPackageLoader( this,this);
+                                transPackageLoader  =new TransPackageLoader( this,this);
                                 if(!isRepeat(id)){
                                     transPackageLoader.Load(id); //得到这个包裹id
                                 }
@@ -110,6 +171,9 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
                         TransNode transNode = (TransNode) bundle.getSerializable("TransNode");
                         if(transNode != null){
                             nextTransNode = transNode;
+                            InZhuanyunActivityUserInfo in = new  InZhuanyunActivityUserInfo();
+                            userInfoLoader = new UserInfoLoader(in,this);
+                            userInfoLoader.getUserManagerById(transNode.getID());
                             //Toast.makeText(this,transNode.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("PackageEditActivity执行了这个：onActivityResult返回了：",transNode.toString());
                             RefreshUI();
@@ -119,6 +183,25 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         }
     }
 
+    //内部类
+    class  InZhuanyunActivityUserInfo implements IDataAdapter<UserInfo>{
+
+        @Override
+        public UserInfo getData() {
+            return nextManger;
+        }
+
+        @Override
+        public void setData(UserInfo data) {
+            Log.d("PackageEditActivity执行了这个InZhuanyunActivityUserInfo","setData"+data.toString());
+            nextManger = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     private boolean isRepeat(String id) {
         for(TransPackage transPackage : itemList){
             if(transPackage.getID().equals(id)){
@@ -135,7 +218,43 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 
     }
 
+    //第二个内部类
+    class InZhuanyunActivityTranNode implements IDataAdapter<TransNode>{
 
+        @Override
+        public TransNode getData() {
+            return  nowTranNode;
+        }
+
+        @Override
+        public void setData(TransNode data) {
+            nowTranNode = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
+
+//    //第三个内部类
+//    class InZhuanyunActivityTransHistory implements IDataAdapter<TransHistory> {
+//
+//        @Override
+//        public TransHistory getData() {
+//            return null;
+//        }
+//
+//        @Override
+//        public void setData(TransHistory data) {
+//
+//        }
+//
+//        @Override
+//        public void notifyDataSetChanged() {
+//
+//        }
+//    }
     @Override
     public TransPackage getData() {
 

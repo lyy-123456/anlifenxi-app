@@ -45,6 +45,7 @@ public class ExTraceApplication extends Application {
 		//临时造一个用户
 		userInfo = new UserInfo();
 		userInfo.setID(12);
+		userInfo.setDptID("11022800");
 		userInfo.setReceivePackageID("1111112222");
 		userInfo.setTransPackageID("1111115555");
 		userInfo.setDelivePackageID("1111113333");
