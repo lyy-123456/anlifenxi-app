@@ -6,6 +6,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Set;
 
+import extrace.misc.model.ListTransHistory;
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransPackage;
 import extrace.net.HttpAsyncTask;
@@ -38,16 +39,16 @@ public class TransHistoryListLoader extends HttpAsyncTask {
     }
 
     //lyy 新增一次性写一堆的transhistory
-    public void saveTranHistoryList(List<TransHistory> transHistoryList){
-        String jsonObj = JsonUtils.toJson(transHistoryList);
-        Toast.makeText(context,jsonObj,Toast.LENGTH_SHORT).show();
-        url += "saveTranHistoryList";
+    public void saveTransHistoryList(ListTransHistory transHistoryList){
+        String jsonObj = JsonUtils.toJson(transHistoryList,true);
+
+        url += "saveTransHistoryList";
+        Toast.makeText(context,url+jsonObj,Toast.LENGTH_SHORT).show();
         try{
             execute(url,"POST",jsonObj);
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
     @Override
     public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {

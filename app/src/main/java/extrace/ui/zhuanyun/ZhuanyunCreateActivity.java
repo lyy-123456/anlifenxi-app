@@ -23,6 +23,7 @@ import extrace.loader.TransHistoryLoader;
 import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
+import extrace.misc.model.ListTransHistory;
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
@@ -114,6 +115,8 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         int uidfrom = ((ExTraceApplication)this.getApplication()).getLoginUser().getUID();
         if(nextManger == null) return;
         int uidto = nextManger.getUID();
+
+
         for(TransPackage item:itemList){
             TransHistory transHistory = new TransHistory();
             transHistory.setUIDFrom(uidfrom);
@@ -121,23 +124,28 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
             transHistory.setPkg(item);
             transHistory.setX(nowTranNode.getX());
             transHistory.setY(nowTranNode.getY());
+
             transHistoryList.add(transHistory);
 //            InZhuanyunActivityTransHistory inZhuanyunActivityTransHistory = new InZhuanyunActivityTransHistory();
 //            transHistoryLoader = new TransHistoryLoader(inZhuanyunActivityTransHistory,this);
 //            transHistoryLoader.AddOneTransHistory();
         }
+
+
         //打包成一个列表一次性写入
         if(transHistoryList.size() != 0){
+            ListTransHistory listTransHistory = new ListTransHistory();
+            listTransHistory.setTransHistoryList(transHistoryList);
             TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(),this);
             TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter,this);
-            transHistoryListLoader.saveTranHistoryList(transHistoryList);
+            transHistoryListLoader.saveTransHistoryList(listTransHistory);
         }
 
     }
     private void StartCapture(){
         Log.d("PackageEditActivity执行了这个：","StartCapture");
         Intent intent = new Intent();
-        intent.putExtra("Action","Capture");
+        intent.putExtra("Action",  "Capture");
         intent.setClass(this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CAPTURE);
     }
