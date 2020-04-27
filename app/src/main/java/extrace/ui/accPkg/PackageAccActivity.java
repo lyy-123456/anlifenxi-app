@@ -9,153 +9,226 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import extrace.loader.ExpressListLoader;
+import extrace.loader.ExpressLoader;
 import extrace.loader.TransHistoryLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.TransHistoryListLoader;
+import extrace.misc.model.ExpressSheet;
+import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.domain.ExpressListAdapter;
 import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
 import zxing.util.CaptureActivity;
 
 public class PackageAccActivity extends AppCompatActivity implements IDataAdapter<TransPackage>{
 
-        private Intent mIntent;
-        private final int REQUEST_CAPTURE = 100;
-        private TransPackage transPackage;
-        private TextView pkg_textView;
-        private Button pkg_acc_button;
-        private List<TransHistory> transHistoryList;
+
+    private Intent mIntent;
+    private final int REQUEST_CAPTURE = 100;
+    private  final int REQUEST_CAPTURE_SCAN_EXPRESS =101;
+    private static final int REQUEST_EXPRESS = 102;
+    private TransPackage transPackage;
+    private TextView pkg_textView;
+    private Button pkg_acc_button;
+    private List<TransHistory> transHistoryList;
+    private ListView express_list_in_pkg;
+    private Button express_scan_btn;
 
 
-        TransPackageLoader transPackageLoader;
-        TransHistoryListAdapter transHistoryListAdapter;
-        TransHistoryListLoader transhistoryListLoader;
-        ExTraceApplication app;
+    private  TransPackageLoader transPackageLoader;
+    private  TransHistoryListAdapter transHistoryListAdapter;
+    private TransHistoryListLoader transhistoryListLoader;
+    private TransHistoryLoader transHistoryLoader;
+    private ExTraceApplication app;
+    private ExpressListAdapter expressListAdapter;
+    private  InTransHistory inTransHistory;
+    private ExpressLoader expressLoader;
+
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_package_acc);
-            pkg_textView = (TextView)findViewById(R.id.pkg_ac_thing);
-            pkg_acc_button = (Button)findViewById(R.id.pkg_acc_btn);
-            pkg_acc_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pkgAcc();  //包裹确认操作
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_package_acc);
+        pkg_textView = (TextView)findViewById(R.id.pkg_ac_thing);
+        pkg_acc_button = (Button)findViewById(R.id.pkg_acc_btn);
+        express_list_in_pkg = (ListView)findViewById(R.id.express_list_in_pkg);
+        express_scan_btn = (Button)findViewById(R.id.express_scan);
+        pkg_acc_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pkgAcc();  //包裹确认操作
+            }
+        });
+        //设置适配器
+        expressListAdapter  =new ExpressListAdapter(new ArrayList<ExpressSheet>(),this,"ExDLV");
+        express_list_in_pkg.setAdapter(expressListAdapter);
+
+        express_scan_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartScanExpress();
+            }
+        });
+        mIntent = getIntent();
+        if(mIntent.hasExtra("Action")){
+            if(mIntent.getStringExtra("Action").equals("Accept")){
+                StartCapture();
+            }
+        }
+
+        //得到本站的信息
+    }
+
+    //扫描快件确认快件
+    private void StartScanExpress() {
+        Intent intent = new Intent();
+        intent.putExtra("Action","Captrue");
+        intent.setClass(this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CAPTURE_SCAN_EXPRESS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d("PackageAccActivity执行了这个","onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case RESULT_OK:
+                switch (requestCode){
+                    case REQUEST_CAPTURE:
+                        if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
+                            String id = data.getStringExtra("BarCode");
+                            transPackageLoader = new TransPackageLoader(this,this);
+                            transPackageLoader.Load(id);
+                            //得到包裹中快件列表
+                            ExpressListLoader expressListLoader = new ExpressListLoader(expressListAdapter,this);
+                            expressListLoader.getExpressListInPackage(id);
+
+                            //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
+                            //1找到包裹历史里最近的一条记录
+                            inTransHistory = new InTransHistory();
+                            transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
+                            transHistoryLoader.getRecentOneTranHistory(transPackage);
+                        }
+                        break;
+                    case REQUEST_CAPTURE_SCAN_EXPRESS:
+                        if(data.hasExtra("BarCode")){
+                            String id = data.getStringExtra("BarCode");
+                            Intent intent = new Intent();
+                            intent.putExtra("ExpressID",id);
+                            intent.setClass(this,ExpressAccActivity.class);
+                            startActivityForResult(intent,REQUEST_EXPRESS);
+                            //跳转到express详情页面
+                        }
                 }
+        }
 
+    }
 
-            });
-            mIntent = getIntent();
-            if(mIntent.hasExtra("Action")){
-                if(mIntent.getStringExtra("Action").equals("Accept")){
-                    StartCapture();
-                }
-            }
+    //包裹从某一营业网点转到下一网点，下一网点的扫描员扫描确认包裹，将包裹状态改为4（表示到达转运中心）
+    //根据扫描员自身的营业网点信息写入包裹历史，需要写的表packageroute和transhistory
+    private void pkgAcc() {
+        Log.d("PackageAccActivity执行了：","包裹确认方法");
+        if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ) {
+            Log.d("PackageAccActivity执行了：", "包裹状态运输中");
+            transPackageLoader = new TransPackageLoader(this, this);
+            transPackageLoader.changeTransPackgeStatus(transPackage, TransPackage.PKG_ACCED); //改变包裹状态
+
+            //往transhistory写入一条记录
+            TransHistory transHistory = inTransHistory.getData();
+            transHistory.setUIDTo(app.getLoginUser().getUID());
+            transHistoryLoader.AddOneTransHistory(transHistory);
+
+        }
+        else{
+            Toast.makeText(this,"包裹状态为"+transPackage.getStatus()+" 不符合要求",Toast.LENGTH_SHORT).show();
+        }
+    }
+    class  InExpress implements IDataAdapter<ExpressSheet>{
+
+        @Override
+        public ExpressSheet getData() {
+            return null;
         }
 
         @Override
-        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            Log.d("PackageAccActivity执行了这个","onActivityResult");
-            super.onActivityResult(requestCode, resultCode, data);
-            switch (resultCode){
-                case RESULT_OK:
-                    switch (requestCode){
-                        case REQUEST_CAPTURE:
-                            if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
-                                String id = data.getStringExtra("BarCode");
-                                TransPackageLoader transPackageLoader = new TransPackageLoader(this,this);
-                                transPackageLoader.Load(id);
-                            }
-                            break;
-                    }
-            }
+        public void setData(ExpressSheet data) {
 
-        }
-
-        //包裹从某一营业网点转到下一网点，下一网点的扫描员扫描确认包裹，将包裹状态改为4（表示到达转运中心）
-        //根据扫描员自身的营业网点信息写入包裹历史，需要写的表packageroute和transhistory
-        private void pkgAcc() {
-            Log.d("PackageAccActivity执行了：","包裹确认方法");
-
-
-            if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ){
-                Log.d("PackageAccActivity执行了：","包裹状态运输中");
-                transPackageLoader = new TransPackageLoader(this,this);
-                transPackageLoader.pkgAcc(transPackage.getID());  //改变包裹状态
-
-                //看一下他的状态是不是运输中
-                InTransHistory test = new InTransHistory();
-                test.addOnePkgHistory();
-
-            }
-            else{
-                Toast.makeText(this,"包裹状态为"+transPackage.getStatus()+" 不符合要求",Toast.LENGTH_SHORT).show();
-            }
-        }
-        class InTransHistory implements IDataAdapter<TransHistory>{
-
-            @Override
-            public TransHistory getData() {
-
-                return null;
-            }
-
-            @Override
-            public void setData(TransHistory data) {
-                Log.d("内部类InTransHistory执行：","setData");
-            }
-
-            @Override
-            public void notifyDataSetChanged() {
-
-            }
-
-            public void addOnePkgHistory() {
-                Log.d("内部类InTransHistory执行：","添加包裹历史");
-                //包裹历史添加一条数据,transhistory里面添加一条，并且改变package的状态为3转运中心（已确认），
-                TransHistory transHistory = new TransHistory();
-                transPackage.setStatus(TransPackage.PKG_ACHIEVED);
-                transHistory.setPkg(transPackage);
-                app = (ExTraceApplication)getApplicationContext();
-                transHistory.setUIDFrom(app.getLoginUser().getUID());  //得到登陆者的UID
-
-
-                Log.d("PackageAccActivity执行了：", String.valueOf(app.getLoginUser().getUID()));
-                transHistory.setUIDTo(TransPackage.PKG_ACCED);  //状态设为转运中心已确认
-
-                TransHistoryLoader transHistoryLoader =new TransHistoryLoader(this, PackageAccActivity.this);
-                transHistoryLoader.AddOneTransHistory(transHistory);
-            }
-        }
-        private void StartCapture(){
-            Intent intent = new Intent();
-            intent.putExtra("Action","Captrue");
-            intent.setClass(this, CaptureActivity.class);
-            startActivityForResult(intent, REQUEST_CAPTURE);
         }
 
         @Override
-        public TransPackage getData() {
-            return transPackage;
-        }
+        public void notifyDataSetChanged() {
 
+        }
+    }
+    class InTransHistory implements IDataAdapter<TransHistory>{
+
+        private  TransHistory recentTransHistory;
+        @Override
+        public TransHistory getData() {
+
+            return recentTransHistory;
+        }
 
         @Override
-        public void setData(TransPackage data) {
-            Log.d("PackageAccActivity执行了：","setData");
-            transPackage = data;
+        public void setData(TransHistory data) {
+            Log.d("内部类InTransHistory执行：","setData");
+            recentTransHistory = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
 
         }
+
+        public void addOnePkgHistory() {
+            Log.d("内部类InTransHistory执行：","添加包裹历史");
+            //包裹历史添加一条数据,transhistory里面添加一条，并且改变package的状态为3转运中心（已确认），
+            TransHistory transHistory = new TransHistory();
+            transPackage.setStatus(TransPackage.PKG_ACHIEVED);
+            transHistory.setPkg(transPackage);
+            app = (ExTraceApplication)getApplicationContext();
+            transHistory.setUIDFrom(app.getLoginUser().getUID());  //得到登陆者的UID
+
+
+            Log.d("PackageAccActivity执行了：", String.valueOf(app.getLoginUser().getUID()));
+            transHistory.setUIDTo(TransPackage.PKG_ACCED);  //状态设为转运中心已确认
+
+            TransHistoryLoader transHistoryLoader =new TransHistoryLoader(this, PackageAccActivity.this);
+            transHistoryLoader.AddOneTransHistory(transHistory);
+        }
+    }
+    private void StartCapture(){
+        Intent intent = new Intent();
+        intent.putExtra("Action","Captrue");
+        intent.setClass(this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CAPTURE);
+    }
+
+    @Override
+    public TransPackage getData() {
+        return transPackage;
+    }
+
+
+    @Override
+    public void setData(TransPackage data) {
+        Log.d("PackageAccActivity执行了：","setData");
+        transPackage = data;
+
+    }
 
     @Override
     public void notifyDataSetChanged() {

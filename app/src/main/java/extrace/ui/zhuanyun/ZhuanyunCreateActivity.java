@@ -21,9 +21,11 @@ import extrace.loader.ExpressLoader;
 import extrace.loader.TransHistoryListLoader;
 import extrace.loader.TransHistoryLoader;
 import extrace.loader.TransNodeLoader;
+import extrace.loader.TransPackageListLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
 import extrace.misc.model.ListTransHistory;
+import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
@@ -132,14 +134,25 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         }
 
 
-        //打包成一个列表一次性写入
+        //打包成一个列表一次性写入,并改变包裹状态
         if(transHistoryList.size() != 0){
             ListTransHistory listTransHistory = new ListTransHistory();
             listTransHistory.setTransHistoryList(transHistoryList);
             TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(),this);
             TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter,this);
             transHistoryListLoader.saveTransHistoryList(listTransHistory);
+
+//            ListTransPackage listTransPackage = new ListTransPackage();
+//            listTransPackage.setTransPackageList(itemList);
+//            //改变包裹状态为运输中
+//            PackageListAdapter packageListAdapter = new PackageListAdapter(new ArrayList<TransPackage>(),this);
+//            TransPackageListLoader transPackageListLoader = new TransPackageListLoader(packageListAdapter,this);
+//            transPackageListLoader.changeTransPackageListStatus(listTransPackage,TransPackage.PKG_TRSNSIT);
         }
+
+
+
+
 
     }
     private void StartCapture(){
@@ -245,24 +258,6 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         }
     }
 
-//    //第三个内部类
-//    class InZhuanyunActivityTransHistory implements IDataAdapter<TransHistory> {
-//
-//        @Override
-//        public TransHistory getData() {
-//            return null;
-//        }
-//
-//        @Override
-//        public void setData(TransHistory data) {
-//
-//        }
-//
-//        @Override
-//        public void notifyDataSetChanged() {
-//
-//        }
-//    }
     @Override
     public TransPackage getData() {
 

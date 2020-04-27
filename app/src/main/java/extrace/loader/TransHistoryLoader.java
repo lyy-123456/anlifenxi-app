@@ -3,8 +3,11 @@ package extrace.loader;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransNode;
+import extrace.misc.model.TransPackage;
 import extrace.net.HttpAsyncTask;
 import extrace.net.HttpResponseParam;
 import extrace.net.IDataAdapter;
@@ -26,6 +29,12 @@ public class TransHistoryLoader extends HttpAsyncTask {
     public void onDataReceive(String class_name, String json_data) {
         if(class_name.equals("N_TransPackage")){
             Toast.makeText(context,"包裹信息不存在",Toast.LENGTH_SHORT).show();
+        }else if(class_name.equals("TransHistory")){
+            TransHistory transHistory = JsonUtils.fromJson(json_data,new TypeToken<TransHistory>(){});
+            Toast.makeText(context,transHistory.toString(),Toast.LENGTH_SHORT).show();
+            adapter.setData(transHistory);
+
+            adapter.notifyDataSetChanged();
         }
         else {
             Toast.makeText(context,"成功",Toast.LENGTH_SHORT).show();
@@ -43,6 +52,17 @@ public class TransHistoryLoader extends HttpAsyncTask {
         Toast.makeText(context,"TranshistoryListLoader执行了AddOneTransHistory方法"+url,Toast.LENGTH_LONG).show();
         try{
             execute(url,"POST",json_data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //lyy 新增
+    public void getRecentOneTranHistory(TransPackage transPackage){
+        String jsonObj = JsonUtils.toJson(transPackage,true);
+        url += "getRecentOneTranHistory";
+        try{
+            execute(url,"POST",jsonObj);
         }catch (Exception e){
             e.printStackTrace();
         }

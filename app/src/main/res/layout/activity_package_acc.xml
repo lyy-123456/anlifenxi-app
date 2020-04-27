@@ -8,24 +8,51 @@
     android:gravity="center_horizontal"
     tools:context="extrace.ui.accPkg.PackageAccActivity">
 
-    <TextView
-        android:text="请您确认一下包裹信息："
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </TextView>
-    <TextView
-        android:id="@+id/pkg_ac_thing"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-    </TextView>
-
-    <Button
-        android:id="@+id/pkg_acc_btn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="扫描确认">
+        android:layout_weight="1">
+        <TextView
+            android:text="请您确认一下包裹信息："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    </Button>
+        </TextView>
+        <TextView
+            android:id="@+id/pkg_ac_thing"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+        </TextView>
+        <ListView
+            android:id="@+id/express_list_in_pkg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="50dp">
+        <Button
+            android:id="@+id/express_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="扫描快件">
+
+        </Button>
+        <Button
+            android:layout_marginLeft="20dp"
+            android:id="@+id/pkg_acc_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成确认">
+
+        </Button>
+    </LinearLayout>
+
 </LinearLayout>

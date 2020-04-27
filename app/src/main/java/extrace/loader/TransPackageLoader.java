@@ -101,4 +101,15 @@ public class TransPackageLoader extends HttpAsyncTask {
 		}
 	}
 
+	//lyy 新增改变一个包裹的状态
+	public void changeTransPackgeStatus(TransPackage transPackage, int status){
+		String jsonObj = JsonUtils.toJson(transPackage,true);
+		url += "changeTransPackgeStatus/"+status+"?_type=json";
+		try{
+			execute(url,"POST",jsonObj);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 }

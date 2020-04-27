@@ -24,7 +24,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.misc.TransNodeEditActivity"></activity>
+        <activity android:name="extrace.ui.accPkg.ExpressAccActivity"></activity>
+        <activity android:name="extrace.ui.misc.TransNodeEditActivity" />
         <activity android:name="extrace.ui.misc.TransNodeListActivity" />
         <activity android:name="extrace.ui.zhuanyun.ZhuanyunCreateActivity" />
         <activity android:name="extrace.ui.accPkg.PackageAccActivity" />
@@ -36,7 +37,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="wtAGf5NcONBHQtlBH0wR7jWSWfMjCNiS"/>
+            android:value="wtAGf5NcONBHQtlBH0wR7jWSWfMjCNiS" />
 
         <activity
             android:name=".MainActivity"
