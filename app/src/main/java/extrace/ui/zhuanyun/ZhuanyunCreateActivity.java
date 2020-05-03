@@ -135,11 +135,11 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 
 
         //打包成一个列表一次性写入,并改变包裹状态
-        if(transHistoryList.size() != 0){
+        if(transHistoryList.size() != 0) {
             ListTransHistory listTransHistory = new ListTransHistory();
             listTransHistory.setTransHistoryList(transHistoryList);
-            TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(),this);
-            TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter,this);
+            TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(), this);
+            TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter, this);
             transHistoryListLoader.saveTransHistoryList(listTransHistory);
 
 //            ListTransPackage listTransPackage = new ListTransPackage();
@@ -149,11 +149,6 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 //            TransPackageListLoader transPackageListLoader = new TransPackageListLoader(packageListAdapter,this);
 //            transPackageListLoader.changeTransPackageListStatus(listTransPackage,TransPackage.PKG_TRSNSIT);
         }
-
-
-
-
-
     }
     private void StartCapture(){
         Log.d("PackageEditActivity执行了这个：","StartCapture");

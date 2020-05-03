@@ -27,6 +27,7 @@ import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransPackage;
+import extrace.misc.model.UsersPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.domain.ExpressListAdapter;
 import extrace.ui.main.ExTraceApplication;
@@ -115,12 +116,6 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
                             //得到包裹中快件列表
                             ExpressListLoader expressListLoader = new ExpressListLoader(expressListAdapter,this);
                             expressListLoader.getExpressListInPackage(id);
-
-                            //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
-                            //1找到包裹历史里最近的一条记录
-                            inTransHistory = new InTransHistory();
-                            transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
-                            transHistoryLoader.getRecentOneTranHistory(transPackage);
                         }
                         break;
                     case REQUEST_CAPTURE_SCAN_EXPRESS:
@@ -147,13 +142,40 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
             transPackageLoader.changeTransPackgeStatus(transPackage, TransPackage.PKG_ACCED); //改变包裹状态
 
             //往transhistory写入一条记录
+            inTransHistory = new InTransHistory();
             TransHistory transHistory = inTransHistory.getData();
             transHistory.setUIDTo(app.getLoginUser().getUID());
             transHistoryLoader.AddOneTransHistory(transHistory);
 
+            //往userpackage里面写入一条数据
+            InUserPackage inUserPackage = new InUserPackage();
+            UsersPackage usersPackage = new UsersPackage();
+            usersPackage.setPkg(transPackage);
+            usersPackage.setUserU(app.getLoginUser());
+
+
+
         }
         else{
             Toast.makeText(this,"包裹状态为"+transPackage.getStatus()+" 不符合要求",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class InUserPackage implements IDataAdapter<UsersPackage>{
+
+        @Override
+        public UsersPackage getData() {
+            return null;
+        }
+
+        @Override
+        public void setData(UsersPackage data) {
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
         }
     }
     class  InExpress implements IDataAdapter<ExpressSheet>{
@@ -193,22 +215,6 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
 
         }
 
-        public void addOnePkgHistory() {
-            Log.d("内部类InTransHistory执行：","添加包裹历史");
-            //包裹历史添加一条数据,transhistory里面添加一条，并且改变package的状态为3转运中心（已确认），
-            TransHistory transHistory = new TransHistory();
-            transPackage.setStatus(TransPackage.PKG_ACHIEVED);
-            transHistory.setPkg(transPackage);
-            app = (ExTraceApplication)getApplicationContext();
-            transHistory.setUIDFrom(app.getLoginUser().getUID());  //得到登陆者的UID
-
-
-            Log.d("PackageAccActivity执行了：", String.valueOf(app.getLoginUser().getUID()));
-            transHistory.setUIDTo(TransPackage.PKG_ACCED);  //状态设为转运中心已确认
-
-            TransHistoryLoader transHistoryLoader =new TransHistoryLoader(this, PackageAccActivity.this);
-            transHistoryLoader.AddOneTransHistory(transHistory);
-        }
     }
     private void StartCapture(){
         Intent intent = new Intent();
@@ -227,6 +233,12 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     public void setData(TransPackage data) {
         Log.d("PackageAccActivity执行了：","setData");
         transPackage = data;
+        //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
+        //1找到包裹历史里最近的一条记录
+        inTransHistory = new InTransHistory();
+        transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
+        transHistoryLoader.getRecentOneTranHistory(transPackage);
+
 
     }
 
