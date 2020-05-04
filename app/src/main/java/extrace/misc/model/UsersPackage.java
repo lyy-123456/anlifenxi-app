@@ -1,6 +1,8 @@
 
 package extrace.misc.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class UsersPackage implements Serializable {
@@ -12,9 +14,9 @@ public class UsersPackage implements Serializable {
 	public UsersPackage() {
 	}
 		
-	private int SN;
-	private UserInfo userU;
-	private TransPackage pkg;
+	@Expose  private int SN;
+	@Expose  private UserInfo userU;
+	@Expose  private TransPackage pkg;
 	
 	public void setSN(int value) {
 		this.SN = value;

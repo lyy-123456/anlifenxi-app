@@ -81,7 +81,7 @@ public class TransPackageLoader extends HttpAsyncTask {
 	public void Save(TransPackage tp)
 	{
 		String jsonObj = JsonUtils.toJson(tp, true);
-		url += "saveTransPackage";
+		url += "saveOneTransPackage";
 		try {
 			execute(url, "POST", jsonObj);
 		} catch (Exception e) {
@@ -102,9 +102,9 @@ public class TransPackageLoader extends HttpAsyncTask {
 	}
 
 	//lyy 新增改变一个包裹的状态
-	public void changeTransPackgeStatus(TransPackage transPackage, int status){
+	public void changeTransPackageStatus(TransPackage transPackage, int status){
 		String jsonObj = JsonUtils.toJson(transPackage,true);
-		url += "changeTransPackgeStatus/"+status+"?_type=json";
+		url += "changeTransPackageStatus/"+status+"?_type=json";
 		try{
 			execute(url,"POST",jsonObj);
 		}catch (Exception e){

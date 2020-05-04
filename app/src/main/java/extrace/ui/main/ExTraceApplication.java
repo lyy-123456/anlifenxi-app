@@ -52,8 +52,7 @@ public class ExTraceApplication extends Application {
     }  
       
     public void onTerminate() {  
-        super.onTerminate();  
-          
+        super.onTerminate();
         //save data of the map  
     }  
 }

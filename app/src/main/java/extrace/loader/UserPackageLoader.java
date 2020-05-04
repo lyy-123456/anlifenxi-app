@@ -29,7 +29,7 @@ public class UserPackageLoader extends HttpAsyncTask {
 
     //lyy 新增
     public  void Save(UsersPackage usersPackage){
-        url += "SaveUsersPackage";
+        url += "saveUsersPackage";
         String jsonObj = JsonUtils.toJson(usersPackage,true);
         try{
             execute(url,"POST",jsonObj);

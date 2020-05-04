@@ -16,10 +16,14 @@ import android.widget.Toast;
 import java.util.Date;
 
 import extrace.loader.TransPackageLoader;
+import extrace.loader.UserInfoLoader;
+import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
 import extrace.ui.misc.RegionListActivity;
+import extrace.ui.misc.TransNodeListActivity;
+import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 import zxing.util.CaptureActivity;
 
 
@@ -38,6 +42,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     private Button create_pkg_Btn; //提交按钮
     private EditText sourceName;   //本站信息
     private  EditText endName;     //终点站信息
+
 
     private TransPackage transPackage;
 
@@ -94,20 +99,17 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         String pkgId = packageIdView.getText().toString();
         String sourcePostCode = sourcePostCodeView.getText().toString();
         String endPostCode = endPostCodeView.getText().toString();
-//        Log.d("crearePkg",pkgId);
-//        Log.d("crearePkg",sourcePostCode);
-//        Log.d("crearePkg",endPostCode);
-        if(pkgId == null || "".equals(pkgId)) {
+        if("".equals(pkgId)) {
             Toast.makeText(this,"包裹ID不能为空！",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(sourcePostCode==null || "".equals(sourcePostCode)){
+        if( "".equals(sourcePostCode)){
             Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(endPostCode ==null || "".equals(endPostCode)){
+        if("".equals(endPostCode)){
             Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
             return ;
         }
@@ -137,33 +139,14 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     //得到源站的网点编号
     private void getSourceRegion() {
         Intent intent = new Intent();
-        intent.setClass(this, RegionListActivity.class);
-        try{
-            String rCode = sourcePostCodeView.getText().toString();
-            //String rString = mRegionView.getText().toString();
-            intent.putExtra("RegionId", rCode);
-            //intent.putExtra("RegionString", rString);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        intent.setClass(this, TransNodeListActivity.class);
         startActivityForResult(intent, REQUEST_SPOSTCODE);
     }
 
     //得到终点站的邮编
     private void getEndRegion() {
         Intent intent = new Intent();
-        intent.setClass(this, RegionListActivity.class);
-        try{
-            String rCode = endPostCodeView.getText().toString();
-            //String rString = mRegionView.getText().toString();
-            intent.putExtra("RegionId", rCode);
-            //intent.putExtra("RegionString", rString);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
+        intent.setClass(this, TransNodeListActivity.class);
         startActivityForResult(intent, REQUEST_EPOSTCODE);
     }
 
@@ -182,28 +165,19 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                         break;
                         //源点邮编
                     case REQUEST_SPOSTCODE:
-                        String sregionId;
-                        if (data.hasExtra("RegionId")) {
-                            sregionId = data.getStringExtra("RegionId");
-                            //regionString = data.getStringExtra("RegionString");
-                        } else {
-                            sregionId = "";
-                            //regionString = "";
-                        }
-                        sourcePostCodeView.setText(sregionId);
-                        searchSource(sregionId); //查询源站信息
+                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
+                        Bundle bundle = data.getExtras();
+                        TransNode transNode = (TransNode) bundle.getSerializable("TransNode");
+                        sourcePostCodeView.setText(transNode.getID());
+                        sourceName.setText(transNode.getNodeName());
                         break;
                         //终点邮编
                     case REQUEST_EPOSTCODE:
-                        String eregionId;
-                        if (data.hasExtra("RegionId")) {
-                            eregionId = data.getStringExtra("RegionId");
-                            //regionString = data.getStringExtra("RegionString");
-                        } else {
-                            eregionId = "";
-                            //regionString = "";
-                        }
-                        endPostCodeView.setText(eregionId);
+                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
+                        Bundle bundle1 = data.getExtras();
+                        TransNode transNode1 = (TransNode) bundle1.getSerializable("TransNode");
+                        endPostCodeView.setText(transNode1.getID());
+                        endName.setText(transNode1.getNodeName());
                         break;
 
                 }
@@ -213,10 +187,6 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         }
     }
 
-    //查询源站信息
-    private void searchSource(String regionCode) {
-
-    }
 
     @Override
     public TransPackage getData()

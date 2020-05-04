@@ -146,12 +146,6 @@ public class TransNodeListActivity extends AppCompatActivity {
         public PlaceholderFragmentInTranNode(){
 
         }
-        private void SelectOk()
-        {
-            mIntent.putExtra("CustomerInfo",selectItem);
-            this.getActivity().setResult(RESULT_OK, mIntent);
-            this.getActivity().finish();  //界面直接关闭
-        }
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             Log.d("PlaceholderFragmentInTranNode执行了这个","onActivityCreated");

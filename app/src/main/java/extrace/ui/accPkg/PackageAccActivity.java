@@ -23,6 +23,7 @@ import extrace.loader.ExpressLoader;
 import extrace.loader.TransHistoryLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.TransHistoryListLoader;
+import extrace.loader.UserPackageLoader;
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransHistory;
@@ -77,6 +78,8 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         expressListAdapter  =new ExpressListAdapter(new ArrayList<ExpressSheet>(),this,"ExDLV");
         express_list_in_pkg.setAdapter(expressListAdapter);
 
+        app = (ExTraceApplication)this.getApplication();
+        Log.d("生成的用户获取：",app.getLoginUser().toString());
         express_scan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +93,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
             }
         }
 
+        inTransHistory = new InTransHistory();
         //得到本站的信息
     }
 
@@ -136,23 +140,38 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     //根据扫描员自身的营业网点信息写入包裹历史，需要写的表packageroute和transhistory
     private void pkgAcc() {
         Log.d("PackageAccActivity执行了：","包裹确认方法");
-        if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ) {
-            Log.d("PackageAccActivity执行了：", "包裹状态运输中");
-            transPackageLoader = new TransPackageLoader(this, this);
-            transPackageLoader.changeTransPackgeStatus(transPackage, TransPackage.PKG_ACCED); //改变包裹状态
 
-            //往transhistory写入一条记录
-            inTransHistory = new InTransHistory();
-            TransHistory transHistory = inTransHistory.getData();
+        if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ) {
+
+            //1改变包裹状态
+            Log.d("PackageAccActivity执行了：", "包裹状态运输中");
+            //transPackage.setStatus(TransPackage.PKG_ACCED);
+            transPackageLoader = new TransPackageLoader(this, this);
+            transPackageLoader.changeTransPackageStatus(transPackage, TransPackage.PKG_ACCED); //改变包裹状态
+
+
+            //2:往transhistory写入一条记录,包裹确认获取上一站的历史，然后将其setuid改为本站的
+            TransHistory transHistory = new TransHistory();
+            TransHistory recent = inTransHistory.getData();
+            transHistory.setPkg(recent.getPkg());
+            transHistory.setX(recent.getX());
+            transHistory.setY(recent.getY());
+            transHistory.setUIDFrom(recent.getUIDFrom());
             transHistory.setUIDTo(app.getLoginUser().getUID());
+
+            Log.d("pkgAcc 生成的用户获取：",transHistory.toString());
+            transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
             transHistoryLoader.AddOneTransHistory(transHistory);
 
             //往userpackage里面写入一条数据
             InUserPackage inUserPackage = new InUserPackage();
             UsersPackage usersPackage = new UsersPackage();
-            usersPackage.setPkg(transPackage);
+            TransPackage transPackage1 = transPackage;
+            transPackage1.setStatus(TransPackage.PKG_ACCED);
+            usersPackage.setPkg(transPackage1);
             usersPackage.setUserU(app.getLoginUser());
-
+            UserPackageLoader userPackageLoader = new UserPackageLoader(inUserPackage,this);
+            userPackageLoader.Save(usersPackage);
 
 
         }
@@ -197,16 +216,15 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     }
     class InTransHistory implements IDataAdapter<TransHistory>{
 
-        private  TransHistory recentTransHistory;
+        private   TransHistory recentTransHistory;
         @Override
         public TransHistory getData() {
-
             return recentTransHistory;
         }
 
         @Override
         public void setData(TransHistory data) {
-            Log.d("内部类InTransHistory执行：","setData");
+            //Log.d("生成的用户获取：",app.getLoginUser().toString());
             recentTransHistory = data;
         }
 
@@ -235,7 +253,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         transPackage = data;
         //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
         //1找到包裹历史里最近的一条记录
-        inTransHistory = new InTransHistory();
+
         transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
         transHistoryLoader.getRecentOneTranHistory(transPackage);
 
