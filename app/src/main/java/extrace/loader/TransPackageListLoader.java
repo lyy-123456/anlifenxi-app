@@ -48,4 +48,14 @@ public class TransPackageListLoader extends HttpAsyncTask{
 			e.printStackTrace();
 		}
 	}
+
+    public void changeExpressStatusInTransPackageList(ListTransPackage listTransPackage, int yuan_status, int mubiao_status) {
+		String jsonObj = JsonUtils.toJson(listTransPackage,true);
+		url += "changeExpressStatusInTransPackageList/"+yuan_status+"/"+mubiao_status+"?_type=json";
+		try{
+			execute(url,"POST",jsonObj);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+    }
 }

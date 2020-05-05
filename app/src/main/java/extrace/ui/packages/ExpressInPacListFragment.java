@@ -212,7 +212,7 @@ public class ExpressInPacListFragment extends ListFragment {
     private void DeleteItem() {
         listExpress.remove(selectItem.toString()); //先将他删除
         elistLoader = new ExpressListLoader(eAdapter,this.getActivity());
-        elistLoader.MoveExpressFromPackage(selectItem.getID(),transPackage.getID());
+        elistLoader.DeleteExpressFromPackage(selectItem.getID(),transPackage.getID());
         eAdapter.getData().remove(selectItem);
         eAdapter.notifyDataSetChanged();
     }

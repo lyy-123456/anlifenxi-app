@@ -19,6 +19,7 @@ import extrace.loader.ExpressListLoader;
 import extrace.loader.ExpressLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.misc.model.ExpressSheet;
+import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.accPkg.PackageAccActivity;
@@ -36,6 +37,7 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
     private ExpressInPacListFragment expressInPacListFragment;
     private List<ExpressSheet> listExpress;
     private ExpressSheet eItem;
+    private TransNode transNode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         transPackage = (TransPackage) bundle.getSerializable("transPackage");
+        transNode = (TransNode)bundle.getSerializable("sTransNode");
         bundle.putString("Action","Init");
         //Toast.makeText(this,transPackage.toString(),Toast.LENGTH_SHORT).show();
 

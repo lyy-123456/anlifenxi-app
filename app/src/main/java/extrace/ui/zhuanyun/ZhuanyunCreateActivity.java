@@ -24,6 +24,7 @@ import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageListLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
+import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.ListTransHistory;
 import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.TransHistory;
@@ -128,26 +129,34 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
             transHistory.setY(nowTranNode.getY());
 
             transHistoryList.add(transHistory);
-//            InZhuanyunActivityTransHistory inZhuanyunActivityTransHistory = new InZhuanyunActivityTransHistory();
-//            transHistoryLoader = new TransHistoryLoader(inZhuanyunActivityTransHistory,this);
-//            transHistoryLoader.AddOneTransHistory();
+
         }
 
 
-        //打包成一个列表一次性写入,并改变包裹状态
+        //2打包成一个列表一次性写入,并改变包裹状态
         if(transHistoryList.size() != 0) {
+
+            //2.1往Transhistory里面写入数据
             ListTransHistory listTransHistory = new ListTransHistory();
             listTransHistory.setTransHistoryList(transHistoryList);
             TransHistoryListAdapter transHistoryListAdapter = new TransHistoryListAdapter(new ArrayList<TransHistory>(), this);
             TransHistoryListLoader transHistoryListLoader = new TransHistoryListLoader(transHistoryListAdapter, this);
             transHistoryListLoader.saveTransHistoryList(listTransHistory);
 
-//            ListTransPackage listTransPackage = new ListTransPackage();
-//            listTransPackage.setTransPackageList(itemList);
-//            //改变包裹状态为运输中
-//            PackageListAdapter packageListAdapter = new PackageListAdapter(new ArrayList<TransPackage>(),this);
-//            TransPackageListLoader transPackageListLoader = new TransPackageListLoader(packageListAdapter,this);
-//            transPackageListLoader.changeTransPackageListStatus(listTransPackage,TransPackage.PKG_TRSNSIT);
+            //2.2改变包裹状态
+            ListTransPackage listTransPackage = new ListTransPackage();
+            listTransPackage.setTransPackageList(itemList);
+            //改变包裹状态为运输中
+            PackageListAdapter packageListAdapter = new PackageListAdapter(new ArrayList<TransPackage>(),this);
+            TransPackageListLoader transPackageListLoader = new TransPackageListLoader(packageListAdapter,this);
+            transPackageListLoader.changeTransPackageListStatus(listTransPackage,TransPackage.PKG_TRSNSIT);
+
+            //2.3往改变包裹里的快件的状态为运输中
+            PackageListAdapter packageListAdapter1 =  new PackageListAdapter(new ArrayList<TransPackage>(),this);
+            TransPackageListLoader transPackageListLoader1 = new TransPackageListLoader(packageListAdapter,this);
+            transPackageListLoader1.changeExpressStatusInTransPackageList(listTransPackage,ExpressSheet.STATUS.STATUS_DAIZHUAYUN, ExpressSheet.STATUS.STATUS_TRANSPORT);
+            //2.4开启GPS定位给 每隔n分钟获取位置信息并记录到packageroute中
+
         }
     }
     private void StartCapture(){

@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
@@ -14,7 +17,7 @@ public class ExTraceApplication extends Application {
 //	String mServerUrl;
 //	String mMiscService,mDomainService;
     UserInfo userInfo;
-    
+
     public String getServerUrl() {
         return settings.getString("ServerUrl", "");
     }  

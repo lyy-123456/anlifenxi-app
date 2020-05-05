@@ -6,7 +6,13 @@
 
     <dist:module dist:instant="true" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 获取网络状态，根据网络状态切换进行数据请求网络转换 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,20 +30,21 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.accPkg.ExpressAccActivity"></activity>
+        <activity android:name="extrace.ui.zhuanyun.GpsLocationActivity"></activity>
+        <activity android:name="extrace.ui.accPkg.ExpressAccActivity" />
         <activity android:name="extrace.ui.misc.TransNodeEditActivity" />
         <activity android:name="extrace.ui.misc.TransNodeListActivity" />
         <activity android:name="extrace.ui.zhuanyun.ZhuanyunCreateActivity" />
         <activity android:name="extrace.ui.accPkg.PackageAccActivity" />
         <activity android:name="extrace.ui.packages.PackageEditActivity" />
-
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"> </service>
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="wtAGf5NcONBHQtlBH0wR7jWSWfMjCNiS" />
+            android:value="a9MkO1zPpXIL63QyaADp8fzzmHivp8D5" />
 
         <activity
             android:name=".MainActivity"

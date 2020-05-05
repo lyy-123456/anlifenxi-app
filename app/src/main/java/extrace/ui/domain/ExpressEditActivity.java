@@ -269,7 +269,8 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			e.printStackTrace();
 		}		
 	}
-	
+
+	//快件揽收
 	void Receive(String id){
 		try {
 			mLoader = new ExpressLoader(this, this);
@@ -470,13 +471,19 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			String stText = "";
 			switch(es.getStatus()){
 			case ExpressSheet.STATUS.STATUS_CREATED:
-				stText = "正在创建";
+				stText = "待揽收";
 				break;
 			case ExpressSheet.STATUS.STATUS_TRANSPORT:
-				stText = "运送途中";
+				stText = "运输中";
 				break;
 			case ExpressSheet.STATUS.STATUS_DELIVERIED:
 				stText = "已交付";
+				break;
+			case ExpressSheet.STATUS.STATUS_PAISONG:
+				stText = "派送中";
+				break;
+			case ExpressSheet.STATUS.STATUS_DAIZHUAYUN:
+				stText="等待转运";
 				break;
 			}
 			mStatusView.setText(stText);

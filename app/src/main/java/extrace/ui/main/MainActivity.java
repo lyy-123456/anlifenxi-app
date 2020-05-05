@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import extrace.ui.domain.ExpressListFragment;
 import extrace.ui.domain.ExpressListFragment.OnFragmentInteractionListener;
+import extrace.ui.zhuanyun.GpsLocationActivity;
 import extrace.ui.zhuanyun.TestActivity;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener,OnFragmentInteractionListener {
@@ -80,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch(id){
+        case R.id.action_my_location:
+            Intent intent2 = new Intent();
+            intent2.setClass(this, GpsLocationActivity.class);
+            startActivity(intent2);
+            return true;
         case R.id.action_login:
             Intent intent1 = new Intent();
             intent1.setClass(this, TestActivity.class);

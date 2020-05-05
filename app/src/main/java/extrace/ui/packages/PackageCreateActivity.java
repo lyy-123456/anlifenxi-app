@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.MessageQueue;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +16,16 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+import extrace.loader.PackageRouteLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
+import extrace.loader.UserPackageLoader;
+import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
+import extrace.misc.model.UsersPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
 import extrace.ui.misc.RegionListActivity;
 import extrace.ui.misc.TransNodeListActivity;
@@ -43,7 +49,8 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     private EditText sourceName;   //本站信息
     private  EditText endName;     //终点站信息
 
-
+    private TransNode stransNode;
+    private TransNode etransNode;
     private TransPackage transPackage;
 
     private TransPackageLoader tLoader;
@@ -96,6 +103,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     //创建一个包裹，并跳转到包裹内部页面
     private  void createPkg(){
 
+        ExTraceApplication app = (ExTraceApplication)this.getApplication();
         String pkgId = packageIdView.getText().toString();
         String sourcePostCode = sourcePostCodeView.getText().toString();
         String endPostCode = endPostCodeView.getText().toString();
@@ -123,11 +131,62 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         transPackage.setStatus(TransPackage.PKG_NEW);
         tLoader.New(transPackage);
 
+        //往userspackage中心写入一条数据，代表该用户打的包裹
+        InUsersPackage inUsersPackage= new InUsersPackage();
+        UserPackageLoader userPackageLoader = new UserPackageLoader(inUsersPackage,this);
 
+        UsersPackage usersPackage = new UsersPackage();
+        usersPackage.setPkg(transPackage);
+        usersPackage.setUserU(app.getLoginUser());
+        userPackageLoader.Save(usersPackage);
         Log.d("创建一个新的包裹",transPackage.toString());
-        //创建一个包裹，然后跳转到包裹新建页面，将包裹信息传到包裹信息编辑页面
+
+        //往packageroute里面添加一条数据
+        InPackageRoute inPackageRoute = new InPackageRoute();
+        PackageRouteLoader packageRouteLoader = new PackageRouteLoader(inPackageRoute,this);
+        PackageRoute packageRoute = new PackageRoute();
+        packageRoute.setPkg(transPackage);
+        stransNode.setX((float) 10);
+        stransNode.setY((float) 11.1);
+        packageRoute.setX(stransNode.getX());
+        packageRoute.setY(stransNode.getY());
+        packageRouteLoader.Save(packageRoute);
     }
 
+    class InPackageRoute implements IDataAdapter<PackageRoute>{
+
+        @Override
+        public PackageRoute getData() {
+            return null;
+        }
+
+        @Override
+        public void setData(PackageRoute data) {
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
+    class InUsersPackage implements IDataAdapter<UsersPackage>{
+        UsersPackage usersPackage;
+        @Override
+        public UsersPackage getData() {
+            return usersPackage;
+        }
+
+        @Override
+        public void setData(UsersPackage data) {
+            usersPackage = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     //扫描条形码
     private void StartCapture(){
         Intent intent = new Intent();
@@ -167,17 +226,17 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                     case REQUEST_SPOSTCODE:
                         Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
                         Bundle bundle = data.getExtras();
-                        TransNode transNode = (TransNode) bundle.getSerializable("TransNode");
-                        sourcePostCodeView.setText(transNode.getID());
-                        sourceName.setText(transNode.getNodeName());
+                        stransNode = (TransNode) bundle.getSerializable("TransNode");
+                        sourcePostCodeView.setText(stransNode.getID());
+                        sourceName.setText(stransNode.getNodeName());
                         break;
                         //终点邮编
                     case REQUEST_EPOSTCODE:
                         Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
                         Bundle bundle1 = data.getExtras();
-                        TransNode transNode1 = (TransNode) bundle1.getSerializable("TransNode");
-                        endPostCodeView.setText(transNode1.getID());
-                        endName.setText(transNode1.getNodeName());
+                        etransNode = (TransNode) bundle1.getSerializable("TransNode");
+                        endPostCodeView.setText(etransNode.getID());
+                        endName.setText(etransNode.getNodeName());
                         break;
 
                 }
@@ -204,6 +263,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         //Log.d("创建一个新的包裹",transPackage.toString());
         Bundle bundle = new Bundle();
         bundle.putSerializable("transPackage",transPackage);
+        bundle.putSerializable("sTransNode",stransNode);
         Intent intent = new Intent();
         intent.putExtras(bundle);
 

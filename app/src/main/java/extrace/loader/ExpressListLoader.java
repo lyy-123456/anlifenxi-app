@@ -103,4 +103,13 @@ public class ExpressListLoader extends HttpAsyncTask {
 			e.printStackTrace();
 		}
 	}
+
+	public void DeleteExpressFromPackage(String id, String pkgId) {
+		url += "DeleteExpressIntoPackage/"+id+"/"+pkgId+"?_type=json";
+		try {
+			execute(url, "GET");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
