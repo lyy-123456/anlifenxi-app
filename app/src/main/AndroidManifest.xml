@@ -62,7 +62,7 @@
             android:name="extrace.ui.packageopenning.PackageOpenActivity"
             android:label="包裹拆包" />
         <activity
-            android:name="extrace.ui.zhuanyun.TestActivity"
+            android:name="extrace.ui.zhuanyun.MyLocationActivity"
             android:label="转运" />
         <activity
             android:name="extrace.ui.misc.CustomerListActivity"

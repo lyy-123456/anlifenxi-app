@@ -17,4 +17,24 @@ public class ListTransPackage implements Serializable {
     public void setTransPackageList(List<TransPackage> transPackageList) {
         this.transPackageList = transPackageList;
     }
+    public String toString() {
+        return toString(false);
+    }
+    private String toString(boolean b) {
+
+        if(b) {
+            return "null";
+        }
+        else {
+            StringBuffer sb = new StringBuffer();
+            if(transPackageList != null){
+                for(TransPackage transPackage:transPackageList){
+                    sb.append(transPackage.toString());
+                }
+            }
+            return sb.toString();
+        }
+
+    }
+
 }

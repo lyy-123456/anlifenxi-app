@@ -1,6 +1,8 @@
 package extrace.ui.zhuanyun;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,23 +10,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 
 import GPS.LocationService;
+import extrace.loader.PackageRouteLoader;
+import extrace.misc.model.ListTransPackage;
+import extrace.misc.model.PackageRoute;
+import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
 
-public class TestActivity extends AppCompatActivity {
+public class MyLocationActivity extends AppCompatActivity {
     private LocationService locationService;
     private TextView mTextView;
     private Button button;
+    private ListTransPackage listTransPackage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
+        Log.d("myLocation中的listTransPackage","onCreate");
+        setTitle("转运定位");
+        Intent mIntent = this.getIntent();
+        Bundle bundle = mIntent.getExtras();
+        if(bundle!= null ){
+            Log.d("myLocation中的listTransPackage","BUNDLE！=null");
+            listTransPackage = (ListTransPackage) bundle.getSerializable("ListTransPackage");
+            if (listTransPackage != null){
+                Log.d("myLocation中的listTransPackage",listTransPackage.toString());
+                Toast.makeText(this,"listTransPackage",Toast.LENGTH_SHORT).show();
+            }
+        }
 
         mTextView = findViewById(R.id.textView01);
         button = findViewById(R.id.button);
@@ -67,6 +87,11 @@ public class TestActivity extends AppCompatActivity {
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
                 button.setText("停止定位");
+
+                //得到经纬度：写入packageRoute
+                writePackageRoute(location);
+
+
                 StringBuilder sb = new StringBuilder(256);
                 sb.append("time : ");
                 /**
@@ -151,6 +176,35 @@ public class TestActivity extends AppCompatActivity {
 
     };
 
+    //操作pckageroute表，写入数据
+    private void writePackageRoute(BDLocation location) {
+
+        if(listTransPackage == null || listTransPackage.getTransPackageList().size() == 0){
+            Toast.makeText(this,"包裹为空！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        InPackageRoute inPackageRoute = new InPackageRoute();
+        PackageRouteLoader packageRouteLoader = new PackageRouteLoader(inPackageRoute,this);
+        packageRouteLoader.SaveListPackageRoute(listTransPackage,(float) location.getLongitude(),(float) location.getLatitude());
+    }
+
+    class InPackageRoute implements IDataAdapter<PackageRoute>{
+
+        @Override
+        public PackageRoute getData() {
+            return null;
+        }
+
+        @Override
+        public void setData(PackageRoute data) {
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     /**
      * 显示请求字符串
      */

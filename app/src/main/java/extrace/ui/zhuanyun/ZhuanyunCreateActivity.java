@@ -1,6 +1,5 @@
 package extrace.ui.zhuanyun;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,13 +16,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import extrace.loader.ExpressLoader;
 import extrace.loader.TransHistoryListLoader;
 import extrace.loader.TransHistoryLoader;
 import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageListLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
+import extrace.loader.UserPackageLoader;
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.ListTransHistory;
 import extrace.misc.model.ListTransPackage;
@@ -31,6 +30,7 @@ import extrace.misc.model.TransHistory;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
 import extrace.misc.model.UserInfo;
+import extrace.misc.model.UsersPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.accPkg.TransHistoryListAdapter;
 import extrace.ui.main.ExTraceApplication;
@@ -153,10 +153,21 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 
             //2.3往改变包裹里的快件的状态为运输中
             PackageListAdapter packageListAdapter1 =  new PackageListAdapter(new ArrayList<TransPackage>(),this);
-            TransPackageListLoader transPackageListLoader1 = new TransPackageListLoader(packageListAdapter,this);
+            TransPackageListLoader transPackageListLoader1 = new TransPackageListLoader(packageListAdapter1,this);
             transPackageListLoader1.changeExpressStatusInTransPackageList(listTransPackage,ExpressSheet.STATUS.STATUS_DAIZHUAYUN, ExpressSheet.STATUS.STATUS_TRANSPORT);
-            //2.4开启GPS定位给 每隔n分钟获取位置信息并记录到packageroute中
 
+            //2.4往userpacakge里面写入数据
+            InUsersPackage inUsersPackage = new InUsersPackage();
+            UserPackageLoader userPackageLoader = new UserPackageLoader(inUsersPackage,this);
+            userPackageLoader.saveUsersPackageList(listTransPackage,((ExTraceApplication)this.getApplication()).getLoginUser().getUID());
+            //2.4开启GPS定位给 每隔8秒获取位置信息并记录到pkageroute中
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("ListTransPackage", listTransPackage);
+            Log.d("Zhuanyun中的listTransPackage",listTransPackage.toString());
+            intent.putExtras(bundle);
+            intent.setClass(this, MyLocationActivity.class);
+            startActivity(intent);
         }
     }
     private void StartCapture(){
@@ -208,6 +219,23 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         }
     }
 
+    class InUsersPackage implements IDataAdapter<UsersPackage>{
+
+        @Override
+        public UsersPackage getData() {
+            return null;
+        }
+
+        @Override
+        public void setData(UsersPackage data) {
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     //内部类
     class  InZhuanyunActivityUserInfo implements IDataAdapter<UserInfo>{
 

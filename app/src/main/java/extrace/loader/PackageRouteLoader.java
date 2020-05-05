@@ -3,6 +3,7 @@ package extrace.loader;
 import android.app.Activity;
 
 import extrace.misc.model.ExpressSheet;
+import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.PackageRoute;
 import extrace.net.HttpAsyncTask;
 import extrace.net.HttpResponseParam;
@@ -34,6 +35,17 @@ public class PackageRouteLoader extends HttpAsyncTask {
     public void Save(PackageRoute packageRoute) {
         String jsonObj = JsonUtils.toJson(packageRoute,true);
         url += "saveOnePackageRoute";
+        try{
+            execute(url,"POST",jsonObj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //lyy 新增
+    public void SaveListPackageRoute(ListTransPackage listTransPackage,float x,float y) {
+        String jsonObj = JsonUtils.toJson(listTransPackage,true);
+        url += "saveListPackageRoute/"+x+"/"+y+"?_type=json";
         try{
             execute(url,"POST",jsonObj);
         }catch (Exception e){

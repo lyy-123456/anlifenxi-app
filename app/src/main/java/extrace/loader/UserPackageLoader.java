@@ -2,6 +2,7 @@ package extrace.loader;
 
 import android.app.Activity;
 
+import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.UserInfo;
 import extrace.misc.model.UsersPackage;
 import extrace.net.HttpAsyncTask;
@@ -40,5 +41,15 @@ public class UserPackageLoader extends HttpAsyncTask {
     @Override
     public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {
 
+    }
+
+    public void saveUsersPackageList(ListTransPackage listTransPackage, int uid) {
+        url += "saveUsersPackageList/"+uid+"?_type=json";
+        String jsonObj = JsonUtils.toJson(listTransPackage,true);
+        try{
+            execute(url,"POST",jsonObj);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
