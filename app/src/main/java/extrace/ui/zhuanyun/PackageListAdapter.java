@@ -89,15 +89,9 @@ public class PackageListAdapter extends ArrayAdapter<TransPackage> implements ID
             case TransPackage.PKG_TRSNSIT:
                 s = "运输中";
                 break;
-            case TransPackage.PKG_ACCED:
-                s = "已接收";
-                break;
             case TransPackage.PKG_UNPACKED:
                 s="已拆包";
                  break;
-            case TransPackage.PKG_ACHIEVED:
-                s ="已到达";
-                break;
              default:
                 s = "错误";
         }

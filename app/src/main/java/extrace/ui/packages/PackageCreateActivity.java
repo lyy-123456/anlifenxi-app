@@ -121,15 +121,17 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
             Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
             return ;
         }
-        //满足要求创建一个包裹,检查包裹是否存在？
-        tLoader = new TransPackageLoader(this,this);
-        transPackage = new TransPackage();
-        transPackage.setID(pkgId);
-        transPackage.setSourceNode(sourcePostCode);
-        transPackage.setTargetNode(endPostCode);
-        transPackage.setCreateTime(new Date());
-        transPackage.setStatus(TransPackage.PKG_NEW);
-        tLoader.New(transPackage);
+        if(transPackage == null){
+            //如果包裹不存在 新建包裹
+            tLoader = new TransPackageLoader(this,this);
+            transPackage = new TransPackage();
+            transPackage.setID(pkgId);
+            transPackage.setSourceNode(sourcePostCode);
+            transPackage.setTargetNode(endPostCode);
+            transPackage.setCreateTime(new Date());
+            transPackage.setStatus(TransPackage.PKG_NEW);
+            tLoader.New(transPackage);
+        }
 
         //往userspackage中心写入一条数据，代表该用户打的包裹
         InUsersPackage inUsersPackage= new InUsersPackage();
@@ -151,6 +153,17 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         packageRoute.setX(stransNode.getX());
         packageRoute.setY(stransNode.getY());
         packageRouteLoader.Save(packageRoute);
+
+        //Log.d("创建一个新的包裹",transPackage.toString());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("transPackage",transPackage);
+        bundle.putSerializable("sTransNode",stransNode);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+
+        //先用this
+        intent.setClass(this, PackageEditActivity.class);
+        startActivityForResult(intent, REQUEST_CREATE_PKG);
     }
 
     class InPackageRoute implements IDataAdapter<PackageRoute>{
@@ -190,7 +203,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     //扫描条形码
     private void StartCapture(){
         Intent intent = new Intent();
-        intent.putExtra("Action","Captrue");
+        intent.putExtra("Action","Capture");
         intent.setClass(this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CAPTURE);
     }
@@ -219,7 +232,9 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                         if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
                             String id = data.getStringExtra("BarCode");
                             Log.d("包裹编号：",id);
-                            packageIdView.setText(id);
+                            //得到id 判断包裹是否存在如果存在那么
+                            tLoader = new TransPackageLoader(this,this);
+                            tLoader.Load(id);
                         }
                         break;
                         //源点邮编
@@ -257,19 +272,28 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
     @Override
     public void setData(TransPackage data) {
         Log.d("PackageCreateActivity执行了这个：","setData");
-        transPackage = data;
+        if(data.getStatus() == TransPackage.PKG_NEW){
+            transPackage = data;
+            RefreshUI();
+        }
+        else{
+            Toast.makeText(this,"包裹状态错误"+data.getStatus(),Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void RefreshUI() {
+//        private EditText  packageIdView;  //包裹编号
+//        private  EditText sourcePostCodeView;  //打包地网点编号
+//        private EditText endPostCodeView;
+//        private ImageButton sourcePostCodeBtnView;  //终点站网点编号
+//        private ImageButton endPostCodeBtnView;   //获取地址的按钮
+//        private Button create_pkg_Btn; //提交按钮
+//        private EditText sourceName;   //本站信息
+//        private  EditText endName;     //终点站信息
 
-        //Log.d("创建一个新的包裹",transPackage.toString());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("transPackage",transPackage);
-        bundle.putSerializable("sTransNode",stransNode);
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
-
-        //先用this
-        intent.setClass(this, PackageEditActivity.class);
-        startActivityForResult(intent, REQUEST_CREATE_PKG);
+        packageIdView.setText(transPackage.getID());
+        sourcePostCodeView.setText(transPackage.getSourceNode());
+        endPostCodeView.setText(transPackage.getTargetNode());
     }
 
     @Override

@@ -42,8 +42,13 @@ public class ExpressListLoader extends HttpAsyncTask {
 		}
 		else{
 			List<ExpressSheet> cstm = JsonUtils.fromJson(json_data, new TypeToken<List<ExpressSheet>>(){});
-			adapter.setData(cstm);
-			adapter.notifyDataSetChanged();
+			if(cstm.size() == 0){
+				Toast.makeText(context, "不存在符合要求的快件", Toast.LENGTH_SHORT).show();
+			}else{
+				adapter.setData(cstm);
+				adapter.notifyDataSetChanged();
+			}
+
 		}
 	}
 

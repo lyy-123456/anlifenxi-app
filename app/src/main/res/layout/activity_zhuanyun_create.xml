@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:text="请选择包裹下一站："
+                android:text="包裹下一站："
                 android:layout_marginLeft="6dp"
                 android:gravity="center"
                 android:textColor="@color/black"

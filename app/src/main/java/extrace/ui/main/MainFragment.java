@@ -75,13 +75,17 @@ public class MainFragment  extends Fragment {
         rootView.findViewById(R.id.action_pk_exp_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StartOpenPackage();
 				Log.d("adsa","包裹拆包");
             }
+
+
         });
         rootView.findViewById(R.id.action_pk_exp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 				Log.d("adsa","包裹拆包");
+                StartOpenPackage();
             }
         });
         //包裹打包
@@ -132,19 +136,6 @@ public class MainFragment  extends Fragment {
 					}
 				});
 
-        //包裹确认
-        rootView.findViewById(R.id.action_pkg_acc_icon).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				StartAccPackage();
-			}
-		});
-        rootView.findViewById(R.id.action_pkg_acc).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				StartAccPackage();
-			}
-		});
 
         //包裹转运
 		rootView.findViewById(R.id.action_pkg_zhuanyun_icon).setOnClickListener(new View.OnClickListener() {
@@ -159,22 +150,42 @@ public class MainFragment  extends Fragment {
 				StartZhuanyunPackage();
 			}
 		});
+
+		//包裹跟踪：
+		rootView.findViewById(R.id.action_express_genzong).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartGenZong();
+			}
+		});
+		rootView.findViewById(R.id.action_express_genzong_icon).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartGenZong();
+			}
+		});
         return rootView;
     }
 
-    //包裹转运
+    //包裹拆包
+    private void StartOpenPackage() {
+        Intent intent = new Intent();
+        intent.putExtra("Action","Open");
+        intent.setClass(this.getActivity(), PackageAccActivity.class);
+        startActivity(intent);
+    }
+
+    //包裹跟踪
+	private void StartGenZong() {
+	}
+
+	//包裹转运
 	private void StartZhuanyunPackage() {
     	Intent intent = new Intent();
     	intent.setClass(this.getActivity(), ZhuanyunCreateActivity.class);
     	startActivityForResult(intent,0);
 	}
-    //扫描员确认
-	private void StartAccPackage() {
-    	Intent intent = new Intent();
-    	intent.putExtra("Action","Accept");
-    	intent.setClass(this.getActivity(), PackageAccActivity.class);
-    	startActivity(intent);
-	}
+
     //包裹打包
     private void StartCreatePackage() {
         Intent intent = new Intent();

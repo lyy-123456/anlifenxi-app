@@ -70,7 +70,12 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         zhuanyun_addpkg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StartCapture();
+                if(nextTransNode != null){
+                    StartCapture();
+                }
+                else{
+                    Toast.makeText(ZhuanyunCreateActivity.this,"下一站不能为空",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -78,7 +83,12 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         zhuanyun_start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StartZhuanYun();
+                if(nextTransNode != null){
+                    StartZhuanYun();
+                }
+                else{
+                    Toast.makeText(ZhuanyunCreateActivity.this,"下一站不能为空",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //网点信息获取：
@@ -98,12 +108,14 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         TransNodeLoader transNodeLoader = new TransNodeLoader(inZhuanyunActivityTranNode,this);
         transNodeLoader.Load(nodeID);
     }
+
     //得到网点信息
     private void GetNextNode() {
         Intent intent  = new Intent();
         intent.setClass(this, TransNodeListActivity.class);
         startActivityForResult(intent,REQUEST_GET_NODE);
     }
+
     //开始转运
     private void StartZhuanYun(){
         if(itemList.size() == 0 || nextManger == null){
@@ -160,6 +172,7 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
             InUsersPackage inUsersPackage = new InUsersPackage();
             UserPackageLoader userPackageLoader = new UserPackageLoader(inUsersPackage,this);
             userPackageLoader.saveUsersPackageList(listTransPackage,((ExTraceApplication)this.getApplication()).getLoginUser().getUID());
+
             //2.4开启GPS定位给 每隔8秒获取位置信息并记录到pkageroute中
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
@@ -268,7 +281,6 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
         if (nextTransNode != null){
             zhuanyun_nextNode_edt .setText(nextTransNode.getNodeName());
         }
-
     }
 
     //第二个内部类
@@ -292,14 +304,22 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
 
     @Override
     public TransPackage getData() {
-
         return null;
     }
 
     @Override
     public void setData(TransPackage data) {
-        itemList.add(data);
-        packageListAdapter.notifyDataSetChanged();
+        if(data.getTargetNode().equals(nextTransNode.getID())){
+            if(data.getStatus() != TransPackage.PKG_PACKED){
+                Toast.makeText(this,"该包裹状态不是已打包，无法转运",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            itemList.add(data);
+            packageListAdapter.notifyDataSetChanged();
+        }
+        else{
+            Toast.makeText(this,"该包裹目的站点与转运下一站不一致",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -34,7 +34,7 @@ public class TransPackageLoader extends HttpAsyncTask {
 			//Toast.makeText(context,json_data,Toast.LENGTH_LONG).show();
 			TransPackage ci = JsonUtils.fromJson(json_data, new TypeToken<TransPackage>(){});
 			adapter.setData(ci);
-			Log.d("TransPackageLoader,onDataReceive",ci.toString());
+			//Log.d("TransPackageLoader,onDataReceive",ci.toString());
 			adapter.notifyDataSetChanged();
 		}
 		else if(class_name.equals("R_TransPackage"))		//保存完成
@@ -48,6 +48,12 @@ public class TransPackageLoader extends HttpAsyncTask {
 		else if(class_name.equals("E_TransPackage"))
 		{
 			Toast.makeText(context, "包裹信息已存在", Toast.LENGTH_SHORT).show();
+		}
+		else if(class_name.equals("N_TransPackage")){
+			Toast.makeText(context, json_data, Toast.LENGTH_SHORT).show();
+		}
+		else {
+			Toast.makeText(context, json_data, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -112,4 +118,13 @@ public class TransPackageLoader extends HttpAsyncTask {
 		}
 	}
 
+	//lyy 改变一个包裹里的快件的状态
+	public  void changeExpressListStatusInTransPackage(String pkgID,int status){
+		url += "changeExpressStatusInTransPackage/"+pkgID+"/"+status+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

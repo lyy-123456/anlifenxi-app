@@ -197,7 +197,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/lightgray" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -207,19 +206,19 @@
                 android:paddingTop="15dip" >
 
                 <ImageView
-                    android:id="@+id/action_pkg_acc_icon"
+                    android:id="@+id/action_express_genzong_icon"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_bottle" />
+                    android:src="@drawable/find_more_friend_shake" />
 
                 <TextView
-                    android:id="@+id/action_pkg_acc"
+                    android:id="@+id/action_express_genzong"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:text="包裹确认"
+                    android:text="快件跟踪"
                     android:textColor="@color/black"
                     android:textSize="20dip" />
             </LinearLayout>

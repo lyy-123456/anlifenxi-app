@@ -64,6 +64,8 @@ public class TransHistoryLoader extends HttpAsyncTask {
             e.printStackTrace();
         }
     }
+
+
     @Override
     public void onStatusNotify(HttpResponseParam.RETURN_STATUS status, String str_response) {
 
