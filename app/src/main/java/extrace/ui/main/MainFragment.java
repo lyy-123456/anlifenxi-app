@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.domain.ExpressEditActivity;
+import extrace.ui.genZong.ExpressGenZongMainActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
 import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
@@ -177,6 +178,9 @@ public class MainFragment  extends Fragment {
 
     //包裹跟踪
 	private void StartGenZong() {
+        Intent intent = new Intent();
+        intent.setClass(this.getActivity(), ExpressGenZongMainActivity.class);
+        startActivityForResult(intent, 0);
 	}
 
 	//包裹转运

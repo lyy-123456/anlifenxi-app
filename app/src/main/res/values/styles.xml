@@ -17,4 +17,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="vertical_dotted_line_style">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/vertical_dotted_line</item>
+        <item name="android:layerType">software</item>
+    </style>
 </resources>

@@ -8,8 +8,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
@@ -30,14 +29,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name="extrace.ui.zhuanyun.GpsLocationActivity"></activity>
+        <activity android:name="extrace.ui.genZong.ExpressGenZongMainActivity"></activity>
+        <activity android:name="extrace.ui.zhuanyun.GpsLocationActivity" />
         <activity android:name="extrace.ui.accPkg.ExpressAccActivity" />
         <activity android:name="extrace.ui.misc.TransNodeEditActivity" />
         <activity android:name="extrace.ui.misc.TransNodeListActivity" />
         <activity android:name="extrace.ui.zhuanyun.ZhuanyunCreateActivity" />
         <activity android:name="extrace.ui.accPkg.PackageAccActivity" />
         <activity android:name="extrace.ui.packages.PackageEditActivity" />
-        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"> </service>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"></service>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

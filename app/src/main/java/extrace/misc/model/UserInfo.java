@@ -117,5 +117,10 @@ public class UserInfo{
 		}
 	}
 
-
+	public static class STATUS{
+		public static final int KUAIDIYUAN = 0;
+		public static final int SAOMIAOYUAN = 1;
+		public static final int SIJI = 2;
+		public static final int FUZEREN = 3;
+	}
 }

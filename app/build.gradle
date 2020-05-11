@@ -50,4 +50,5 @@ dependencies {
     implementation files('libs/BaiduLBS_Android.jar')
 
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.yinglan.scrolllayout:scrolllayout:1.0.2'
 }
