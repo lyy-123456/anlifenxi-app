@@ -33,6 +33,7 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
     private List<TransHistoryDetail> itemList;  //将要展示的列表对象
     private TransHistoryDetail item;
     private int transHistoryLength;
+    private int totalLength;
 
     public ListViewAdapter(List<TransHistoryDetail> itemList,Context context) {
         super(context, item_listview);
@@ -85,8 +86,8 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             hd=(ListViewAdapter.hold)v.getTag();
         }
         TransHistoryDetail transHistoryDetail = getItem(position);
-
-
+//        TransHistoryDetail transHistoryDetail = getItem(position);
+//        System.out.println("总长为"+totalLength);
         StringBuffer sb = new StringBuffer();
         //TransHistory transHistory = transHistoryDetail.getTransHistory();
         UserInfo UIDFrom = transHistoryDetail.getUIDFrom();
@@ -106,6 +107,7 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             sb.append("快件已揽收");
         }else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_TRANSPORT || (position >=2 && position <= transHistoryLength+1)  ){
             //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+            System.out.println(position);
             System.out.println(transHistoryDetail.getTransHistory().toString());
             hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
             if(UIDTo.getURull() == UserInfo.STATUS.FUZEREN) //如果是负责人，说明是司机转运的记录
@@ -124,11 +126,51 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             //hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
             sb.append("快件正在派送"+"派送员是： 【"+UIDFrom.getName()+"】"+"电话号码：【"+UIDFrom.getTelCode());
         }
-        else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DELIVERIED || position == transHistoryLength+2+3){
+        else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DELIVERIED || position == transHistoryLength+3){
             //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
             hd.express_time.setText(expressSheet.getDeliveTime().toString());
             sb.append("快件已交付");
         }
+
+
+
+//        if(position == 0) totalLength=itemList.size();
+//        System.out.println(position);
+//        if(totalLength == transHistoryLength+4){
+//            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+//            hd.express_time.setText(expressSheet.getDeliveTime().toString());
+//            sb.append("快件已交付");
+//        }
+//        else if( totalLength == transHistoryLength+3){
+//            //hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
+//            sb.append("快件正在派送"+"派送员是： 【"+UIDFrom.getName()+"】"+"电话号码：【"+UIDFrom.getTelCode());
+//        }
+//        else if(totalLength >2 && totalLength <= transHistoryLength+2  ){
+//            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+//            System.out.println(position);
+//            System.out.println(transHistoryDetail.getTransHistory().toString());
+//            hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
+//            if(UIDTo.getURull() == UserInfo.STATUS.FUZEREN) //如果是负责人，说明是司机转运的记录
+//            {
+//                sb.append("快件已装车，准备发往下一站 【");
+//                sb.append(toNode.getNodeName());
+//                sb.append("】 ,");
+//                sb.append("司机是：【");
+//                sb.append(UIDFrom.getName());
+//                sb.append("】");
+//            }else{
+//                sb.append("快件已到达 【"+toNode.getNodeName()+"】站点，扫描员是 【"+UIDTo.getName()+"】");
+//            }
+//        }
+//        else if(totalLength == 2){
+//            sb.append("快件已揽收");
+//        }
+//        else if(totalLength == 1){
+//            //System.out.println(transHistoryDetail.getTransHistory().toString());
+//            sb.append("快件待揽收，正在等待揽收");
+//            //System.out.println(transHistoryDetail.getTransHistory().toString());
+//        }
+//        totalLength--;
         hd.express_history_detail.setText(sb.toString());
         return v;
     }
@@ -141,8 +183,16 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
     @Override
     public void setData(List<TransHistoryDetail> data) {
         this.itemList = data;
+        for(TransHistoryDetail transHistoryDetail: data){
+            System.out.print(transHistoryDetail.getSN());
+            if(transHistoryDetail.getTransHistory() != null){
+                System.out.println(transHistoryDetail.getTransHistory().toString());
+            }
+
+        }
         transHistoryLength = getHistoryLength();
-        System.out.println("长度为"+transHistoryLength);
+        totalLength = itemList.size();
+        System.out.println("长度为"+transHistoryLength+"总长为"+itemList.size());
     }
 
 

@@ -163,9 +163,8 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
                         if((this.getIntent().getExtras()) != null){
                             ExpressSheet es = (ExpressSheet) (this.getIntent().getExtras()).getSerializable("ExpressSheet");
                             expressListAdapter.getData().remove(es);
+                            expressListAdapter.notifyDataSetChanged();
                         }
-
-
                         break;
                 }
         }

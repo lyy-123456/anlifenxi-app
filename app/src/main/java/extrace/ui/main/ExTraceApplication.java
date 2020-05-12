@@ -1,5 +1,6 @@
 package extrace.ui.main;
 
+
 import cn.smssdk.SMSSDK;
 import extrace.misc.model.UserInfo;
 import android.app.Application;
@@ -46,13 +47,13 @@ public class ExTraceApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         SMSSDK.initSDK(this, "2f147ac272b9c", "3d99ba99670eca2e85ede4256b441529");
 
-		//临时造一个用户
-		userInfo = new UserInfo();
-		userInfo.setID(12);
-		userInfo.setDptID("11022800");
-		userInfo.setReceivePackageID("1111112222");
-		userInfo.setTransPackageID("1111115555");
-		userInfo.setDelivePackageID("1111113333");
+//		//临时造一个用户
+//		userInfo = new UserInfo();
+//		userInfo.setID(12);
+//		userInfo.setDptID("11022800");
+//		userInfo.setReceivePackageID("1111112222");
+//		userInfo.setTransPackageID("1111115555");
+//		userInfo.setDelivePackageID("1111113333");
     }
     public void setUserInfo(UserInfo userInfo){
         this.userInfo = userInfo;

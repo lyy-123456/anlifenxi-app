@@ -143,16 +143,16 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         userPackageLoader.Save(usersPackage);
         Log.d("创建一个新的包裹",transPackage.toString());
 
-        //往packageroute里面添加一条数据
-        InPackageRoute inPackageRoute = new InPackageRoute();
-        PackageRouteLoader packageRouteLoader = new PackageRouteLoader(inPackageRoute,this);
-        PackageRoute packageRoute = new PackageRoute();
-        packageRoute.setPkg(transPackage);
-        stransNode.setX((float) 10);
-        stransNode.setY((float) 11.1);
-        packageRoute.setX(stransNode.getX());
-        packageRoute.setY(stransNode.getY());
-        packageRouteLoader.Save(packageRoute);
+//        //往packageroute里面添加一条数据
+//        InPackageRoute inPackageRoute = new InPackageRoute();
+//        PackageRouteLoader packageRouteLoader = new PackageRouteLoader(inPackageRoute,this);
+//        PackageRoute packageRoute = new PackageRoute();
+//        packageRoute.setPkg(transPackage);
+//        stransNode.setX((float) 10);
+//        stransNode.setY((float) 11.1);
+//        packageRoute.setX(stransNode.getX());
+//        packageRoute.setY(stransNode.getY());
+//        packageRouteLoader.Save(packageRoute);
 
         //Log.d("创建一个新的包裹",transPackage.toString());
         Bundle bundle = new Bundle();
@@ -166,23 +166,23 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         startActivityForResult(intent, REQUEST_CREATE_PKG);
     }
 
-    class InPackageRoute implements IDataAdapter<PackageRoute>{
-
-        @Override
-        public PackageRoute getData() {
-            return null;
-        }
-
-        @Override
-        public void setData(PackageRoute data) {
-
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-
-        }
-    }
+//    class InPackageRoute implements IDataAdapter<PackageRoute>{
+//
+//        @Override
+//        public PackageRoute getData() {
+//            return null;
+//        }
+//
+//        @Override
+//        public void setData(PackageRoute data) {
+//
+//        }
+//
+//        @Override
+//        public void notifyDataSetChanged() {
+//
+//        }
+//    }
     class InUsersPackage implements IDataAdapter<UsersPackage>{
         UsersPackage usersPackage;
         @Override

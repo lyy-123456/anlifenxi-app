@@ -1,6 +1,11 @@
 package extrace.loader;
 
 import android.app.Activity;
+import android.widget.Toast;
+
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.ListTransPackage;
@@ -24,7 +29,15 @@ public class PackageRouteLoader extends HttpAsyncTask {
 
     @Override
     public void onDataReceive(String class_name, String json_data) {
-
+        if(class_name.equals("ListPackageRoute")){
+            Toast.makeText(context,json_data,Toast.LENGTH_SHORT).show();
+        }else  if(class_name.equals("PackageRoute")){
+            PackageRoute packageRoute = JsonUtils.fromJson(json_data,new TypeToken<PackageRoute>(){});
+            adapter.setData(packageRoute);
+            adapter.notifyDataSetChanged();
+        }else{
+            Toast.makeText(context,json_data,Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -52,4 +65,6 @@ public class PackageRouteLoader extends HttpAsyncTask {
             e.printStackTrace();
         }
     }
+
+
 }

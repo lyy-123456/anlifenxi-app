@@ -17,7 +17,7 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.Date;
 
-public class PackageRoute implements Serializable {
+public class PackageRoute implements Serializable,Comparable<PackageRoute>{
 	/**
 	 * 
 	 */
@@ -101,5 +101,12 @@ public class PackageRoute implements Serializable {
 			return sb.toString();
 		}
 	}
-	
+
+	@Override
+	public int compareTo(PackageRoute o) {
+//		if(o.getTm().before(this.getTm())){
+//			return 1;
+//		}
+		return this.getSN()-o.getSN();
+	}
 }

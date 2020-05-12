@@ -12,17 +12,17 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.baidu.mapapi.map.MapView
+                android:id="@+id/genzong_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             </com.baidu.mapapi.map.MapView>
 
             <com.yinglan.scrolllayout.ScrollLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/scroll_down_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -58,20 +58,29 @@
                 </RelativeLayout>
 
             </com.yinglan.scrolllayout.ScrollLayout>
-        </FrameLayout>
+        </RelativeLayout>
     </LinearLayout>
 
-
-
-
-
-    <Button
-        android:id="@+id/btn_go_second"
+    <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:text="点击进入第二页面" />
+        android:layout_height="wrap_content">
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ACCEAD"/>
+        <Button
+            android:id="@+id/open_btn"
+            android:layout_alignRight="@id/search"
+            android:text="点击弹出运单历史"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content">
+
+        </Button>
+    </RelativeLayout>
+
+
 
 
 

@@ -70,4 +70,10 @@ public class TransHistoryDetail implements Serializable,Comparable<TransHistoryD
     public int compareTo(TransHistoryDetail o) {
         return  this.getSN()-o.getSN();
     }
+
+    //SN降序
+//    @Override
+//    public int compareTo(TransHistoryDetail o) {
+//        return  o.getSN()-this.getSN();
+//    }
 }

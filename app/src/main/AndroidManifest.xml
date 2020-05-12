@@ -54,6 +54,7 @@
         <activity android:name="extrace.ui.login_register_reset.ForgotInfo_Activity" />
         <activity android:name="extrace.ui.login_register_reset.ResetPassword_Activity" />
 
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -126,6 +127,13 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <!--这个必须得加-->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
     </application>
 
 </manifest>
