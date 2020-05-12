@@ -3,6 +3,7 @@ package extrace.ui.main;
 import java.util.Locale;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,11 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import extrace.ui.domain.ExpressListFragment;
 import extrace.ui.domain.ExpressListFragment.OnFragmentInteractionListener;
+import extrace.ui.login_register_reset.Login_Activity;
 import extrace.ui.zhuanyun.GpsLocationActivity;
 import extrace.ui.zhuanyun.MyLocationActivity;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener,OnFragmentInteractionListener {
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
@@ -28,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         // Set up the action bar.
         //设置菜单栏
         final ActionBar actionBar = getSupportActionBar();
@@ -87,11 +92,14 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             startActivity(intent2);
             return true;
         case R.id.action_login:
-            Intent intent1 = new Intent();
-            intent1.setClass(this, MyLocationActivity.class);
-            startActivity(intent1);
+            startActivity(new Intent(MainActivity.this, Login_Activity.class));
             return true;
         case R.id.action_logout:
+            //清空
+            editor.clear();
+            editor.commit();
+            startActivity(new Intent(MainActivity.this,Login_Activity.class));
+            finish();
             return true;
         case R.id.action_settings:
     		Intent intent = new Intent();

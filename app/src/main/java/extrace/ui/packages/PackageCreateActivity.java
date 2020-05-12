@@ -235,6 +235,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             //得到id 判断包裹是否存在如果存在那么
                             tLoader = new TransPackageLoader(this,this);
                             tLoader.Load(id);
+                            packageIdView.setText(id);
                         }
                         break;
                         //源点邮编

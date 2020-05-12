@@ -10,7 +10,14 @@ public class TransHistoryDetail implements Serializable,Comparable<TransHistoryD
     private  UserInfo UIDTo;
     private TransNode fromNode;
     private TransNode toNode;
+    private int SN;
 
+    public int getSN() {
+        return SN;
+    }
+    public void setSN(int sN) {
+        SN = sN;
+    }
     public void setExpressSheet(ExpressSheet expressSheet) {
         this.expressSheet = expressSheet;
     }
@@ -61,9 +68,6 @@ public class TransHistoryDetail implements Serializable,Comparable<TransHistoryD
 
     @Override
     public int compareTo(TransHistoryDetail o) {
-        if(this.getTransHistory().getActTime().before(o.getTransHistory().getActTime()) ){
-            return -1;
-        }
-        return 1;
+        return  this.getSN()-o.getSN();
     }
 }

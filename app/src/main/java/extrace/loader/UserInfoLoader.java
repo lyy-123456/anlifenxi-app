@@ -36,6 +36,18 @@ public class UserInfoLoader extends HttpAsyncTask {
             adapter.notifyDataSetChanged();
         }else if(class_name.equals("N_UserInfo")){
             Toast.makeText(context,"没有符合要求的用户",Toast.LENGTH_SHORT).show();
+        }else if(class_name.equals("R_UserInfo")){
+            UserInfo userInfo = JsonUtils.fromJson(json_data,new TypeToken<UserInfo>(){});
+            adapter.setData(userInfo);
+            adapter.notifyDataSetChanged();
+        }else if(class_name.equals("NR_UserInfo")){
+            Toast.makeText(context,"该用户已注册",Toast.LENGTH_SHORT).show();
+        }else if(class_name.equals("P_UserInfo")){
+            UserInfo userInfo = JsonUtils.fromJson(json_data,new TypeToken<UserInfo>(){});
+            adapter.setData(userInfo);
+            adapter.notifyDataSetChanged();
+        }else if(class_name.equals("NP_UserInfo")){
+            Toast.makeText(context,"该用户未注册",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -51,6 +63,32 @@ public class UserInfoLoader extends HttpAsyncTask {
     //lyy 新增通过所网点id查询负责人
     public void getUserManagerById(String DptID){
         url += "getManagerByNodeID/" +DptID+"?_type=json";
+        try{
+            execute(url,"GET");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //whb新增登录
+    public void doLogin(String telCode,String password){
+        url += "doLogin/" +telCode+"/" +password+"?_type=json";
+        try{
+            execute(url,"GET");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //whb新增注册
+    public void doRegister(String name,String telCode,String password,String dptId,Integer uRull){
+        url += "doRegister/"+name+"/"+telCode+"/"+password+"/"+dptId+"/"+uRull+"?_type=json";
+        try{
+            execute(url,"GET");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void resetPWD(String telCode,String newpwd){
+        url += "resetPWD/" +telCode+"/" +newpwd+"?_type=json";
         try{
             execute(url,"GET");
         }catch (Exception e){

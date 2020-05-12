@@ -1,5 +1,6 @@
 package extrace.ui.main;
 
+import cn.smssdk.SMSSDK;
 import extrace.misc.model.UserInfo;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -43,7 +44,7 @@ public class ExTraceApplication extends Application {
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
-
+        SMSSDK.initSDK(this, "2f147ac272b9c", "3d99ba99670eca2e85ede4256b441529");
 
 		//临时造一个用户
 		userInfo = new UserInfo();
@@ -52,8 +53,10 @@ public class ExTraceApplication extends Application {
 		userInfo.setReceivePackageID("1111112222");
 		userInfo.setTransPackageID("1111115555");
 		userInfo.setDelivePackageID("1111113333");
-    }  
-      
+    }
+    public void setUserInfo(UserInfo userInfo){
+        this.userInfo = userInfo;
+    }
     public void onTerminate() {  
         super.onTerminate();
         //save data of the map  

@@ -15,15 +15,87 @@
         android:textColor="#000"
         android:textSize="22sp" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="业务类型"
+        android:textSize="24sp" />
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_marginLeft="21dp"
+        android:layout_toRightOf="@+id/textView1"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="司机"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="业务员"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="快递员"
+            tools:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="管理员"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/edit_dptid"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="所在网点编号"
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp" />
+
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="用户名"
+        android:imeOptions="actionDone"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp" />
 
     <EditText
         android:id="@+id/edit_register"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/edittext_bg"
         android:ems="10"
-        android:hint="用户名"
+        android:hint="手机号"
+        android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:paddingLeft="10dp" />
 
@@ -33,10 +105,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="用户名不能为空"
+        android:text="请输入您的手机号"
+        android:textColor="#D32F2F"
         android:textSize="16sp"
-        android:textColor="#000"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
 
     <EditText
@@ -56,10 +128,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="密码不能为空"
+        android:text="密码由8-12位的数字或字母组成"
+        android:textColor="#D32F2F"
         android:textSize="16sp"
-        android:textColor="#000"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
 
     <EditText

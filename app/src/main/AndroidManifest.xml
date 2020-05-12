@@ -10,15 +10,22 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 获取网络状态，根据网络状态切换进行数据请求网络转换 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".ExTraceApplication"
@@ -29,6 +36,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
+
+        <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
+        <meta-data android:name="Mob-AppKey" android:value="2f147ac272b9c"/>
+        <meta-data android:name="Mob-AppSecret" android:value="3d99ba99670eca2e85ede4256b441529"/>
+
         <activity android:name="extrace.ui.genZong.ExpressGenZongMainActivity"></activity>
         <activity android:name="extrace.ui.zhuanyun.GpsLocationActivity" />
         <activity android:name="extrace.ui.accPkg.ExpressAccActivity" />
@@ -37,6 +49,10 @@
         <activity android:name="extrace.ui.zhuanyun.ZhuanyunCreateActivity" />
         <activity android:name="extrace.ui.accPkg.PackageAccActivity" />
         <activity android:name="extrace.ui.packages.PackageEditActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name="extrace.ui.login_register_reset.Register_Activity" />
+        <activity android:name="extrace.ui.login_register_reset.ForgotInfo_Activity" />
+        <activity android:name="extrace.ui.login_register_reset.ResetPassword_Activity" />
 
         <service
             android:name="com.baidu.location.f"
@@ -52,7 +68,7 @@
             android:value="a9MkO1zPpXIL63QyaADp8fzzmHivp8D5" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="extrace.ui.login_register_reset.Login_Activity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

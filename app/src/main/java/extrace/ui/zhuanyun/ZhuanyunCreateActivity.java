@@ -158,10 +158,14 @@ public class ZhuanyunCreateActivity extends AppCompatActivity implements IDataAd
             //2.2改变包裹状态
             ListTransPackage listTransPackage = new ListTransPackage();
             listTransPackage.setTransPackageList(itemList);
+
             //改变包裹状态为运输中
             PackageListAdapter packageListAdapter = new PackageListAdapter(new ArrayList<TransPackage>(),this);
             TransPackageListLoader transPackageListLoader = new TransPackageListLoader(packageListAdapter,this);
             transPackageListLoader.changeTransPackageListStatus(listTransPackage,TransPackage.PKG_TRSNSIT);
+            for(TransPackage transPackage:listTransPackage.getTransPackageList()){
+                transPackage.setStatus(TransPackage.PKG_TRSNSIT);
+            }
 
             //2.3往改变包裹里的快件的状态为运输中
             PackageListAdapter packageListAdapter1 =  new PackageListAdapter(new ArrayList<TransPackage>(),this);

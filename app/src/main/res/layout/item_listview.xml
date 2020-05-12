@@ -17,7 +17,6 @@
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/express_time"
-                android:text="12334"
                 android:textSize="10dp"
                 android:layout_margin="10dp"
                 android:layout_width="60dp"
@@ -31,7 +30,6 @@
         <TextView
             android:id="@+id/express_history_detail"
             android:layout_width="0dp"
-            android:text="快件已装车，准备发往下一站 【中原区网点】"
             android:textSize="20dp"
             android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
