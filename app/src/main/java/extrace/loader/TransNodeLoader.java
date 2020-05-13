@@ -33,6 +33,8 @@ public class TransNodeLoader extends HttpAsyncTask {
             adapter.notifyDataSetChanged();
         }else if(class_name.equals("N_TransNode")){
             Toast.makeText(context,"不存在该网点信息",Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context,json_data,Toast.LENGTH_SHORT).show();
         }
     }
 

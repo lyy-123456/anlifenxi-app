@@ -267,8 +267,6 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
      * */
     protected void readUserInfo() {
         login(edit_account.getText().toString(), edit_password.getText().toString());
-
-
     }
 
     /**

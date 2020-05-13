@@ -45,7 +45,17 @@ public class ExpressListAdapter extends ArrayAdapter<ExpressSheet> implements ID
 		return 0;
 	}
 
-
+	public void delete(ExpressSheet expressSheet){
+		int i = 0;
+		for(ExpressSheet es:itemList){
+			if(es.getID().equals(expressSheet.getID())){
+				itemList.remove(i);
+				break;
+			}
+			i++;
+		}
+		notifyDataSetChanged();
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 

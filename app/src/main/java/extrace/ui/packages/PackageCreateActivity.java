@@ -235,7 +235,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             //得到id 判断包裹是否存在如果存在那么
                             tLoader = new TransPackageLoader(this,this);
                             tLoader.Load(id);
-                            packageIdView.setText(id);
+
                         }
                         break;
                         //源点邮编
@@ -275,10 +275,11 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         Log.d("PackageCreateActivity执行了这个：","setData");
         if(data.getStatus() == TransPackage.PKG_NEW){
             transPackage = data;
+            packageIdView.setText(data.getID());
             RefreshUI();
         }
         else{
-            Toast.makeText(this,"包裹状态错误"+data.getStatus(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
         }
     }
 

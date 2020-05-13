@@ -8,10 +8,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,12 +51,20 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     private  final int REQUEST_CAPTURE_SCAN_EXPRESS =101;
     private static final int REQUEST_EXPRESS = 102;
     private TransPackage transPackage;
-    private TextView pkg_textView;
     private Button pkg_acc_button;
     private List<TransHistory> transHistoryList;
     private ListView express_list_in_pkg;
     private Button express_scan_btn;
 
+    private TextView pkg_id;
+    private TextView pkg_sNode;
+    private TextView pkg_eNode;
+    private TextView pkg_time;
+    private TextView pkg_stauts;
+
+    private TransNode sNode;  //源站点
+    private TransNode eNode; //目的站点
+    private TransNode nowNode; //扫描员所在站点
 
     private  TransPackageLoader transPackageLoader;
     private  TransHistoryListAdapter transHistoryListAdapter;
@@ -65,7 +75,6 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     private  InTransHistory inTransHistory;
     private ExpressLoader expressLoader;
 
-    private TransNode nowNode;
 
 
     @Override
@@ -77,7 +86,11 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     }
 
     private void Init() {
-        pkg_textView = (TextView)findViewById(R.id.pkg_ac_thing);
+        pkg_id=(TextView)findViewById(R.id.pkg_acc_Id);
+        pkg_sNode=(TextView)findViewById(R.id.pkg_acc_sNode);
+        pkg_eNode=(TextView)findViewById(R.id.pkg_acc_eNode);
+        pkg_stauts=(TextView)findViewById(R.id.pkg_acc_status);
+        pkg_time=(TextView)findViewById(R.id.pkg_acc_time);
         pkg_acc_button = (Button)findViewById(R.id.pkg_acc_btn);
         express_list_in_pkg = (ListView)findViewById(R.id.express_list_in_pkg);
         express_scan_btn = (Button)findViewById(R.id.express_scan);
@@ -90,7 +103,6 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         //设置适配器
         expressListAdapter  =new ExpressListAdapter(new ArrayList<ExpressSheet>(),this,"ExDLV");
         express_list_in_pkg.setAdapter(expressListAdapter);
-
         app = (ExTraceApplication)this.getApplication();
         Log.d("生成的用户获取：",app.getLoginUser().toString());
         express_scan_btn.setOnClickListener(new View.OnClickListener() {
@@ -112,13 +124,18 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         inTransHistory = new InTransHistory();
 
         //得到本站的信息
-        InTransNode inTransNode = new InTransNode();
+        InTransNode inTransNode = new InTransNode("nowNode");
         TransNodeLoader transNodeLoader = new TransNodeLoader(inTransNode,this);
         transNodeLoader.Load(app.getLoginUser().getDptID());
     }
 
     //扫描快件确认快件
     private void StartScanExpress() {
+        if (transPackage == null){
+            Toast.makeText(this,"包裹不存在请重新扫描",Toast.LENGTH_SHORT).show();
+            StartCapture();
+            return;
+        }
         if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ){
             Intent intent = new Intent();
             intent.putExtra("Action","Capture");
@@ -156,13 +173,41 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
                                 startActivityForResult(intent,REQUEST_EXPRESS);
                                 //跳转到express详情页面
                             }
-
                         }
                         break;
                     case REQUEST_EXPRESS:
-                        if((this.getIntent().getExtras()) != null){
-                            ExpressSheet es = (ExpressSheet) (this.getIntent().getExtras()).getSerializable("ExpressSheet");
-                            expressListAdapter.getData().remove(es);
+                        Bundle bundle = data.getExtras();
+                        if( bundle != null){
+                            Toast.makeText(this,"我回来了",Toast.LENGTH_SHORT).show();
+                            ExpressSheet es = (ExpressSheet) bundle.getSerializable("ExpressSheet");
+                            //System.out.println("ExpressAccActivity"+es.toString());
+//                            List<ExpressSheet> da1 = expressListAdapter.getData();
+//                            da1.remove(es);
+//                            expressListAdapter.setData(da1);
+
+                            //扫描回来的状态已经改变，所以无法删除导致list无法刷新
+                            //es.setStatus(TransPackageContent.STATUS.STATUS_ACTIVE);
+                            //expressListAdapter.getPosition(es)
+//                            System.out.println("删除前");
+//                            for(ExpressSheet expressSheet:expressListAdapter.getData()){
+//                                System.out.println(expressSheet.toString());
+//                            }
+                            //expressListAdapter.remove(es);
+                            //System.out.println("删除中");
+                            expressListAdapter.delete(es);
+
+//                            int i = 0;
+//                            for(ExpressSheet expressSheet:expressListAdapter.getData()){
+//                                if(expressSheet.toString().equals(es.toString())){
+//                                    System.out.println("删除中");
+//                                    expressListAdapter.remove(expressListAdapter.getItem(i));
+//                                }
+//                                i++;
+//                            }
+//                            System.out.println("删除后");
+//                            for(ExpressSheet expressSheet:expressListAdapter.getData()){
+//                                System.out.println(expressSheet.toString());
+//                            }
                             expressListAdapter.notifyDataSetChanged();
                         }
                         break;
@@ -173,6 +218,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
 
     private boolean expressIsInPackage(String id) {
         boolean flag = true;
+        if(expressListAdapter.getData().size() == 0) flag =false;
         for(ExpressSheet es:expressListAdapter.getData()){
             if(!es.getID().equals(id)){
                 flag = false;
@@ -187,6 +233,11 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     private void pkgAcc() {
         Log.d("PackageAccActivity执行了：","包裹确认方法");
 
+        if (transPackage == null){
+            Toast.makeText(this,"包裹不存在请重新扫描",Toast.LENGTH_SHORT).show();
+            StartCapture();
+            return;
+        }
         if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ) {
 
             if(expressListAdapter.getData().size() != 0){
@@ -215,6 +266,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
                 alertDialog2.show();
             }else{
                 databaseDao();
+                finish();
             }
         }
         else{
@@ -254,15 +306,20 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         userPackageLoader.Save(usersPackage);
     }
     class InTransNode implements IDataAdapter<TransNode>{
-
+        private String e_type;
+        InTransNode(String e_type){
+            this.e_type =e_type;
+        }
         @Override
         public TransNode getData() {
-            return nowNode;
+            return  getTranNode(e_type);
         }
 
         @Override
         public void setData(TransNode data) {
-            nowNode = data;
+
+            setTranNode(e_type,data);
+            RefreshUI();
         }
 
         @Override
@@ -347,6 +404,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
 //            return;
 //        }
         transPackage = data;
+        RefreshUI();
         //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
 
         //1：得到包裹中快件列表
@@ -357,11 +415,59 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
         transHistoryLoader.getRecentOneTranHistory(transPackage);
 
+        //3得到目的站点和原站点
+        InTransNode inTransNode = new InTransNode("sNode");
+        TransNodeLoader transNodeLoader = new TransNodeLoader(inTransNode,this);
+        transNodeLoader.Load(data.getSourceNode());
+
+        InTransNode inTransNode1 = new InTransNode("eNode");
+        TransNodeLoader transNodeLoader1 = new TransNodeLoader(inTransNode1,this);
+        transNodeLoader1.Load(data.getTargetNode());
+    }
+    public void setTranNode(String e_type,TransNode transNode){
+        switch (e_type){
+            case "sNode":
+                sNode = transNode;
+                break;
+            case "eNode":
+                eNode =transNode;
+                break;
+            case "nowNode":
+                nowNode = transNode;
+        }
+        return;
+    }
+
+    public TransNode getTranNode(String e_type){
+        TransNode transNode=null;
+        switch (e_type){
+            case "sNode":
+                transNode=sNode;
+                break;
+            case "eNode":
+                transNode=eNode;
+                break;
+            case "nowNode":
+                transNode=nowNode;
+        }
+        return transNode;
+    }
+    private void RefreshUI() {
+        if(transPackage != null){
+            pkg_id.setText(transPackage.getID());
+            pkg_time.setText(DateFormat.format("yyyy-MM-dd hh:mm:ss", transPackage.getCreateTime()));
+            pkg_stauts.setText(TransPackage.getPackageStatus(transPackage.getStatus()));
+            if(sNode !=null){
+                pkg_sNode.setText(sNode.getNodeName());
+            }
+            if(eNode != null){
+                pkg_eNode.setText(eNode.getNodeName());
+            }
+        }
     }
 
     @Override
     public void notifyDataSetChanged() {
         Log.d("PackageAccActivity执行了这个","notifyDataSetChanged");
-        pkg_textView.setText(transPackage.toString());
     }
 }

@@ -119,6 +119,25 @@ public class TransPackage  implements Serializable {
 	public boolean isSaved() {
 		return _saved;
 	}
-	
+
+
+	public static  String getPackageStatus(int status){
+		StringBuffer sb = new StringBuffer();
+		switch (status){
+			case TransPackage.PKG_NEW:
+				sb.append("新建");
+				break;
+			case TransPackage.PKG_PACKED:
+				sb.append("已打包");
+				break;
+			case TransPackage.PKG_TRSNSIT:
+				sb.append("运输中");
+				break;
+			case TransPackage.PKG_UNPACKED:
+				sb.append("已拆包");
+				break;
+		}
+		return  sb.toString();
+	}
 	
 }
