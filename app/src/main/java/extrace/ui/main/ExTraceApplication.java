@@ -54,9 +54,11 @@ public class ExTraceApplication extends Application {
 //		userInfo.setReceivePackageID("1111112222");
 //		userInfo.setTransPackageID("1111115555");
 //		userInfo.setDelivePackageID("1111113333");
+
     }
     public void setUserInfo(UserInfo userInfo){
         this.userInfo = userInfo;
+        System.out.println(userInfo.toString());
     }
     public void onTerminate() {  
         super.onTerminate();

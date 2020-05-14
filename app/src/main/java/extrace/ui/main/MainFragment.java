@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
+import extrace.misc.model.UserInfo;
 import extrace.ui.accPkg.PackageAccActivity;
 import extrace.ui.domain.ExpressEditActivity;
 import extrace.ui.genZong.ExpressGenZongMainActivity;
@@ -37,8 +40,69 @@ public class MainFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-    	//显示主页
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+    	ExTraceApplication app = (ExTraceApplication) Objects.requireNonNull(this.getActivity()).getApplication();
+    	UserInfo userInfo = app.getLoginUser();
+		//显示主页
+		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+    	if(userInfo.getURull() == UserInfo.STATUS.SIJI){
+    		//快件揽收
+			rootView.findViewById(R.id.lanshou_root).setVisibility(View.GONE);
+			//快件派送
+			rootView.findViewById(R.id.paisong_root).setVisibility(View.GONE);
+			//包裹打包
+			rootView.findViewById(R.id.dopkg_root).setVisibility(View.GONE);
+			//包裹拆包
+			rootView.findViewById(R.id.caipkg_root).setVisibility(View.GONE);
+			//客户管理
+			rootView.findViewById(R.id.mng_root).setVisibility(View.GONE);
+			//快件查询
+			rootView.findViewById(R.id.query_root).setVisibility(View.GONE);
+
+//			//包裹转运
+//			rootView.findViewById(R.id.zhuanyun_root).setVisibility(View.GONE);
+//
+			//快件跟踪
+			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+
+		}else if(userInfo.getURull() == UserInfo.STATUS.SAOMIAOYUAN){
+			//快件揽收
+			rootView.findViewById(R.id.lanshou_root).setVisibility(View.GONE);
+			//快件派送
+			rootView.findViewById(R.id.paisong_root).setVisibility(View.GONE);
+//			//包裹打包
+//			rootView.findViewById(R.id.dopkg_root).setVisibility(View.GONE);
+//			//包裹拆包
+//			rootView.findViewById(R.id.caipkg_root).setVisibility(View.GONE);
+//			//客户管理
+//			rootView.findViewById(R.id.mng_root).setVisibility(View.GONE);
+//			//快件查询
+//			rootView.findViewById(R.id.query_root).setVisibility(View.GONE);
+
+			//包裹转运
+			rootView.findViewById(R.id.zhuanyun_root).setVisibility(View.GONE);
+
+//			//快件跟踪
+//			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+
+		}else if(userInfo.getURull() == UserInfo.STATUS.KUAIDIYUAN) {
+//			//快件揽收
+//			rootView.findViewById(R.id.lanshou_root).setVisibility(View.GONE);
+//			//快件派送
+//			rootView.findViewById(R.id.paisong_root).setVisibility(View.GONE);
+			//包裹打包
+			rootView.findViewById(R.id.dopkg_root).setVisibility(View.GONE);
+			//包裹拆包
+			rootView.findViewById(R.id.caipkg_root).setVisibility(View.GONE);
+			//客户管理
+			rootView.findViewById(R.id.mng_root).setVisibility(View.GONE);
+			//快件查询
+			rootView.findViewById(R.id.query_root).setVisibility(View.GONE);
+			//包裹转运
+			rootView.findViewById(R.id.zhuanyun_root).setVisibility(View.GONE);
+			//快件跟踪
+			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+		}
+
         //fragment_main中的操作激发
 		//快递揽收
         rootView.findViewById(R.id.action_ex_receive_icon).setOnClickListener(
