@@ -90,7 +90,7 @@ public class UserInfo{
 		this.transPackageID = value;
 	}
 	
-	public String geTransPackageID() {
+	public String getTransPackageID() {
 		return transPackageID;
 	}
 	

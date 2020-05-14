@@ -16,7 +16,7 @@ import extrace.ui.main.ExTraceApplication;
  * A fragment representing a list of Items.
  * <p />
  * <p />
- * Activities containing this fragment MUST implement the {@link Callbacks}
+ * Activities containing this fragment MUST implement the {@link //Callbacks}
  * interface.
  */
 public class ExpressListFragment extends ListFragment {
@@ -123,7 +123,7 @@ public class ExpressListFragment extends ListFragment {
 				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getReceivePackageID();
 				break;
 			case "ExTAN":
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().geTransPackageID();
+				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getTransPackageID();
 				break;
 		}
 		mLoader = new ExpressListLoader(mAdapter, this.getActivity());
