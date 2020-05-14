@@ -16,7 +16,7 @@ import extrace.ui.main.ExTraceApplication;
  * A fragment representing a list of Items.
  * <p />
  * <p />
- * Activities containing this fragment MUST implement the {@link //Callbacks}
+ * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
 public class ExpressListFragment extends ListFragment {
@@ -114,21 +114,25 @@ public class ExpressListFragment extends ListFragment {
 	
 	private void RefreshList()
 	{
+		int Express_status= ExpressSheet.STATUS.STATUS_CREATED;
+		String ID=null;
 		String pkgId = null;
 		switch(mExType){
-			case "ExDLV":
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDelivePackageID();
+			case "ExDLV"://派送任务
+                ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
+                Express_status=ExpressSheet.STATUS.STATUS_CREATED;
 				break;
-			case "ExRCV":
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getReceivePackageID();
+			case "ExRCV"://揽收任务
+				ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
+				Express_status=ExpressSheet.STATUS.STATUS_DAIPAISONG;
 				break;
-			case "ExTAN":
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getTransPackageID();
+			case "ExTAN"://转运任务
+				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().geTransPackageID();
 				break;
 		}
 		mLoader = new ExpressListLoader(mAdapter, this.getActivity());
 
-		mLoader.LoadExpressListInPackage(pkgId);
+		mLoader.getExpressListbyTransnode(ID,Express_status);
         //mLoader.LoadExpressList();
 	}
 
@@ -138,7 +142,7 @@ public class ExpressListFragment extends ListFragment {
 		intent.putExtra("Action","Edit");
 		intent.putExtra("ExpressSheet",es);
 		intent.setClass(this.getActivity(), ExpressEditActivity.class);
-		startActivityForResult(intent, 0);  	
+		startActivityForResult(intent, 0);
     }
 
 }

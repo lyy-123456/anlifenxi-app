@@ -68,6 +68,15 @@ public class ExpressListLoader extends HttpAsyncTask {
 		}
 	}
 
+	//lsy新增
+	public void getExpressListbyTransnode(String ID,int status){
+		url += "getExpressListbytransnode/"+ID+"/"+status+"?_type=json";
+		try {
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 //	//像包裹中添加运单列表
 //	public void MoveExpressListIntoPackage(List<ExpressSheet> esList,String pkgId)
 //	{

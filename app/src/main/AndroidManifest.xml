@@ -81,9 +81,6 @@
             android:name="extrace.ui.packages.PackageCreateActivity"
             android:label="包裹打包" />
         <activity
-            android:name="extrace.ui.packageopenning.PackageOpenActivity"
-            android:label="包裹拆包" />
-        <activity
             android:name="extrace.ui.zhuanyun.MyLocationActivity"
             android:label="转运" />
         <activity
