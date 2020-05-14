@@ -111,7 +111,8 @@ public class ExpressListFragment extends ListFragment {
 		// TODO: Update argument type and name
 		public void onFragmentInteraction(String id);
 	}
-	
+
+	//lsy修改
 	private void RefreshList()
 	{
 		int Express_status= ExpressSheet.STATUS.STATUS_CREATED;
@@ -120,14 +121,14 @@ public class ExpressListFragment extends ListFragment {
 		switch(mExType){
 			case "ExDLV"://派送任务
                 ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
-                Express_status=ExpressSheet.STATUS.STATUS_CREATED;
+                Express_status=ExpressSheet.STATUS.STATUS_DAIPAISONG;
 				break;
 			case "ExRCV"://揽收任务
 				ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
-				Express_status=ExpressSheet.STATUS.STATUS_DAIPAISONG;
+				Express_status=ExpressSheet.STATUS.STATUS_CREATED;
 				break;
 			case "ExTAN"://转运任务
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().geTransPackageID();
+				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getTransPackageID();
 				break;
 		}
 		mLoader = new ExpressListLoader(mAdapter, this.getActivity());
