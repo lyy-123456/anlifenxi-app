@@ -15,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import extrace.misc.model.UserInfo;
 import extrace.ui.domain.ExpressListFragment;
 import extrace.ui.domain.ExpressListFragment.OnFragmentInteractionListener;
 import extrace.ui.login_register_reset.Login_Activity;
@@ -27,11 +30,14 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     private SharedPreferences.Editor editor;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    private  ExTraceApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        app = (ExTraceApplication)this.getApplication();
+        Toast.makeText(this,app.getLoginUser().toString(),Toast.LENGTH_SHORT).show();
         sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         // Set up the action bar.
@@ -67,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+
    }
 
     @Override
@@ -75,6 +83,26 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        if(app.getLoginUser().getURull() == UserInfo.STATUS.SIJI){
+
+        }
+        switch (app.getLoginUser().getURull()){
+            case UserInfo.STATUS.SIJI:
+                setTitle("卓越快递（司机）");;
+                break;
+            case UserInfo.STATUS.SAOMIAOYUAN:
+                setTitle("卓越快递（业务员）");
+                break;
+            case UserInfo.STATUS.FUZEREN:
+                setTitle("卓越快递（负责人）");
+                break;
+            case UserInfo.STATUS.KUAIDIYUAN:
+                setTitle("卓越快递（快递员）");
+                break;
+             default:
+                setTitle("卓越快递");
+                break;
+        }
         return true;
     }
 
@@ -139,23 +167,59 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
         @Override
         public Fragment getItem(int position) {
-	        switch(position){
-        	case 0:
-                return MainFragment.newInstance();
-        	case 1:
-                return ExpressListFragment.newInstance("ExDLV");	//派送快件
-        	case 2:
-                return ExpressListFragment.newInstance("ExRCV");	//揽收快件
-        	case 3:
-                return ExpressListFragment.newInstance("ExTAN");	//转运快件
-        	}
+
+            if(app.getLoginUser().getURull() == UserInfo.STATUS.FUZEREN){
+                switch(position){
+                    case 0:
+                        return MainFragment.newInstance();
+                    case 1:
+                        return ExpressListFragment.newInstance("ExDLV");	//派送快件
+                    case 2:
+                        return ExpressListFragment.newInstance("ExRCV");	//揽收快件
+                    case 3:
+                        return ExpressListFragment.newInstance("ExTAN");	//转运快件
+                }
+            }else if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN){
+                switch(position){
+                    case 0:
+                        return MainFragment.newInstance();
+                    case 1:
+                        return ExpressListFragment.newInstance("ExDLV");	//派送快件
+                    case 2:
+                        return ExpressListFragment.newInstance("ExRCV");	//揽收快件
+                }
+            }
+            else if(app.getLoginUser().getURull() == UserInfo.STATUS.SAOMIAOYUAN){
+                switch(position){
+                    case 0:
+                        return MainFragment.newInstance();
+                }
+            }if(app.getLoginUser().getURull() == UserInfo.STATUS.SIJI){
+                switch(position){
+                    case 0:
+                        return MainFragment.newInstance();
+                    case 1:
+                        return ExpressListFragment.newInstance("ExTAN");	//转运快件
+                }
+            }
+
         	return null;
         }
 
         @Override
     public int getCount() {
         // 总共4页.
-        return 4;
+            int i = 0;
+        if(app.getLoginUser().getURull() == UserInfo.STATUS.FUZEREN){
+            i = 4;
+        }else if(app.getLoginUser().getURull() == UserInfo.STATUS.SIJI){
+            i = 2;
+        }else if(app.getLoginUser().getURull() == UserInfo.STATUS.SAOMIAOYUAN){
+            i = 1;
+        }else  if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN){
+            i = 3;
+        }
+        return i;
     }
 
     @Override
@@ -166,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             case 0:
                 return getString(R.string.title_section1).toUpperCase(l);
             case 1:
+                if(app.getLoginUser().getURull() == UserInfo.STATUS.SIJI) return getString(R.string.title_section4).toUpperCase(l);
                 return getString(R.string.title_section2).toUpperCase(l);
             case 2:
                 return getString(R.string.title_section3).toUpperCase(l);

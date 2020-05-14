@@ -14,244 +14,324 @@
             android:paddingRight="15dip" >
 
             <LinearLayout
+                android:id="@+id/lanshou_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_ex_receive_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_photograph_icon" />
+                    <ImageView
+                        android:id="@+id/action_ex_receive_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_photograph_icon" />
+
+                    <TextView
+                        android:id="@+id/action_ex_receive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="快件揽收"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/action_ex_receive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="快件揽收"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
 
             <LinearLayout
+                android:id="@+id/paisong_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_ex_transfer_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_game" />
+                    <ImageView
+                        android:id="@+id/action_ex_transfer_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_game" />
+
+                    <TextView
+                        android:id="@+id/action_ex_transfer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="快件派送"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/action_ex_transfer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="快件派送"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
+
+
+
 
             <LinearLayout
+                android:id="@+id/caipkg_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_pk_exp_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_scan" />
+                    <ImageView
+                        android:id="@+id/action_pk_exp_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_scan" />
+
+                    <TextView
+                        android:id="@+id/action_pk_exp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="包裹拆包"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/action_pk_exp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="包裹拆包"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
+
+
 
             <LinearLayout
+                android:id="@+id/dopkg_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_pk_pkg_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_shake" />
+                    <ImageView
+                        android:id="@+id/action_pk_pkg_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_shake" />
+
+                    <TextView
+                        android:id="@+id/action_pk_pkg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="包裹打包"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/action_pk_pkg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="包裹打包"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
+
+
 
             <LinearLayout
+                android:id="@+id/mng_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_cu_mng_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_near_icon" />
+                    <ImageView
+                        android:id="@+id/action_cu_mng_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_near_icon" />
+
+                    <TextView
+                        android:id="@+id/action_cu_mng"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="客户管理"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/action_cu_mng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="客户管理"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
+
 
             <LinearLayout
+                android:id="@+id/query_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_ex_qur_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_bottle" />
+                    <ImageView
+                        android:id="@+id/action_ex_qur_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_bottle" />
 
+                    <TextView
+                        android:id="@+id/action_ex_qur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="快件查询"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
                 <TextView
-                    android:id="@+id/action_ex_qur"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="快件查询"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
+
+
+
             <LinearLayout
+                android:id="@+id/genzong_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_express_genzong_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_shake" />
+                    <ImageView
+                        android:id="@+id/action_express_genzong_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_shake" />
 
+                    <TextView
+                        android:id="@+id/action_express_genzong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="快件跟踪"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
                 <TextView
-                    android:id="@+id/action_express_genzong"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="快件跟踪"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
+
             </LinearLayout>
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/lightgray" />
+
+
             <LinearLayout
+                android:id="@+id/zhuanyun_root"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dip"
-                android:paddingLeft="5dip"
-                android:paddingTop="15dip" >
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
 
-                <ImageView
-                    android:id="@+id/action_pkg_zhuanyun_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/find_more_friend_shake" />
+                    <ImageView
+                        android:id="@+id/action_pkg_zhuanyun_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_shake" />
 
-                <TextView
-                    android:id="@+id/action_pkg_zhuanyun"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:text="包裹转运"
-                    android:textColor="@color/black"
-                    android:textSize="20dip" />
+                    <TextView
+                        android:id="@+id/action_pkg_zhuanyun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="包裹转运"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+            </LinearLayout>
+
+
 
 
 
