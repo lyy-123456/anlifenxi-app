@@ -1,6 +1,7 @@
 package extrace.loader;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -28,6 +29,10 @@ public class TransHistoryDetailListLoader extends HttpAsyncTask {
     @Override
     public void onDataReceive(String class_name, String json_data) {
         List<TransHistoryDetail> transHistoryDetails = JsonUtils.fromJson(json_data,new TypeToken<List<TransHistoryDetail>>(){});
+        if(transHistoryDetails == null || transHistoryDetails.size() == 0){
+            Toast.makeText(context,"包裹历史为空或不存在",Toast.LENGTH_SHORT).show();
+            return;
+        }
         adapter.setData(transHistoryDetails);
         adapter.notifyDataSetChanged();
     }

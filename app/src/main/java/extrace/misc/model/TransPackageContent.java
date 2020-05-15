@@ -78,10 +78,11 @@ public class TransPackageContent implements Serializable {
 		}
 	}
 
+	//TransPackageContent类
 	public static final class STATUS{
-		public static final int STATUS_ACTIVE = 0;
-		public static final int STATUS_OUTOF_PACKAGE = 1;
-		public static final int STATUS_LOST = 2;
-		public static final int STATUS_DAMAGED = 3;
+		public static final int STATUS_ACTIVE = 0;  //正常
+		public static final int STATUS_OUTOF_PACKAGE = 1;  //已移除快件
+		public static final int STATUS_LOST = 2;  //快件丢失
+		public static final int STATUS_DAMAGED = 3;  //快件损坏
 	}
 }

@@ -117,10 +117,11 @@ public class UserInfo{
 		}
 	}
 
+	//USErinfo类
 	public static class STATUS{
-		public static final int SIJI = 0;
-		public static final int SAOMIAOYUAN = 1;
-		public static final int KUAIDIYUAN = 2;
-		public static final int FUZEREN = 3;
+		public static final int SIJI = 0;  //司机
+		public static final int SAOMIAOYUAN = 1;  //扫描员
+		public static final int KUAIDIYUAN = 2;  //快递员
+		public static final int FUZEREN = 3;   //负责人
 	}
 }

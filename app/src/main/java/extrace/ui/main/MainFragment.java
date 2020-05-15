@@ -17,6 +17,7 @@ import extrace.ui.domain.ExpressEditActivity;
 import extrace.ui.genZong.ExpressGenZongMainActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
+import extrace.ui.qianShou.ExpressQianShouActivity;
 import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 
 public class MainFragment  extends Fragment {
@@ -64,6 +65,9 @@ public class MainFragment  extends Fragment {
 			//快件跟踪
 			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
 
+			//快件签收
+			rootView.findViewById(R.id.qianshou_root).setVisibility(View.GONE);
+
 		}else if(userInfo.getURull() == UserInfo.STATUS.SAOMIAOYUAN){
 			//快件揽收
 			rootView.findViewById(R.id.lanshou_root).setVisibility(View.GONE);
@@ -83,6 +87,8 @@ public class MainFragment  extends Fragment {
 
 //			//快件跟踪
 //			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+			//快件签收
+			rootView.findViewById(R.id.qianshou_root).setVisibility(View.GONE);
 
 		}else if(userInfo.getURull() == UserInfo.STATUS.KUAIDIYUAN) {
 //			//快件揽收
@@ -101,6 +107,27 @@ public class MainFragment  extends Fragment {
 			rootView.findViewById(R.id.zhuanyun_root).setVisibility(View.GONE);
 			//快件跟踪
 			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+//			//快件签收
+//			rootView.findViewById(R.id.qianshou_root).setVisibility(View.GONE);
+		}else{ //负责人
+			//快件揽收
+			rootView.findViewById(R.id.lanshou_root).setVisibility(View.GONE);
+			//快件派送
+			rootView.findViewById(R.id.paisong_root).setVisibility(View.GONE);
+			//包裹打包
+			rootView.findViewById(R.id.dopkg_root).setVisibility(View.GONE);
+			//包裹拆包
+			rootView.findViewById(R.id.caipkg_root).setVisibility(View.GONE);
+//			//客户管理
+//			rootView.findViewById(R.id.mng_root).setVisibility(View.GONE);
+//			//快件查询
+//			rootView.findViewById(R.id.query_root).setVisibility(View.GONE);
+			//包裹转运
+			rootView.findViewById(R.id.zhuanyun_root).setVisibility(View.GONE);
+//			//快件跟踪
+//			rootView.findViewById(R.id.genzong_root).setVisibility(View.GONE);
+			//快件签收
+			rootView.findViewById(R.id.qianshou_root).setVisibility(View.GONE);
 		}
 
         //fragment_main中的操作激发
@@ -229,10 +256,31 @@ public class MainFragment  extends Fragment {
 				StartGenZong();
 			}
 		});
+
+		//快件签收
+		rootView.findViewById(R.id.action_exp_qianshou_icon).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartQianShou();
+			}
+		});
+		rootView.findViewById(R.id.action_exp_qianshou).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				StartQianShou();
+			}
+		});
         return rootView;
     }
 
-    //包裹拆包
+    //快件签收
+	private void StartQianShou() {
+		Intent intent = new Intent();
+		intent.setClass(this.getActivity(), ExpressQianShouActivity.class);
+		startActivityForResult(intent, 0);
+	}
+
+	//包裹拆包
     private void StartOpenPackage() {
         Intent intent = new Intent();
         intent.putExtra("Action","Open");
@@ -262,7 +310,7 @@ public class MainFragment  extends Fragment {
         startActivityForResult(intent, 0);
     }
 
-    void StartReceiveExpress()
+	private void StartReceiveExpress()
     {
 		Intent intent = new Intent();
 		intent.putExtra("Action","New");
@@ -270,7 +318,7 @@ public class MainFragment  extends Fragment {
 		startActivityForResult(intent, 0);  	
     }
 
-    void StartQueryExpress()
+	private void StartQueryExpress()
     {
 		Intent intent = new Intent();
 		intent.putExtra("Action","Query");
@@ -278,7 +326,7 @@ public class MainFragment  extends Fragment {
 		startActivityForResult(intent, 0);  	
     }
 
-    void StartCustomerList()
+    private  void StartCustomerList()
     {
 		Intent intent = new Intent();
 		intent.putExtra("Action","None");

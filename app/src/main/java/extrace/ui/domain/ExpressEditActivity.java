@@ -300,7 +300,7 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 	
 	private void StartCapture(){
 		Intent intent = new Intent();
-		intent.putExtra("Action","Captrue");
+		intent.putExtra("Action","Capture");
 		intent.setClass(this, CaptureActivity.class);
 		startActivityForResult(intent, REQUEST_CAPTURE);  	
 	}

@@ -70,14 +70,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ACCEAD"/>
-        <Button
-            android:id="@+id/open_btn"
-            android:layout_alignRight="@id/search"
-            android:text="点击弹出运单历史"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content">
+<!--        <Button-->
+<!--            android:id="@+id/open_btn"-->
+<!--            android:layout_alignRight="@id/search"-->
+<!--            android:text="点击弹出运单历史"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="wrap_content">-->
 
-        </Button>
+<!--        </Button>-->
     </RelativeLayout>
 
 

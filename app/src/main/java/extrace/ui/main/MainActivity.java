@@ -172,12 +172,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                 switch(position){
                     case 0:
                         return MainFragment.newInstance();
-                    case 1:
-                        return ExpressListFragment.newInstance("ExDLV");	//派送快件
-                    case 2:
-                        return ExpressListFragment.newInstance("ExRCV");	//揽收快件
-                    case 3:
-                        return ExpressListFragment.newInstance("ExTAN");	//转运快件
                 }
             }else if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN){
                 switch(position){
@@ -187,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                         return ExpressListFragment.newInstance("ExDLV");	//派送快件
                     case 2:
                         return ExpressListFragment.newInstance("ExRCV");	//揽收快件
+                    case 3:
+                        return ExpressListFragment.newInstance("MyExpress");
                 }
             }
             else if(app.getLoginUser().getURull() == UserInfo.STATUS.SAOMIAOYUAN){
@@ -211,13 +207,13 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         // 总共4页.
             int i = 0;
         if(app.getLoginUser().getURull() == UserInfo.STATUS.FUZEREN){
-            i = 4;
+            i = 1;
         }else if(app.getLoginUser().getURull() == UserInfo.STATUS.SIJI){
             i = 2;
         }else if(app.getLoginUser().getURull() == UserInfo.STATUS.SAOMIAOYUAN){
             i = 1;
         }else  if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN){
-            i = 3;
+            i = 4;
         }
         return i;
     }
@@ -235,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             case 2:
                 return getString(R.string.title_section3).toUpperCase(l);
             case 3:
+                if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN) return "我的派送".toUpperCase(l);
                 return getString(R.string.title_section4).toUpperCase(l);
         }
         return null;

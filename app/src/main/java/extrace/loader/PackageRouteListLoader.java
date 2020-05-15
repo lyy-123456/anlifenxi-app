@@ -1,6 +1,7 @@
 package extrace.loader;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -26,6 +27,10 @@ public class PackageRouteListLoader extends HttpAsyncTask {
     @Override
     public void onDataReceive(String class_name, String json_data) {
         List<PackageRoute> packageRouteList = JsonUtils.fromJson(json_data,new TypeToken<List<PackageRoute>>(){});
+        if(packageRouteList == null || packageRouteList.size() ==0 ){
+            Toast.makeText(context,"包裹历史为空或包裹不存在",Toast.LENGTH_SHORT).show();
+            return;
+        }
         adapter.setData(packageRouteList);
         adapter.notifyDataSetChanged();
     }

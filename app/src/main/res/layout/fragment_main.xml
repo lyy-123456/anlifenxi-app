@@ -328,12 +328,51 @@
                         android:textColor="@color/black"
                         android:textSize="20dip" />
                 </LinearLayout>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/qianshou_root"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="15dip" >
+
+                    <ImageView
+                        android:id="@+id/action_exp_qianshou_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/find_more_friend_shake" />
+
+                    <TextView
+                        android:id="@+id/action_exp_qianshou"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="快件签收"
+                        android:textColor="@color/black"
+                        android:textSize="20dip" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lightgray" />
             </LinearLayout>
 
 
-
-
+        </LinearLayout>
 
     </ScrollView>
 </LinearLayout>
