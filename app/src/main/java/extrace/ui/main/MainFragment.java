@@ -17,6 +17,7 @@ import extrace.ui.domain.ExpressEditActivity;
 import extrace.ui.genZong.ExpressGenZongMainActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
+import extrace.ui.paiSong.ExpressPaiSongActivity;
 import extrace.ui.qianShou.ExpressQianShouActivity;
 import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 
@@ -310,6 +311,7 @@ public class MainFragment  extends Fragment {
         startActivityForResult(intent, 0);
     }
 
+    //快件揽收
 	private void StartReceiveExpress()
     {
 		Intent intent = new Intent();
@@ -318,11 +320,12 @@ public class MainFragment  extends Fragment {
 		startActivityForResult(intent, 0);  	
     }
 
+    //快件派送
 	private void StartQueryExpress()
     {
 		Intent intent = new Intent();
-		intent.putExtra("Action","Query");
-		intent.setClass(this.getActivity(), ExpressEditActivity.class);
+//		intent.putExtra("Action","Query");
+		intent.setClass(this.getActivity(), ExpressPaiSongActivity.class);
 		startActivityForResult(intent, 0);  	
     }
 

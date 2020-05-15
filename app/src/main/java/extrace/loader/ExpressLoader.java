@@ -49,6 +49,15 @@ public class ExpressLoader extends HttpAsyncTask {
 			adapter.getData().onSave();
 			adapter.notifyDataSetChanged();
 			Toast.makeText(context, "快件运单信息保存完成!", Toast.LENGTH_SHORT).show();
+		}else if(class_name.equals("isArrived")){
+			Boolean bool = JsonUtils.fromJson(json_data,new TypeToken<Boolean>(){});
+			if(bool){
+				ExpressSheet expressSheet = new ExpressSheet();
+				expressSheet.setID("00000000");
+				adapter.setData(expressSheet);
+			}else{
+				Toast.makeText(context,"包裹没有到达",Toast.LENGTH_SHORT).show();
+			}
 		}
 		else
 		{
@@ -115,5 +124,33 @@ public class ExpressLoader extends HttpAsyncTask {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
+
+	public void changeExpressStatus(String id, int status){
+		url += "changeExpressStatus/"+id+"/"+status+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void  saveOneExpressSheet(ExpressSheet expressSheet){
+		String json_data = JsonUtils.toJson(expressSheet,true);
+		url += "saveOneExpressSheet";
+		try{
+			execute(url,"POST",json_data);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void isArrived(String expressID, String dptID) {
+		url += "isarrived/"+expressID+"/"+dptID+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

@@ -1,38 +1,27 @@
-package extrace.ui.accPkg;
+package extrace.ui.paiSong;
 
-import androidx.annotation.IntRange;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import extrace.loader.ExpressLoader;
-import extrace.loader.TransPackageContentLoader;
 import extrace.misc.model.ExpressSheet;
-import extrace.misc.model.TransPackageContent;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
+import zxing.util.CaptureActivity;
 
-public class ExpressAccActivity extends AppCompatActivity implements IDataAdapter<ExpressSheet> {
+public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAdapter<ExpressSheet> {
 
-    private static final String[] status={"正常","已丢失","已损坏"};
-    private Button accBtn;
-    private Spinner spinner;
-    private ArrayAdapter<String> adapter;
-    private String selectItem;
-    private ExpressSheet expressSheet;
-    private int selectPosition;
-    private TransPackageContent transPackageContent;
-    
+    private static final int REQUEST_CAPTURE = 100;
     private TextView mIDView;
     private TextView mRcvNameView;
     private TextView mRcvTelCodeView;
@@ -53,18 +42,73 @@ public class ExpressAccActivity extends AppCompatActivity implements IDataAdapte
     private TextView mSndTimeView;
 
     private TextView mStatusView;
-    private String packageID;
-    private String expressID;
 
-    private boolean isCommit;
+    private  Button paiSongBtn;
 
-    private Boolean isArrived;
+    private ExpressSheet expressSheet;
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_express_acc);
-        accBtn = (Button)findViewById(R.id.btnCommit);
-        spinner = (Spinner) findViewById(R.id.expressInPkgStatusSpinner);
+        setContentView(R.layout.qianshou_activity);
+        initView();
+        initData();
+        StartCapture();
+    }
+
+    private void StartCapture(){
+        Intent intent = new Intent();
+        intent.putExtra("Action","Capture");
+        intent.setClass(this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CAPTURE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case RESULT_OK:
+                switch (requestCode){
+                    case REQUEST_CAPTURE:
+                        if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
+                            String id = data.getStringExtra("BarCode");
+                            ExpressLoader mLoader = new ExpressLoader(this, this);  //加载一个快件
+                            mLoader.Load(id);
+                        }
+                        break;
+                }
+        }
+    }
+    private void initData() {
+        paiSongBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartPaiSong();
+            }
+        });
+    }
+
+    //开始派送
+    private void StartPaiSong() {
+        if(expressSheet ==null){
+            Toast.makeText(this,"没有快件无法派送",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(expressSheet.getStatus() != ExpressSheet.STATUS.STATUS_DAIPAISONG){
+            Toast.makeText(this,"快件状态不正确，无法派送",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //1获取登陆者的信息往ExpressSheet里面写
+        ExpressLoader expressLoader =new ExpressLoader(this,this);
+        expressSheet.setStatus(ExpressSheet.STATUS.STATUS_PAISONG);
+        expressSheet.setDeliver(String.valueOf( ((ExTraceApplication)getApplication()).getLoginUser().getUID() ) );
+        RefreshUI();
+        expressLoader.saveOneExpressSheet(expressSheet);
+    }
+
+    //新建View
+    private void initView() {
+        findViewById(R.id.paisong_lay).setVisibility(View.VISIBLE);
+        paiSongBtn = (Button) findViewById(R.id.btn_paisong);
+
         mIDView = (TextView) findViewById(R.id.express_acc_Id);
         mRcvNameView = (TextView) findViewById(R.id.express_acc_RcvName);
         mRcvTelCodeView = (TextView) findViewById(R.id.express_acc_RcvTel);
@@ -82,90 +126,8 @@ public class ExpressAccActivity extends AppCompatActivity implements IDataAdapte
         mSndTimeView = (TextView)findViewById(R.id.express_acc_DlvTime);
 
         mStatusView =  (TextView)findViewById(R.id.express_acc_Status);
-
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,status);
-
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //将adapter 添加到spinner中
-        spinner.setAdapter(adapter);
-        //添加事件Spinner事件监听
-        spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
-        //设置默认值
-        selectPosition = 0;
-        spinner.setSelection(selectPosition);
-        spinner.setVisibility(View.VISIBLE);
-
-
-        accBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StartAccExpress();
-
-            }
-        });
-
-        //初始化状态
-        isCommit = false;
-        isArrived = false;
-
-        //加载快件的信息
-        expressID = getIntent().getStringExtra("ExpressID");
-        ExpressLoader expressLoader = new ExpressLoader(this,this);
-        expressLoader.Load(expressID);
-        packageID = getIntent().getStringExtra("PackageID");
-        InTransPackageContent inTransPackageContent = new InTransPackageContent();
-        TransPackageContentLoader transPackageContentLoader = new TransPackageContentLoader(inTransPackageContent,this);
-        transPackageContentLoader.getTransPackageContent(packageID,expressID);
-
-        //如果快件已到达终点需要改变状态
-        ExpressLoader expressLoader1 = new ExpressLoader(this,this);
-        expressLoader1.isArrived(expressID,((ExTraceApplication)this.getApplication()).getLoginUser().getDptID());
-
     }
 
-    //确认包裹
-    private void StartAccExpress() {
-        isCommit = true;
-        //改变状态
-        InTransPackageContent inTransPackageContent = new InTransPackageContent();
-        TransPackageContentLoader transPackageContentLoader = new TransPackageContentLoader(inTransPackageContent,this);
-        transPackageContentLoader.changeExpressStatusInPackage(packageID,expressID,selectPosition+1);
-
-        if(isArrived && selectPosition <=0){ //如果已经到达
-            ExpressLoader expressLoader = new ExpressLoader(this,this);
-            expressLoader.changeExpressStatus(expressSheet.getID(),ExpressSheet.STATUS.STATUS_DAIPAISONG);
-        }
-}
-
-    class InTransPackageContent implements IDataAdapter<TransPackageContent>{
-
-        @Override
-        public TransPackageContent getData() {
-            return transPackageContent;
-        }
-
-        @Override
-        public void setData(TransPackageContent data) {
-            transPackageContent = data;
-            if(isCommit){
-                isCommit = false;
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("ExpressSheet",expressSheet);
-                System.out.println("ExpressAccActivity"+expressSheet.toString());
-                intent.putExtras(bundle);
-                setResult(RESULT_OK,intent);
-                finish();
-            }
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-
-        }
-    }
     private void displayRcv(ExpressSheet es){
         if(es.getRecever() != null){
             mRcvNameView.setText(es.getRecever().getName());
@@ -203,20 +165,6 @@ public class ExpressAccActivity extends AppCompatActivity implements IDataAdapte
             mSndRegionView.setText(null);
         }
     }
-    @Override
-    public ExpressSheet getData() {
-        return expressSheet;
-    }
-
-    @Override
-    public void setData(ExpressSheet data) {
-        if(data.getID().equals("00000000")){
-            isArrived = true;
-        }
-        expressSheet = data;
-        RefreshUI();
-    }
-
     private void RefreshUI() {
         mIDView.setText(expressSheet.getID());
         displayRcv(expressSheet);
@@ -254,21 +202,21 @@ public class ExpressAccActivity extends AppCompatActivity implements IDataAdapte
         mStatusView.setText(stText);
     }
 
+
+    @Override
+    public ExpressSheet getData() {
+        return expressSheet;
+    }
+
+    @Override
+    public void setData(ExpressSheet data) {
+
+        expressSheet = data;
+        RefreshUI();
+    }
+
     @Override
     public void notifyDataSetChanged() {
 
-    }
-
-    //使用数组形式操作
-    class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
-
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-                                   long arg3) {
-            selectPosition = arg2;
-            selectItem=status[arg2];
-        }
-
-        public void onNothingSelected(AdapterView<?> arg0) {
-        }
     }
 }

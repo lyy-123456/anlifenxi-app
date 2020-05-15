@@ -291,6 +291,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(Login_Activity.this, MainActivity.class);
         intent.putExtra("Username",edit_account.getText().toString());
         startActivity(intent);
+        finish();
     }
 
     @Override

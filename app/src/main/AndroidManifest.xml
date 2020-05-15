@@ -36,12 +36,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-
+        <activity android:name="extrace.ui.paiSong.ExpressPaiSongActivity"></activity>
         <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
-        <meta-data android:name="Mob-AppKey" android:value="2f147ac272b9c"/>
-        <meta-data android:name="Mob-AppSecret" android:value="3d99ba99670eca2e85ede4256b441529"/>
+        <meta-data
+            android:name="Mob-AppKey"
+            android:value="2f147ac272b9c" />
+        <meta-data
+            android:name="Mob-AppSecret"
+            android:value="3d99ba99670eca2e85ede4256b441529" />
 
-        <activity android:name="extrace.ui.genZong.ExpressGenZongMainActivity"></activity>
+        <activity android:name="extrace.ui.genZong.ExpressGenZongMainActivity" />
         <activity android:name="extrace.ui.zhuanyun.GpsLocationActivity" />
         <activity android:name="extrace.ui.accPkg.ExpressAccActivity" />
         <activity android:name="extrace.ui.misc.TransNodeEditActivity" />
@@ -53,12 +57,12 @@
         <activity android:name="extrace.ui.login_register_reset.Register_Activity" />
         <activity android:name="extrace.ui.login_register_reset.ForgotInfo_Activity" />
         <activity android:name="extrace.ui.login_register_reset.ResetPassword_Activity" />
-
+        <activity android:name="extrace.ui.qianShou.ExpressQianShouActivity" />
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -123,14 +127,12 @@
             android:label="@string/title_activity_express_edit" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <!--这个必须得加-->
+            android:label="@string/title_activity_settings" /> <!-- 这个必须得加 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
     </application>
 
 </manifest>
