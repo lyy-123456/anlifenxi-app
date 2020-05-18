@@ -118,6 +118,7 @@ public class ExpressListFragment extends ListFragment {
 		int Express_status= ExpressSheet.STATUS.STATUS_CREATED;
 		String ID=null;
 		String pkgId = null;
+		int UID=0;
 		switch(mExType){
 			case "ExDLV"://派送任务
                 ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
@@ -127,15 +128,18 @@ public class ExpressListFragment extends ListFragment {
 				ID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getDptID();
 				Express_status=ExpressSheet.STATUS.STATUS_CREATED;
 				break;
-			case "ExTAN"://转运任务
-				pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getTransPackageID();
-				break;
-			case "MyExpress":
+			//case "ExTAN"://转运任务
+				//pkgId = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getTransPackageID();
+				//break;
+			case "MyExpress"://正在派送
+				UID = ((ExTraceApplication)this.getActivity().getApplication()).getLoginUser().getUID();
 				break;
 		}
 		mLoader = new ExpressListLoader(mAdapter, this.getActivity());
-
-		mLoader.getExpressListbyTransnode(ID,Express_status);
+		if (mExType.equals("ExDLV")||mExType.equals("ExRCV"))
+			mLoader.getExpressListbyTransnode(ID,Express_status);
+		else if (mExType.equals("MyExpress"))
+			mLoader.getPaisongExpresssheet(UID);
         //mLoader.LoadExpressList();
 	}
 

@@ -223,6 +223,7 @@ public class Register_Activity extends Activity implements View.OnClickListener,
             case  R.id.radio2:
                 Toast.makeText(Register_Activity.this, "你选择了快递员类型", Toast.LENGTH_SHORT).show();
                 uRull=2;
+                break;
             case  R.id.radio3:
                 Toast.makeText(Register_Activity.this, "你选择了管理员类型", Toast.LENGTH_SHORT).show();
                 uRull=3;

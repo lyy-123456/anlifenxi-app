@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                     case 2:
                         return ExpressListFragment.newInstance("ExRCV");	//揽收快件
                     case 3:
-                        return ExpressListFragment.newInstance("MyExpress");
+                        return ExpressListFragment.newInstance("MyExpress");//正在派送
                 }
             }
             else if(app.getLoginUser().getURull() == UserInfo.STATUS.SAOMIAOYUAN){
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             case 2:
                 return getString(R.string.title_section3).toUpperCase(l);
             case 3:
-                if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN) return "我的派送".toUpperCase(l);
+                if(app.getLoginUser().getURull() == UserInfo.STATUS.KUAIDIYUAN) return "正在派送".toUpperCase(l);
                 return getString(R.string.title_section4).toUpperCase(l);
         }
         return null;

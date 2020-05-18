@@ -78,7 +78,7 @@ public class ExpressListAdapter extends ArrayAdapter<ExpressSheet> implements ID
 
 		ExpressSheet es = getItem(position);
 		switch(ex_type){
-		case "ExDLV":	//派送
+		case "ExDLV":	//待派送
 			if(es.getRecever() != null){
 				hd.name.setText(es.getRecever().getName());			//接收者姓名
 				hd.telCode.setText(es.getRecever().getTelCode());	//接收者电话
@@ -100,15 +100,15 @@ public class ExpressListAdapter extends ArrayAdapter<ExpressSheet> implements ID
 				hd.time.setText(DateFormat.format("MM月dd日 hh:mm",es.getAccepteTime()));
 			}
 			break;
-		case "ExTAN":	//这个需要改
+		case "MyExpress":	//派送中
 			if(es.getRecever() != null){
 				hd.name.setText(es.getRecever().getName());			//接收者姓名
 				hd.telCode.setText(es.getRecever().getTelCode());	//接收者电话
 				hd.address.setText(es.getRecever().getAddress());	//接收者
 			}
 			if(es.getAccepteTime() != null){
-				SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
-				hd.time.setText(myFmt.format(es.getAccepteTime()));
+				//SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+				hd.time.setText(DateFormat.format("MM月dd日 hh:mm",es.getAccepteTime()));
 			}
 			break;
 		}
@@ -128,6 +128,12 @@ public class ExpressListAdapter extends ArrayAdapter<ExpressSheet> implements ID
 			stText = "已交付";
 			break;
 
+		case ExpressSheet.STATUS.STATUS_DAIPAISONG:
+			stText = "待派送";
+			break;
+
+		case ExpressSheet.STATUS.STATUS_PAISONG:
+			stText = "派送中";
 		}
 		hd.status.setText(stText);
 		return v;		

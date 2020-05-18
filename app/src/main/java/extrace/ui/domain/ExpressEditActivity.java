@@ -485,6 +485,9 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			case ExpressSheet.STATUS.STATUS_DAIZHUAYUN:
 				stText="等待转运";
 				break;
+			case ExpressSheet.STATUS.STATUS_DAIPAISONG:
+				stText="待派送";
+				break;
 			}
 			mStatusView.setText(stText);
 			displayBtn(es);

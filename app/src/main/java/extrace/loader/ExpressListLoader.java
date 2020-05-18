@@ -77,6 +77,15 @@ public class ExpressListLoader extends HttpAsyncTask {
 			e.printStackTrace();
 		}
 	}
+
+	public void getPaisongExpresssheet(int UID){
+		url += "getPaisongExpresssheet/"+UID+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 //	//像包裹中添加运单列表
 //	public void MoveExpressListIntoPackage(List<ExpressSheet> esList,String pkgId)
 //	{
