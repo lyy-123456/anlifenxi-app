@@ -350,7 +350,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/lightskyblue"
-            android:text="提交" />
+            android:text="提交"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/btnDelivry"

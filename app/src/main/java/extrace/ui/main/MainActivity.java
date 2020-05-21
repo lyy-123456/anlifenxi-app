@@ -178,9 +178,9 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                     case 0:
                         return MainFragment.newInstance();
                     case 1:
-                        return ExpressListFragment.newInstance("ExDLV");	//派送快件
+                        return ExpressListFragment.newInstance("ExDLV");	//派送任务
                     case 2:
-                        return ExpressListFragment.newInstance("ExRCV");	//揽收快件
+                        return ExpressListFragment.newInstance("ExRCV");	//揽收任务
                     case 3:
                         return ExpressListFragment.newInstance("MyExpress");//正在派送
                 }

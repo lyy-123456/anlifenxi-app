@@ -21,7 +21,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/edittext_bg"
         android:ems="10"
-        android:hint="用户名"
+        android:hint="手机号"
         android:inputType="textPersonName"
         android:paddingLeft="10dp" />
 

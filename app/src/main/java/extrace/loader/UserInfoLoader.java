@@ -32,8 +32,12 @@ public class UserInfoLoader extends HttpAsyncTask {
     public void onDataReceive(String class_name, String json_data) {
         if(class_name.equals("UserInfo")){
             UserInfo userInfo = JsonUtils.fromJson(json_data,new TypeToken<UserInfo>(){});
-            adapter.setData(userInfo);
-            adapter.notifyDataSetChanged();
+            if(userInfo.getStatus()== 0){
+                adapter.setData(userInfo);
+                adapter.notifyDataSetChanged();
+            }else {
+                Toast.makeText(context, "没有登陆权限", Toast.LENGTH_SHORT).show();
+            }
         }else if(class_name.equals("N_UserInfo")){
             Toast.makeText(context,"没有符合要求的用户",Toast.LENGTH_SHORT).show();
         }else if(class_name.equals("R_UserInfo")){

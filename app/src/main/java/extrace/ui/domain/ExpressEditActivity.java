@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import extrace.loader.ExpressLoader;
 import extrace.misc.model.CustomerInfo;
 import extrace.misc.model.ExpressSheet;
@@ -191,8 +193,9 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 
 	@Override
 	public void notifyDataSetChanged() {
-		if(baseFragment != null){
-			baseFragment.RefreshUI(mItem);			
+		if(baseFragment != null && externFragment != null){
+			baseFragment.RefreshUI(mItem);
+			externFragment.RefreshUI(mItem);
 		}
 		MenuDisplay(mItem.getStatus());
 	}
@@ -545,14 +548,14 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 
 	public static class ExpressEditFragment2 extends Fragment {
 
-		/**
-		 * Returns a new instance of this fragment for the given section number.
-		 */
+		private TextView mWeightView;
+		private TextView mTranFeeView;
+		private TextView mPackageFeeView;
+		private TextView mInsuFeeView;
+
+
 		public static ExpressEditFragment2 newInstance() {
 			ExpressEditFragment2 fragment = new ExpressEditFragment2();
-//			Bundle args = new Bundle();
-//			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//			fragment.setArguments(args);
 			return fragment;
 		}
 
@@ -564,11 +567,23 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_express_edit2,
 					container, false);
-//			TextView textView = (TextView) rootView
-//					.findViewById(R.id.section_label);
-//			textView.setText(Integer.toString(getArguments().getInt(
-//					ARG_SECTION_NUMBER)));
+			mWeightView = (TextView) rootView.findViewById(R.id.expressWeight);
+			mTranFeeView = (TextView) rootView.findViewById(R.id.expressTranFee);
+			mPackageFeeView = (TextView) rootView.findViewById(R.id.expressPackageFee);
+			mInsuFeeView = (TextView) rootView.findViewById(R.id.expressInsuFee);
 			return rootView;
+		}
+		void RefreshUI(ExpressSheet es){
+			if(es.getWeight()!=null && es.getTranFee()!=null && es.getPackageFee()!=null && es.getInsuFee()!=null){
+				mWeightView.setText(Double.toString(es.getWeight()));
+				mTranFeeView.setText(Double.toString(es.getTranFee()));
+				mPackageFeeView.setText(Double.toString(es.getPackageFee()));
+				mInsuFeeView.setText(Double.toString(es.getInsuFee()));
+			}else{
+				Toast.makeText(getActivity(),"快件扩展信息为空",Toast.LENGTH_SHORT).show();
+
+			}
+
 		}
 	}
 
