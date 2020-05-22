@@ -336,27 +336,6 @@
 
     <LinearLayout
         android:visibility="gone"
-        android:id="@+id/paisong_lay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="2dip"
-        android:paddingLeft="15dip"
-        android:paddingRight="15dip"
-        android:paddingTop="2dip">
-
-        <Button
-            android:id="@+id/btn_paisong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/lightskyblue"
-            android:text="确认派送" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:visibility="gone"
         android:id="@+id/qianshou_lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

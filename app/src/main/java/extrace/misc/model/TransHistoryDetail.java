@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class TransHistoryDetail implements Serializable,Comparable<TransHistoryDetail>{
+    private static final long serialVersionUID = 3366396099638993504L;
     private ExpressSheet expressSheet;
     private TransHistory transHistory;
     private  UserInfo UIDFrom;

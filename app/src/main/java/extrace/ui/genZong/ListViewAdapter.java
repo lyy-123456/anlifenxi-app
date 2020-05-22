@@ -99,17 +99,21 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
 
         //查一下快件的状态是否为正在运输
 
-        if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_CREATED  || position == 0){
+        if(position == 0){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_CREATED  ||
             //System.out.println(transHistoryDetail.getTransHistory().toString());
             sb.append("快件待揽收，正在等待揽收");
-            //System.out.println(transHistoryDetail.getTransHistory().toString());
-        }else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DAIZHUAYUN || position == 1){
+        }else if( position == 1){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DAIZHUAYUN ||
             sb.append("快件已揽收");
-        }else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_TRANSPORT || (position >=2 && position <= transHistoryLength+1)  ){
+        }else if( position >=2 && position <= transHistoryLength+1  ){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_TRANSPORT ||
             //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println(position);
             System.out.println(transHistoryDetail.getTransHistory().toString());
-            hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
+            //hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
+            hd.express_time.setText(sdf.format(transHistoryDetail.getTransHistory().getActTime()));
             if(UIDTo.getURull() == UserInfo.STATUS.FUZEREN) //如果是负责人，说明是司机转运的记录
             {
                 sb.append("快件已装车，准备发往下一站 【");
@@ -121,56 +125,23 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             }else{
                 sb.append("快件已到达 【"+toNode.getNodeName()+"】站点，扫描员是 【"+UIDTo.getName()+"】");
             }
+        }else if(position == transHistoryLength+2){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DAIPAISONG ||
+            sb.append("快件已到达终点站，等待转运");
         }
-        else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_PAISONG || position == transHistoryLength+2){
+        else if(position == transHistoryLength+3){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_PAISONG ||
             //hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
             sb.append("快件正在派送"+"派送员是： 【"+UIDFrom.getName()+"】"+"电话号码：【"+UIDFrom.getTelCode());
         }
-        else if(expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DELIVERIED || position == transHistoryLength+3){
-            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
-            hd.express_time.setText(expressSheet.getDeliveTime().toString());
+        else if(position == transHistoryLength+4){
+            //expressSheet.getStatus() == ExpressSheet.STATUS.STATUS_DELIVERIED ||
+                    //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            hd.express_time.setText(sdf.format(expressSheet.getDeliveTime()));
             sb.append("快件已交付");
         }
 
-
-
-//        if(position == 0) totalLength=itemList.size();
-//        System.out.println(position);
-//        if(totalLength == transHistoryLength+4){
-//            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
-//            hd.express_time.setText(expressSheet.getDeliveTime().toString());
-//            sb.append("快件已交付");
-//        }
-//        else if( totalLength == transHistoryLength+3){
-//            //hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
-//            sb.append("快件正在派送"+"派送员是： 【"+UIDFrom.getName()+"】"+"电话号码：【"+UIDFrom.getTelCode());
-//        }
-//        else if(totalLength >2 && totalLength <= transHistoryLength+2  ){
-//            //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
-//            System.out.println(position);
-//            System.out.println(transHistoryDetail.getTransHistory().toString());
-//            hd.express_time.setText(transHistoryDetail.getTransHistory().getActTime().toString());
-//            if(UIDTo.getURull() == UserInfo.STATUS.FUZEREN) //如果是负责人，说明是司机转运的记录
-//            {
-//                sb.append("快件已装车，准备发往下一站 【");
-//                sb.append(toNode.getNodeName());
-//                sb.append("】 ,");
-//                sb.append("司机是：【");
-//                sb.append(UIDFrom.getName());
-//                sb.append("】");
-//            }else{
-//                sb.append("快件已到达 【"+toNode.getNodeName()+"】站点，扫描员是 【"+UIDTo.getName()+"】");
-//            }
-//        }
-//        else if(totalLength == 2){
-//            sb.append("快件已揽收");
-//        }
-//        else if(totalLength == 1){
-//            //System.out.println(transHistoryDetail.getTransHistory().toString());
-//            sb.append("快件待揽收，正在等待揽收");
-//            //System.out.println(transHistoryDetail.getTransHistory().toString());
-//        }
-//        totalLength--;
         hd.express_history_detail.setText(sb.toString());
         return v;
     }

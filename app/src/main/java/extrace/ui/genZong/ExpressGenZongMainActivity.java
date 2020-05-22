@@ -1,15 +1,18 @@
 package extrace.ui.genZong;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -51,9 +54,11 @@ import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransHistoryDetail;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
+import zxing.util.CaptureActivity;
 
 public class ExpressGenZongMainActivity extends AppCompatActivity implements IDataAdapter<List<TransHistoryDetail>> {
 
+    private static final int REQUEST_CAPTURE = 100;
     private LocationService locationService;
     private ScrollLayout mScrollLayout;
     private TextView text_foot;
@@ -73,6 +78,8 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
     private float level;
     private LatLng center;
 
+    private ImageButton express_id_btn;
+    private SearchView searchView;
     private List<LatLng> points;
     private InfoWindow infoWindow;
     private ScrollLayout.OnScrollChangedListener mOnScrollChangedListener = new ScrollLayout.OnScrollChangedListener() {
@@ -158,7 +165,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
             //以动画方式更新地图状态，动画耗时 500 ms
             mBaiduMap.animateMapStatus(status, 500);
             //构建marker图标
-            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
+            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.nowposition);
             //构建MarkerOption，用于在地图上添加Marker
             MarkerOptions option = new MarkerOptions().icon(bitmap).position(latLng);
             //生长动画
@@ -193,7 +200,9 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
         text_foot = (TextView) findViewById(R.id.text_foot);
         mapView =(MapView)findViewById(R.id.genzong_map);
         ListView listView = (ListView) findViewById(R.id.list_view);
-        SearchView searchView = (SearchView)findViewById(R.id.search);
+        searchView = (SearchView)findViewById(R.id.search);
+        express_id_btn = (ImageButton)findViewById(R.id.express_id_btn);
+
         transHistoryDetails = new ArrayList<TransHistoryDetail>();
         listViewAdapter = new  ListViewAdapter(transHistoryDetails,this);
         listView.setAdapter(listViewAdapter);
@@ -222,6 +231,8 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
             }
         });
 
+        searchView.onActionViewCollapsed();
+        searchView.onActionViewExpanded();
         //设置输入框的监听器
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -239,6 +250,37 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
             }
         });
 
+        express_id_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartCapture();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case RESULT_OK:
+                switch (requestCode){
+                    case REQUEST_CAPTURE:
+                        if (data.hasExtra("BarCode")) {//如果扫描结果得到的单号不为空
+                            String id = data.getStringExtra("BarCode");
+                            expressID = id;
+                            searchView.setQuery(id,true);
+                        }
+                        break;
+                }
+                break;
+        }
+    }
+
+    private void StartCapture(){
+        Intent intent = new Intent();
+        intent.putExtra("Action","Capture");
+        intent.setClass(this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CAPTURE);
     }
 
     //得到快件的所有点
@@ -287,7 +329,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
         // mPloyline 折线对象
         Overlay mPolyline = mBaiduMap.addOverlay(mOverlayOptions);
 
-        showLineMarker();
+        //showLineMarker();
         //比较选出集合中最大经纬度
         getMax();
         //计算两个Marker之间的距离
@@ -304,7 +346,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
      */
     private void showLineMarker() {
         //构建marker图标
-        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
+        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.transnode);
 
         for (int i = 0; i < points.size(); i++) {
             //构建MarkerOption，用于在地图上添加Marker
@@ -431,6 +473,9 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
             }
         });
     }
+
+/*
+* 画出各个站点在地图上*/
     @Override
     public List<TransHistoryDetail> getData() {
         return listViewAdapter.getData();
@@ -439,6 +484,8 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
     @Override
     public void setData(List<TransHistoryDetail> data) {
         Collections.sort(data);
+
+        //画出他经历过的站点
 
         listViewAdapter.setData(data);
 

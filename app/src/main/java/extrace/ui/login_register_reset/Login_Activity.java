@@ -242,7 +242,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
         boolean v_ischeck = sharedPreferences.getBoolean("v_ischeck", false);
         if(v_ischeck){
             login(edit_account.getText().toString(), edit_password.getText().toString());
-            finish();
+            //finish();
         }
 
         //勾选自动登录同时记住密码

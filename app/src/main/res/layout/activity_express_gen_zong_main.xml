@@ -63,12 +63,13 @@
 
     <RelativeLayout
         android:orientation="horizontal"
+        android:layout_gravity="end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <SearchView
             android:id="@+id/search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
             android:background="#ACCEAD"/>
 <!--        <Button-->
 <!--            android:id="@+id/open_btn"-->
@@ -78,6 +79,14 @@
 <!--            android:layout_height="wrap_content">-->
 
 <!--        </Button>-->
+        <ImageButton
+            android:id="@+id/express_id_btn"
+            android:layout_toEndOf="@id/search"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_search">
+        </ImageButton>
     </RelativeLayout>
 
 
