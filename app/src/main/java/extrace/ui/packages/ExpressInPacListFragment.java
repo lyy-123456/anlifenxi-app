@@ -153,6 +153,7 @@ public class ExpressInPacListFragment extends ListFragment {
         }
     }
 
+    //是不是去往同一个目的地的没写
     private boolean isToEnd() {
         return true;
     }
@@ -161,8 +162,8 @@ public class ExpressInPacListFragment extends ListFragment {
     private boolean isRepeat() {
         Log.d("ExpressInPacListFragment执行了这个：","isRepeat");
         Set<String> set=new HashSet<String>(listExpress);
-        boolean result = listExpress.size() == set.size() ? false :true;
-        return listExpress.size() == set.size() ? false :true;
+        boolean result = listExpress.size() != set.size();
+        return listExpress.size() != set.size();
     }
 
     @Override

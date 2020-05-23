@@ -35,8 +35,7 @@ public class ExpressListLoader extends HttpAsyncTask {
 			if(json_data.equals("true")){
 				Toast.makeText(context, "包裹信息已保存!", Toast.LENGTH_SHORT).show();
 			}
-		}else
-		if(json_data.equals("Deleted")){
+		}else if(json_data.equals("Deleted")){
 			//adapter.getData().remove(0);	//这个地方不好处理
 			Toast.makeText(context, "快件信息已删除!", Toast.LENGTH_SHORT).show();
 		}

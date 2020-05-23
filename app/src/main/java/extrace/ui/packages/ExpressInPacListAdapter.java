@@ -92,9 +92,27 @@ public class ExpressInPacListAdapter extends ArrayAdapter<ExpressSheet> implemen
             //SimpleDateFormat myFmt=new SimpleDateFormat("MM月dd日 hh:mm");
             hd.time.setText(DateFormat.format("MM月dd日 hh:mm",es.getAccepteTime()));
         }
-        String stText = "还没写";
-
-
+        String stText = "";
+        switch (es.getStatus()){
+            case ExpressSheet.STATUS.STATUS_CREATED:
+                stText="正在创建";
+                break;
+            case ExpressSheet.STATUS.STATUS_TRANSPORT:
+                stText="运送途中";
+                break;
+            case ExpressSheet.STATUS.STATUS_DELIVERIED:
+                stText="已签收";
+                break;
+            case ExpressSheet.STATUS.STATUS_PAISONG:
+                stText="派送中";
+                break;
+            case ExpressSheet.STATUS.STATUS_DAIPAISONG:
+                stText="等待派送";
+                break;
+            default:
+                 stText="状态错误";
+                 break;
+        }
         hd.status.setText(stText);
         return v;
     }

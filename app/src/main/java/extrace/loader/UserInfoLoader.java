@@ -73,6 +73,16 @@ public class UserInfoLoader extends HttpAsyncTask {
             e.printStackTrace();
         }
     }
+    //lyy 新增
+    public void save(UserInfo userInfo){
+        String json_data = JsonUtils.toJson(userInfo,true);
+        url += "saveUserInfo";
+        try{
+            execute(url,"POST",json_data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     //whb新增登录
     public void doLogin(String telCode,String password){
         url += "doLogin/" +telCode+"/" +password+"?_type=json";

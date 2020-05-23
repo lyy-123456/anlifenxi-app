@@ -18,6 +18,7 @@ import extrace.ui.genZong.ExpressGenZongMainActivity;
 import extrace.ui.misc.CustomerListActivity;
 import extrace.ui.packages.PackageCreateActivity;
 import extrace.ui.paiSong.ExpressPaiSongActivity;
+import extrace.ui.paiSong.PaiSongPkgActivity;
 import extrace.ui.qianShou.ExpressQianShouActivity;
 import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 
@@ -325,7 +326,7 @@ public class MainFragment  extends Fragment {
     {
 		Intent intent = new Intent();
 //		intent.putExtra("Action","Query");
-		intent.setClass(this.getActivity(), ExpressPaiSongActivity.class);
+		intent.setClass(this.getActivity(), PaiSongPkgActivity.class);
 		startActivityForResult(intent, 0);  	
     }
 

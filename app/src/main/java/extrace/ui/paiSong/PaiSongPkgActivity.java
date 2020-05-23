@@ -1,46 +1,41 @@
-package extrace.ui.packages;
+package extrace.ui.paiSong;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.MessageQueue;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
 
-import extrace.loader.PackageRouteLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
 import extrace.loader.UserPackageLoader;
-import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransNode;
 import extrace.misc.model.TransPackage;
+import extrace.misc.model.UserInfo;
 import extrace.misc.model.UsersPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
-import extrace.ui.misc.RegionListActivity;
 import extrace.ui.misc.TransNodeListActivity;
-import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
+import extrace.ui.packages.PackageCreateActivity;
+import extrace.ui.packages.PackageEditActivity;
 import zxing.util.CaptureActivity;
 
-
-public class PackageCreateActivity extends AppCompatActivity implements IDataAdapter<TransPackage> {
+public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapter<TransPackage> {
 
     public static final int REQUEST_CAPTURE = 100;
     public static final int REQUEST_SPOSTCODE = 101;
     public static final int REQUEST_EPOSTCODE = 102;
     public static final int REQUEST_CREATE_PKG = 103;
 
-    private EditText  packageIdView;  //包裹编号
+    private EditText packageIdView;  //包裹编号
     private  EditText sourcePostCodeView;  //打包地网点编号
     private EditText endPostCodeView;
     private ImageButton sourcePostCodeBtnView;  //终点站网点编号
@@ -134,7 +129,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         }
 
         //往userspackage中心写入一条数据，代表该用户打的包裹
-        InUsersPackage inUsersPackage= new InUsersPackage();
+        PaiSongPkgActivity.InUsersPackage inUsersPackage= new PaiSongPkgActivity.InUsersPackage();
         UserPackageLoader userPackageLoader = new UserPackageLoader(inUsersPackage,this);
 
         UsersPackage usersPackage = new UsersPackage();
@@ -149,14 +144,36 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         Intent intent = new Intent();
         intent.putExtras(bundle);
 
+        //将包裹号写入userinfo里面的delieverPackageID
+        UserInfo userInfo = app.getLoginUser();
+        userInfo.setDelivePackageID(transPackage.getID());
+        UserInfoLoader userInfoLoader = new UserInfoLoader(new InUserInfo(),this);
+        userInfoLoader.save(userInfo);
         //先用this
-        intent.setClass(this, PackageEditActivity.class);
+        intent.setClass(this, ExpressPaiSongActivity.class);
         startActivity(intent);
         finish();
     }
 
 
-    class InUsersPackage implements IDataAdapter<UsersPackage>{
+    class InUserInfo implements  IDataAdapter<UserInfo>{
+
+        @Override
+        public UserInfo getData() {
+            return null;
+        }
+
+        @Override
+        public void setData(UserInfo data) {
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
+    class InUsersPackage implements IDataAdapter<UsersPackage> {
         UsersPackage usersPackage;
         @Override
         public UsersPackage getData() {
@@ -208,10 +225,11 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             //得到id 判断包裹是否存在如果存在那么
                             tLoader = new TransPackageLoader(this,this);
                             tLoader.Load(id);
+                            packageIdView.setText(id);
 
                         }
                         break;
-                        //源点邮编
+                    //源点邮编
                     case REQUEST_SPOSTCODE:
                         Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
                         Bundle bundle = data.getExtras();
@@ -219,7 +237,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                         sourcePostCodeView.setText(stransNode.getID());
                         sourceName.setText(stransNode.getNodeName());
                         break;
-                        //终点邮编
+                    //终点邮编
                     case REQUEST_EPOSTCODE:
                         Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
                         Bundle bundle1 = data.getExtras();
