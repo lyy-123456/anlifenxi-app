@@ -4,15 +4,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -150,6 +153,7 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
                     .setContentText("点击关闭后台定位服务！")
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
                     .build();
         } else {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -158,11 +162,15 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
                     .setSmallIcon(R.drawable.ic_launcher_background)
                     .setOngoing(true)
                     .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
                     .setChannelId("0");//无效
             notification = notificationBuilder.build();
         }
         notificationManager.notify(1, notification);//把通知显示出来
         //startForeground(1,notification);//前台通知(会一直显示在通知栏)
+//        Intent intent1  = new Intent();
+//        intent1.setClass(this,MainActivity.class);
+//        startActivity(intent1);
         isPaiSong = true;
     }
 
@@ -231,6 +239,31 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
     public ExpressSheet getData() {
         return null;
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode== KeyEvent.KEYCODE_BACK){
+            if(!isPaiSong){
+                AlertDialog.Builder builder=new AlertDialog.Builder(this);
+                builder.setTitle("提示：");
+                builder.setMessage("这些快件没派送，您确定退出？");
+
+                //设置确定按钮
+                builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                //设置取消按钮
+                builder.setPositiveButton("容我再想想",null);
+                //显示提示框
+                builder.show();
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     @Override
     public void setData(ExpressSheet data) {

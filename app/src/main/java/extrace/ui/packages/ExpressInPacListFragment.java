@@ -138,6 +138,7 @@ public class ExpressInPacListFragment extends ListFragment {
             }
         }
     }
+
     public void ReloadList() {
         eAdapter.getData().clear();
         listExpress.clear();
