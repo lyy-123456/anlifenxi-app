@@ -153,14 +153,14 @@ public class MainFragment  extends Fragment {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						StartQueryExpress();
+						StartPaiSongExpress();
 					}
 				});
         rootView.findViewById(R.id.action_ex_transfer).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						StartQueryExpress();
+						StartPaiSongExpress();
 					}
 				});
 
@@ -275,7 +275,14 @@ public class MainFragment  extends Fragment {
         return rootView;
     }
 
-    //快件签收
+    //快件派送
+	private void StartPaiSongExpress() {
+		Intent intent = new Intent();
+		intent.setClass(this.getActivity(), PaiSongPkgActivity.class);
+		startActivityForResult(intent, 0);
+	}
+
+	//快件签收
 	private void StartQianShou() {
 		Intent intent = new Intent();
 		intent.setClass(this.getActivity(), ExpressQianShouActivity.class);
@@ -321,12 +328,12 @@ public class MainFragment  extends Fragment {
 		startActivityForResult(intent, 0);  	
     }
 
-    //快件派送
+    //快件查询
 	private void StartQueryExpress()
     {
 		Intent intent = new Intent();
-//		intent.putExtra("Action","Query");
-		intent.setClass(this.getActivity(), PaiSongPkgActivity.class);
+		intent.putExtra("Action","Query");
+		intent.setClass(this.getActivity(), ExpressEditActivity.class);
 		startActivityForResult(intent, 0);  	
     }
 

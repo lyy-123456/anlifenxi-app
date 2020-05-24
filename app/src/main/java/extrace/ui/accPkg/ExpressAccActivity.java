@@ -213,8 +213,10 @@ public class ExpressAccActivity extends AppCompatActivity implements IDataAdapte
         if(data.getID().equals("00000000")){
             isArrived = true;
         }
-        expressSheet = data;
-        RefreshUI();
+        else{
+            expressSheet = data;
+            RefreshUI();
+        }
     }
 
     private void RefreshUI() {

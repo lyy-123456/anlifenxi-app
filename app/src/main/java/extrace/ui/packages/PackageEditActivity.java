@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,8 +42,12 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
     private List<ExpressSheet> listExpress;
     private ExpressSheet eItem;
     private TransNode transNode;
+    private boolean isBack;
+    private Activity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_edit);
 
@@ -57,6 +62,9 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
         FragmentTransaction tran= getSupportFragmentManager().beginTransaction();//创建提交事务对象
         tran.add(R.id.layout,expressInPacListFragment);//添加
         tran.commit();//提交
+
+        activity = this;
+        isBack = false;
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -69,7 +77,13 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
             builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    finish();
+                    if(transPackage.getStatus() == TransPackage.PKG_NEW){
+                        isBack = true;
+                        InPackageEditActivity inPackageEditActivity = new InPackageEditActivity();
+                        TransPackageLoader transPackageLoader = new TransPackageLoader(inPackageEditActivity,activity );
+                        transPackageLoader.changeTransPackageStatus(transPackage,TransPackage.PKG_PACKED);
+                    }
+                    //finish();
                 }
             });
             //设置取消按钮
@@ -141,6 +155,9 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
 
         @Override
         public void setData(TransPackage data) {
+            if(isBack){
+                finish();
+            }
             transPackage = data;
         }
 
@@ -228,6 +245,7 @@ public class PackageEditActivity extends AppCompatActivity implements IDataAdapt
 
     @Override
     public void setData(ExpressSheet data) {
+
         Log.d("PackageEditActivity执行了这个：","setData2");
         eItem = data;
 

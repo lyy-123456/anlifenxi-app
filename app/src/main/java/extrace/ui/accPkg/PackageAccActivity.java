@@ -75,6 +75,8 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     private  InTransHistory inTransHistory;
     private ExpressLoader expressLoader;
 
+    private AlertDialog alertDialog2;
+    private boolean isInit;
 
 
     @Override
@@ -127,6 +129,8 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         InTransNode inTransNode = new InTransNode("nowNode");
         TransNodeLoader transNodeLoader = new TransNodeLoader(inTransNode,this);
         transNodeLoader.Load(app.getLoginUser().getDptID());
+
+        isInit = true;
     }
 
     //扫描快件确认快件
@@ -217,11 +221,11 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
     }
 
     private boolean expressIsInPackage(String id) {
-        boolean flag = true;
+        boolean flag = false;
         if(expressListAdapter.getData().size() == 0) flag =false;
         for(ExpressSheet es:expressListAdapter.getData()){
-            if(!es.getID().equals(id)){
-                flag = false;
+            if(es.getID().equals(id)){
+                flag = true;
                 break;
             }
         }
@@ -241,7 +245,7 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         if( transPackage.getStatus() == TransPackage.PKG_TRSNSIT ) {
 
             if(expressListAdapter.getData().size() != 0){
-                AlertDialog alertDialog2 = new AlertDialog.Builder(this)
+                alertDialog2 = new AlertDialog.Builder(this)
                         .setTitle("包裹内有未扫描的快件存在！")
                         .setMessage("点击确定后，将把所有未确认的快件状态更改为已丢失，是否确定？")
                         .setIcon(R.mipmap.ic_launcher)
@@ -273,7 +277,13 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
             Toast.makeText(this,"包裹状态为"+transPackage.getStatus()+" 不符合要求",Toast.LENGTH_SHORT).show();
         }
     }
-
+    @Override
+    protected void onDestroy() {
+        if(alertDialog2 != null) {
+            alertDialog2.dismiss();
+        }
+        super.onDestroy();
+    }
     private void databaseDao(){
         //1改变包裹状态
         Log.d("PackageAccActivity执行了：", "包裹状态运输中");
@@ -407,22 +417,26 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
         RefreshUI();
         //包裹历史最近的一条且终点是本站的记录0-》上一站找到是谁（司机）送过来的-》再把自己的id放进去放入形成一条记录
 
-        //1：得到包裹中快件列表
-        ExpressListLoader expressListLoader = new ExpressListLoader(expressListAdapter,this);
-        expressListLoader.getExpressListInPackage(transPackage.getID());
+        if (isInit) {
+            isInit = false;
+            //1：得到包裹中快件列表
+            ExpressListLoader expressListLoader = new ExpressListLoader(expressListAdapter,this);
+            expressListLoader.getExpressListInPackage(transPackage.getID());
 
-        //2：找到包裹历史里最近的一条记录
-        transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
-        transHistoryLoader.getRecentOneTranHistory(transPackage);
+            //2：找到包裹历史里最近的一条记录
+            transHistoryLoader = new TransHistoryLoader(inTransHistory,this);
+            transHistoryLoader.getRecentOneTranHistory(transPackage);
 
-        //3得到目的站点和原站点
-        InTransNode inTransNode = new InTransNode("sNode");
-        TransNodeLoader transNodeLoader = new TransNodeLoader(inTransNode,this);
-        transNodeLoader.Load(data.getSourceNode());
+            //3得到目的站点和原站点
+            InTransNode inTransNode = new InTransNode("sNode");
+            TransNodeLoader transNodeLoader = new TransNodeLoader(inTransNode,this);
+            transNodeLoader.Load(data.getSourceNode());
 
-        InTransNode inTransNode1 = new InTransNode("eNode");
-        TransNodeLoader transNodeLoader1 = new TransNodeLoader(inTransNode1,this);
-        transNodeLoader1.Load(data.getTargetNode());
+            InTransNode inTransNode1 = new InTransNode("eNode");
+            TransNodeLoader transNodeLoader1 = new TransNodeLoader(inTransNode1,this);
+            transNodeLoader1.Load(data.getTargetNode());
+        }
+
     }
     public void setTranNode(String e_type,TransNode transNode){
         switch (e_type){
