@@ -99,7 +99,29 @@ public class ValidateUtil {
         }
         return flag;
     }
-
+    /**
+     * 验证是否是浮点型
+     *
+     * @param str
+     */
+    public static boolean isFloat(String str) {
+        boolean flag = false;
+        Pattern pattern = Pattern.compile("^[0-9]+.?[0-9]*$");
+        // 字符串不为空;
+        if (str.length() > 0) {
+            Matcher matcher = pattern.matcher(str);
+            if (matcher.matches() == true) {
+                flag = true;
+                // 除去以0开头的情况;
+                if (str.length() > 1) {
+                    if ((str.charAt(0) == '0')) {
+                        flag = false;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
     /**
      * 严格验证身份证号的方法，15位、18位均可
      *

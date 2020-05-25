@@ -26,11 +26,11 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="6dp"
             android:gravity="center"
-            android:text="快件重量:"
+            android:text="快件重量（kg）:"
             android:textColor="@color/black"
             android:textSize="16dip" />
 
-        <TextView
+        <EditText
             android:id="@+id/expressWeight"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -59,11 +59,11 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="6dp"
             android:gravity="center"
-            android:text="运费:"
+            android:text="运费（元）:"
             android:textColor="@color/black"
             android:textSize="16dip" />
 
-        <TextView
+        <EditText
             android:id="@+id/expressTranFee"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -92,11 +92,11 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="6dp"
             android:gravity="center"
-            android:text="包裹费:"
+            android:text="包裹费（元）:"
             android:textColor="@color/black"
             android:textSize="16dip" />
 
-        <TextView
+        <EditText
             android:id="@+id/expressPackageFee"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -124,11 +124,11 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="6dp"
             android:gravity="center"
-            android:text="运费险:"
+            android:text="运费险（元）:"
             android:textColor="@color/black"
             android:textSize="16dip" />
 
-        <TextView
+        <EditText
             android:id="@+id/expressInsuFee"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"

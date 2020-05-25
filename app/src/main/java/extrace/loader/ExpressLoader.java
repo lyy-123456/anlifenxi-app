@@ -93,10 +93,10 @@ public class ExpressLoader extends HttpAsyncTask {
 		}
 	}
 
-	public void Save(ExpressSheet es)
+	public void Edit(ExpressSheet es)
 	{
 		String jsonObj = JsonUtils.toJson(es, true);
-		url += "saveExpressSheet";
+		url += "editExpressSheet";
 		try {
 			execute(url, "POST", jsonObj);
 		} catch (Exception e) {
