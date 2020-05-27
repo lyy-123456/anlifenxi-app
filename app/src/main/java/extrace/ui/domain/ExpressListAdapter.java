@@ -117,7 +117,7 @@ public class ExpressListAdapter extends ArrayAdapter<ExpressSheet> implements ID
 
 		switch(es.getStatus()){
 		case ExpressSheet.STATUS.STATUS_CREATED:
-			stText = "正在创建";
+			stText = "待揽收";
 			break;
 
 		case ExpressSheet.STATUS.STATUS_TRANSPORT:

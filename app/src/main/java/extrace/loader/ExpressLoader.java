@@ -153,4 +153,14 @@ public class ExpressLoader extends HttpAsyncTask {
 			e.printStackTrace();
 		}
 	}
+
+	//lsy 修改快件状态为已移出
+	public void changeStatusInTranspackageContentToOut(String expressId,String packageId){
+		url += "changeStatusInTranspackageContentToOut/"+expressId+"/"+packageId+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

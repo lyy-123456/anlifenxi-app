@@ -20,6 +20,7 @@ import extrace.ui.packages.PackageCreateActivity;
 import extrace.ui.paiSong.ExpressPaiSongActivity;
 import extrace.ui.paiSong.PaiSongPkgActivity;
 import extrace.ui.qianShou.ExpressQianShouActivity;
+import extrace.ui.qianShou.QianshouBacklocation;
 import extrace.ui.zhuanyun.ZhuanyunCreateActivity;
 
 public class MainFragment  extends Fragment {
@@ -285,7 +286,7 @@ public class MainFragment  extends Fragment {
 	//快件签收
 	private void StartQianShou() {
 		Intent intent = new Intent();
-		intent.setClass(this.getActivity(), ExpressQianShouActivity.class);
+		intent.setClass(this.getActivity(), QianshouBacklocation.class);
 		startActivityForResult(intent, 0);
 	}
 

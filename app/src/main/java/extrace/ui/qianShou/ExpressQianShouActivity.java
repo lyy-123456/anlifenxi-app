@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import extrace.loader.ExpressLoader;
 import extrace.misc.model.ExpressSheet;
+import extrace.misc.model.TransHistory;
 import extrace.net.IDataAdapter;
+import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.R;
 import zxing.util.CaptureActivity;
 
@@ -43,6 +45,9 @@ public class ExpressQianShouActivity extends AppCompatActivity implements IDataA
     private TextView mSndTimeView;
 
     private TextView mStatusView;
+    private int Userinfo;
+    private String Userinfoch;
+    private String PackageId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -214,6 +219,10 @@ public class ExpressQianShouActivity extends AppCompatActivity implements IDataA
 
     private void QianShouExpress() {
 
+        Userinfo=((ExTraceApplication)this.getApplication()).getLoginUser().getUID();
+        Userinfoch= (String) (Userinfo+ "");
+        PackageId=((ExTraceApplication)this.getApplication()).getLoginUser().getDelivePackageID();
+
         if(expressSheet == null){
             Toast.makeText(this,"快件不存在！请重新扫描",Toast.LENGTH_SHORT).show();
             StartCapture();
@@ -228,11 +237,16 @@ public class ExpressQianShouActivity extends AppCompatActivity implements IDataA
             finish();
             return;
         }
+        if(!expressSheet.getDeliver().equals(Userinfoch)){
+            Toast.makeText(this,"快件不在包裹内!请重新扫描",Toast.LENGTH_SHORT).show();
+            StartCapture();
+        }
         isQianshou = true;
         ExpressLoader expressLoader = new ExpressLoader(this,this);
-
+        ExpressLoader expressLoader1=new ExpressLoader(this,this);
         expressLoader.changeExpressStatus(expressSheet.getID(),ExpressSheet.STATUS.STATUS_DELIVERIED);
-        expressSheet.setStatus(ExpressSheet.STATUS.STATUS_DELIVERIED);  //把包裹状态改为已到达
+        expressSheet.setStatus(ExpressSheet.STATUS.STATUS_DELIVERIED);  //把快件状态改为已到达
+        expressLoader1.changeStatusInTranspackageContentToOut(expressSheet.getID(),PackageId);
         RefreshUI();
 
         //expressLoader.Receive();

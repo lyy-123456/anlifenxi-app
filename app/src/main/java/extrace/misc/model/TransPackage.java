@@ -27,7 +27,7 @@ public class TransPackage  implements Serializable {
 	public static final int PKG_PACKED = 1; //已打包
 	public static final int PKG_TRSNSIT = 2; //运输中
 	//public static final int PKG_ACCED = 3; //转运中心（已扫描）
-	//public static final int PKG_ACHIEVED = 4; //以达到achieved
+	public static final int PKG_ACHIEVED = 4; //以达到achieved
 	public static final int PKG_UNPACKED = 5;  //已拆包
 
 	public TransPackage() {
@@ -135,6 +135,9 @@ public class TransPackage  implements Serializable {
 				break;
 			case TransPackage.PKG_UNPACKED:
 				sb.append("已拆包");
+				break;
+			case TransPackage.PKG_ACHIEVED:
+				sb.append("已到达");
 				break;
 		}
 		return  sb.toString();

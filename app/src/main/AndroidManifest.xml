@@ -67,8 +67,8 @@
         <activity android:name="extrace.ui.login_register_reset.Register_Activity" />
         <activity android:name="extrace.ui.login_register_reset.ForgotInfo_Activity" />
         <activity android:name="extrace.ui.login_register_reset.ResetPassword_Activity" />
+        <activity android:name="extrace.ui.qianShou.QianshouBacklocation"/>
         <activity android:name="extrace.ui.qianShou.ExpressQianShouActivity" />
-
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

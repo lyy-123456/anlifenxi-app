@@ -47,7 +47,6 @@ public class ExpressListLoader extends HttpAsyncTask {
 				adapter.setData(cstm);
 				adapter.notifyDataSetChanged();
 			}
-
 		}
 	}
 

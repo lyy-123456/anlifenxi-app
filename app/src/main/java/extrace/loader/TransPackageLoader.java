@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 
+import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransPackage;
 import extrace.net.HttpAsyncTask;
 import extrace.net.HttpResponseParam.RETURN_STATUS;
@@ -121,6 +122,16 @@ public class TransPackageLoader extends HttpAsyncTask {
 	//lyy 改变一个包裹里的快件的状态
 	public  void changeExpressListStatusInTransPackage(String pkgID,int status){
 		url += "changeExpressStatusInTransPackage/"+pkgID+"/"+status+"?_type=json";
+		try{
+			execute(url,"GET");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	//lsy 改变一个包裹的状态为已拆包
+	public void changeTransPackageStatustoUnpackaged(String pkgId){
+		url += "changeTransPackageStatustoUnpackaged/"+ pkgId+"?_type=json";
 		try{
 			execute(url,"GET");
 		}catch (Exception e){

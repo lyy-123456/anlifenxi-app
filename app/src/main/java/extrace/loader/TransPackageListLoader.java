@@ -12,6 +12,7 @@ import extrace.net.HttpResponseParam.RETURN_STATUS;
 import extrace.net.IDataAdapter;
 import extrace.net.JsonUtils;
 import extrace.ui.main.ExTraceApplication;
+import extrace.ui.qianShou.QianshouBacklocation;
 
 public class TransPackageListLoader extends HttpAsyncTask{
 
