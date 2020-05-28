@@ -37,10 +37,6 @@ public class ExpressLoader extends HttpAsyncTask {
 		else if(class_name.equals("E_ExpressSheet"))		//已经存在
 		{
 			Toast.makeText(context, json_data, Toast.LENGTH_SHORT).show();
-//			ExpressSheet ci = JsonUtils.fromJson(json_data, new TypeToken<ExpressSheet>(){});
-//			adapter.setData(ci);
-//			adapter.notifyDataSetChanged();
-//			Toast.makeText(context, "快件运单信息已经存在!", Toast.LENGTH_SHORT).show();
 		}
 		else if(class_name.equals("R_ExpressSheet"))		//保存完成
 		{
@@ -58,6 +54,9 @@ public class ExpressLoader extends HttpAsyncTask {
 			}else{
 				Toast.makeText(context,"包裹没有到达",Toast.LENGTH_SHORT).show();
 			}
+		}else if(class_name.equals("NR_ExpressSheet"))		//已经存在
+		{
+			Toast.makeText(context, json_data, Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
@@ -96,7 +95,7 @@ public class ExpressLoader extends HttpAsyncTask {
 	public void Edit(ExpressSheet es)
 	{
 		String jsonObj = JsonUtils.toJson(es, true);
-		url += "editExpressSheet";
+		url += "addExpressSheetMessage";
 		try {
 			execute(url, "POST", jsonObj);
 		} catch (Exception e) {
