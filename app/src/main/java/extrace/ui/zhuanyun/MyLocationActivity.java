@@ -1,8 +1,11 @@
 package extrace.ui.zhuanyun;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,10 +20,13 @@ import com.baidu.location.Poi;
 
 import GPS.LocationService;
 import extrace.loader.PackageRouteLoader;
+import extrace.loader.TransPackageLoader;
 import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.PackageRoute;
+import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
 import extrace.ui.main.R;
+import extrace.ui.packages.PackageEditActivity;
 
 public class MyLocationActivity extends AppCompatActivity {
     private LocationService locationService;
@@ -203,6 +209,28 @@ public class MyLocationActivity extends AppCompatActivity {
         public void notifyDataSetChanged() {
 
         }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode== KeyEvent.KEYCODE_BACK){
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("提示：");
+            builder.setMessage("您确定退出？");
+
+            //设置确定按钮
+            builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            //设置取消按钮
+            builder.setPositiveButton("容我再想想",null);
+            //显示提示框
+            builder.show();
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
     /**
      * 显示请求字符串

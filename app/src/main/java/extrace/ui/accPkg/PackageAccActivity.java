@@ -222,7 +222,6 @@ public class PackageAccActivity extends AppCompatActivity implements IDataAdapte
 
     private boolean expressIsInPackage(String id) {
         boolean flag = false;
-        if(expressListAdapter.getData().size() == 0) flag =false;
         for(ExpressSheet es:expressListAdapter.getData()){
             if(es.getID().equals(id)){
                 flag = true;
