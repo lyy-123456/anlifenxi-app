@@ -1,5 +1,6 @@
 package extrace.ui.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import extrace.ui.login_register_reset.Register_Activity;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -53,13 +55,16 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 	ViewPager mViewPager;
 
 	private ExpressSheet mItem;
-
+	private static float weight;
+	private static float tranFee;
+	private static float packageFee;
+	private static float insuFee;
 	private ExpressLoader mLoader;
 	private Intent mIntent;
 	private ExpressEditFragment1 baseFragment; 
 	private ExpressEditFragment2 externFragment; 
 	private MenuItem action_menu_item;
-	private boolean new_es = false;	//新建
+	private static boolean new_es = false;	//新建
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +206,9 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 	public void notifyDataSetChanged() {
 		if(baseFragment != null ){
 			baseFragment.RefreshUI(mItem);
+
+		}
+		if(externFragment != null){
 			externFragment.RefreshUI(mItem);
 		}
 		MenuDisplay(mItem.getStatus());
@@ -305,6 +313,10 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 	}
 	
 	void Save(){
+		mItem.setWeight(weight);
+		mItem.setTranFee(tranFee);
+		mItem.setPackageFee(packageFee);
+		mItem.setInsuFee(insuFee);
 		mLoader = new ExpressLoader(this, this);
 		mLoader.Edit(mItem);
 	}
@@ -470,12 +482,15 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			mIDView.setText(es.getID());
 			displayRcv(es);
 			displaySnd(es);
+			SimpleDateFormat myFmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			if(es.getAccepteTime() != null)
-				mRcvTimeView.setText(DateFormat.format("yyyy-MM-dd hh:mm:ss", es.getAccepteTime()));
+				mRcvTimeView.setText(myFmt.format(es.getAccepteTime()));
+
+//				mRcvTimeView.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss", es.getAccepteTime()));
 			else
 				mRcvTimeView.setText(null);
 			if(es.getDeliveTime() != null)
-				mSndTimeView.setText(DateFormat.format("yyyy-MM-dd hh:mm:ss", es.getDeliveTime()));
+				mSndTimeView.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss", es.getDeliveTime()));
 			else
 				mSndTimeView.setText(null);
 
@@ -579,125 +594,155 @@ public class ExpressEditActivity extends AppCompatActivity implements ActionBar.
 			mTranFeeView = (TextView) rootView.findViewById(R.id.expressTranFee);
 			mPackageFeeView = (TextView) rootView.findViewById(R.id.expressPackageFee);
 			mInsuFeeView = (TextView) rootView.findViewById(R.id.expressInsuFee);
+			mWeightView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+			mTranFeeView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+			mPackageFeeView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+			mInsuFeeView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_VARIATION_NORMAL);
 			return rootView;
 		}
 		void RefreshUI(final ExpressSheet es){
-				mWeightView.addTextChangedListener(new TextWatcher() {
-					private CharSequence word;
-					private float weight;
 
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-						word = charSequence;
+			if(es.getWeight()!=null && es.getPackageFee()!=null && es.getTranFee()!=null && es.getInsuFee()!=null) {
+				mWeightView.setText(String.valueOf(es.getWeight()));
+				mTranFeeView.setText(String.valueOf(es.getTranFee()));
+				mPackageFeeView.setText(String.valueOf(es.getPackageFee()));
+				mInsuFeeView.setText(String.valueOf(es.getInsuFee()));
+				weight=es.getWeight();
+				tranFee=es.getTranFee();
+				packageFee=es.getPackageFee();
+				insuFee=es.getInsuFee();
+				mWeightView.setFocusable(false);
+				mTranFeeView.setFocusable(false);
+				mPackageFeeView.setFocusable(false);
+				mInsuFeeView.setFocusable(false);
+			}
+			mWeightView.addTextChangedListener(new TextWatcher() {
+				private CharSequence word;
+				private int selectionStart;
+				private int selectionEnd;
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+					word = charSequence;
+				}
 
+				@Override
+				public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if(word.length()==0) {
+						Toast.makeText(getActivity(), "快件重量不能为空", Toast.LENGTH_SHORT).show();
 					}
-
-					@Override
-					public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
+					selectionStart = mWeightView.getSelectionStart();
+					selectionEnd = mWeightView.getSelectionEnd();
+					if (!ValidateUtil.isOnlyPointNumber(mWeightView.getText().toString()) && s.length() > 0) {
+						//删除多余输入的字（不会显示出来）
+						Toast.makeText(getActivity(), "只能保留两位小数", Toast.LENGTH_SHORT).show();
+						s.delete(selectionStart - 1, selectionEnd);
+						mWeightView.setText(s);
+						System.out.println(word.toString()+"weight");
 					}
+					weight = Float.parseFloat(word.toString());
+				}
+			});
 
-					@Override
-					public void afterTextChanged(Editable editable) {
-						if(word.length()==0) {
-							Toast.makeText(getActivity(), "快件重量不能为空", Toast.LENGTH_SHORT).show();
-						}
-						if(ValidateUtil.isFloat(word.toString())){
-							weight = Integer.parseInt(word.toString());
-						}else{
-							Toast.makeText(getActivity(), "快件重量只能是数字", Toast.LENGTH_SHORT).show();
-						}
-						es.setWeight(weight);
+			mTranFeeView.addTextChangedListener(new TextWatcher() {
+				private CharSequence word;
+				private int selectionStart;
+				private int selectionEnd;
+
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+					word = charSequence;
+				}
+
+				@Override
+				public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if(word.length()==0) {
+						Toast.makeText(getActivity(), "运费不能为空", Toast.LENGTH_SHORT).show();
 					}
-				});
-
-				mTranFeeView.addTextChangedListener(new TextWatcher() {
-					private CharSequence word;
-					private float tranFee;
-
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-						word = charSequence;
-
+					selectionStart = mTranFeeView.getSelectionStart();
+					selectionEnd = mTranFeeView.getSelectionEnd();
+					if (!ValidateUtil.isOnlyPointNumber(mTranFeeView.getText().toString()) && s.length() > 0) {
+						//删除多余输入的字（不会显示出来）
+						Toast.makeText(getActivity(), "只能保留两位小数", Toast.LENGTH_SHORT).show();
+						s.delete(selectionStart - 1, selectionEnd);
+						mTranFeeView.setText(s);
+						System.out.println(word.toString()+"tranFee");
 					}
+					tranFee = Float.parseFloat(word.toString());
+				}
+			});
+			mPackageFeeView.addTextChangedListener(new TextWatcher() {
+				private CharSequence word;
+				private int selectionStart;
+				private int selectionEnd;
 
-					@Override
-					public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+					word = charSequence;
+				}
 
+				@Override
+				public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if(word.length()==0) {
+						Toast.makeText(getActivity(), "包裹费不能为空", Toast.LENGTH_SHORT).show();
 					}
-
-					@Override
-					public void afterTextChanged(Editable editable) {
-						if(word.length()==0) {
-							Toast.makeText(getActivity(), "运费不能为空", Toast.LENGTH_SHORT).show();
-						}
-						if(ValidateUtil.isFloat(word.toString())){
-							tranFee = Integer.parseInt(word.toString());
-						}else{
-							Toast.makeText(getActivity(), "运费只能是数字", Toast.LENGTH_SHORT).show();
-						}
-						es.setTranFee(tranFee);
+					selectionStart = mPackageFeeView.getSelectionStart();
+					selectionEnd = mPackageFeeView.getSelectionEnd();
+					if (!ValidateUtil.isOnlyPointNumber(mPackageFeeView.getText().toString()) && s.length() > 0) {
+						//删除多余输入的字（不会显示出来）
+						Toast.makeText(getActivity(), "只能保留两位小数", Toast.LENGTH_SHORT).show();
+						s.delete(selectionStart - 1, selectionEnd);
+						mPackageFeeView.setText(s);
+						System.out.println(word.toString()+"packageFee");
 					}
-				});
-				mPackageFeeView.addTextChangedListener(new TextWatcher() {
-					private CharSequence word;
-					private float packageFee;
+					packageFee = Float.parseFloat(word.toString());
+				}
+			});
+			mInsuFeeView.addTextChangedListener(new TextWatcher() {
+				private CharSequence word;
+				private int selectionStart;
+				private int selectionEnd;
 
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-						word = charSequence;
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+					word = charSequence;
+				}
 
+				@Override
+				public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if(word.length()==0) {
+						Toast.makeText(getActivity(), "运费险不能为空", Toast.LENGTH_SHORT).show();
 					}
-
-					@Override
-					public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
+					selectionStart = mInsuFeeView.getSelectionStart();
+					selectionEnd = mInsuFeeView.getSelectionEnd();
+					if (!ValidateUtil.isOnlyPointNumber(mInsuFeeView.getText().toString()) && s.length() > 0) {
+						//删除多余输入的字（不会显示出来）
+						Toast.makeText(getActivity(), "只能保留两位小数", Toast.LENGTH_SHORT).show();
+						s.delete(selectionStart - 1, selectionEnd);
+						System.out.println(word.toString()+"insuFee");
 					}
-
-					@Override
-					public void afterTextChanged(Editable editable) {
-						if(word.length()==0) {
-							Toast.makeText(getActivity(), "包裹费不能为空", Toast.LENGTH_SHORT).show();
-						}
-						if(ValidateUtil.isFloat(word.toString())){
-							packageFee = Integer.parseInt(word.toString());
-						}else{
-							Toast.makeText(getActivity(), "包裹费只能是数字", Toast.LENGTH_SHORT).show();
-						}
-						es.setPackageFee(packageFee);
-					}
-				});
-				mInsuFeeView.addTextChangedListener(new TextWatcher() {
-					private CharSequence word;
-					private float insuFee;
-
-					@Override
-					public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-						word = charSequence;
-
-					}
-
-					@Override
-					public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-					}
-
-					@Override
-					public void afterTextChanged(Editable editable) {
-						if(word.length()==0) {
-							Toast.makeText(getActivity(), "运费险不能为空", Toast.LENGTH_SHORT).show();
-						}
-						if(ValidateUtil.isFloat(word.toString())){
-							insuFee = Integer.parseInt(word.toString());
-						}else{
-							Toast.makeText(getActivity(), "运费险只能是数字", Toast.LENGTH_SHORT).show();
-						}
-						es.setInsuFee(insuFee);
-					}
-				});
-
-
-
+					insuFee= Float.parseFloat(word.toString());
+				}
+			});
 		}
 	}
 
