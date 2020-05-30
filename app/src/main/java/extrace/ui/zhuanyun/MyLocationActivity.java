@@ -25,6 +25,7 @@ import extrace.misc.model.ListTransPackage;
 import extrace.misc.model.PackageRoute;
 import extrace.misc.model.TransPackage;
 import extrace.net.IDataAdapter;
+import extrace.ui.main.MainActivity;
 import extrace.ui.main.R;
 import extrace.ui.packages.PackageEditActivity;
 
@@ -221,7 +222,11 @@ public class MyLocationActivity extends AppCompatActivity {
             builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.setClass(MyLocationActivity.this, MainActivity.class);
+                    startActivity(intent);
                     finish();
+
                 }
             });
             //设置取消按钮

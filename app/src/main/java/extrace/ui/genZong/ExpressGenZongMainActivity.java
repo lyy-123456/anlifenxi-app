@@ -320,6 +320,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
             LatLng latLng = new LatLng(packageRoute.getY(),packageRoute.getX());
             points.add(latLng);
         }
+
         //设置折线的属性
         OverlayOptions mOverlayOptions = new PolylineOptions()
                 .width(10)

@@ -1,5 +1,6 @@
 package extrace.ui.genZong;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import extrace.misc.model.ExpressSheet;
 import extrace.misc.model.TransHistory;
@@ -96,7 +98,8 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
         TransNode fromNode= transHistoryDetail.getFromNode();
         TransNode toNode = transHistoryDetail.getToNode();
         ExpressSheet expressSheet = transHistoryDetail.getExpressSheet();
-
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
 
         //查一下快件的状态是否为正在运输
 
@@ -104,17 +107,17 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             hd.express_time.setText("");
             sb.append("快件待揽收，正在等待揽收");
         }else if( position == 1){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             hd.express_time.setText(sdf.format(expressSheet.getAccepteTime()));
             sb.append("快件已揽收");
         }else if( position >=2 && position <= transHistoryLength+1  ){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println(position);
             System.out.println(transHistoryDetail.getTransHistory().toString());
             hd.express_time.setText(sdf.format(transHistoryDetail.getTransHistory().getActTime()));
             if(UIDTo.getURull() == UserInfo.STATUS.FUZEREN) //如果是负责人，说明是司机转运的记录
             {
-                sb.append("快件已装车，准备发往下一站 【");
+                sb.append("快件已在【");
+                sb.append(fromNode.getNodeName());
+                sb.append("】装车，准备发往下一站 【");
                 sb.append(toNode.getNodeName());
                 sb.append("】 ,");
                 sb.append("司机是：【");
@@ -132,13 +135,12 @@ class ListViewAdapter extends ArrayAdapter<TransHistoryDetail> implements IDataA
             sb.append("快件正在派送"+"派送员是： 【"+UIDFrom.getName()+"】"+"电话号码：【"+UIDFrom.getTelCode()+"】");
         }
         else if(position == transHistoryLength+4){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             hd.express_time.setText(sdf.format(expressSheet.getDeliveTime()));
             sb.append("快件已交付");
         }
 
-        if(position == getCount()-1){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(position == getCount()-1 && hd.express_time.getText().equals("") ){
+
             Date date = new Date(System.currentTimeMillis());
             hd.express_time.setText(sdf.format(date));
         }
