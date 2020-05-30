@@ -102,7 +102,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
 
     //创建一个包裹，并跳转到包裹内部页面
     private  void createPkg(){
-
+        System.out.println(transPackage.toString());
         ExTraceApplication app = (ExTraceApplication)this.getApplication();
         String pkgId = packageIdView.getText().toString();
         String sourcePostCode = sourcePostCodeView.getText().toString();
@@ -122,6 +122,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
             return ;
         }
         if(transPackage == null){
+            Toast.makeText(this,"包裹不存在，新建包裹",Toast.LENGTH_SHORT).show();
             //如果包裹不存在 新建包裹
             tLoader = new TransPackageLoader(this,this);
             transPackage = new TransPackage();
@@ -129,13 +130,13 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
             transPackage.setSourceNode(sourcePostCode);
             transPackage.setTargetNode(endPostCode);
             transPackage.setStatus(TransPackage.PKG_NEW);
+            transPackage.setCreateTime(new Date());
             tLoader.New(transPackage);
         }
 
         //往userspackage中心写入一条数据，代表该用户打的包裹
         InUsersPackage inUsersPackage= new InUsersPackage();
         UserPackageLoader userPackageLoader = new UserPackageLoader(inUsersPackage,this);
-
         UsersPackage usersPackage = new UsersPackage();
         usersPackage.setPkg(transPackage);
         usersPackage.setUserU(app.getLoginUser());

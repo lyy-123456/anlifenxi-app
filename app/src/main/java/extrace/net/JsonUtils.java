@@ -28,7 +28,8 @@ public class JsonUtils {
     public static final String EMPTY_JSON_ARRAY = "[]";
   
     /** 默认的 {@code JSON} 日期/时间字段的格式化模式。 */
-    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss+hh:mm";
+    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+//    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss+hh:mm";
   
     /** {@code Google Gson} 的 <pre>@Since</pre> 注解常用的版本号常量 - {@code 1.0}。 */
     public static final double SINCE_VERSION_10 = 1.0d;

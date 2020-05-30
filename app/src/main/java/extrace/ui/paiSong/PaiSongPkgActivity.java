@@ -49,6 +49,8 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
     private TransPackage transPackage;
 
     private TransPackageLoader tLoader;
+    private boolean isCreatePkg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,7 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
             }
         });
 
+        isCreatePkg = false;
     }
 
     //创建一个包裹，并跳转到包裹内部页面
@@ -123,8 +126,8 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
             transPackage.setID(pkgId);
             transPackage.setSourceNode(sourcePostCode);
             transPackage.setTargetNode(endPostCode);
-            transPackage.setCreateTime(new Date());
             transPackage.setStatus(TransPackage.PKG_NEW);
+            transPackage.setCreateTime(new Date());
             tLoader.New(transPackage);
         }
 
@@ -138,21 +141,17 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
         userPackageLoader.Save(usersPackage);
         Log.d("创建一个新的包裹",transPackage.toString());
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("transPackage",transPackage);
-        bundle.putSerializable("sTransNode",stransNode);
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
+
 
         //将包裹号写入userinfo里面的delieverPackageID
         UserInfo userInfo = app.getLoginUser();
         userInfo.setDelivePackageID(transPackage.getID());
         UserInfoLoader userInfoLoader = new UserInfoLoader(new InUserInfo(),this);
         userInfoLoader.save(userInfo);
-        //先用this
-        intent.setClass(this, ExpressPaiSongActivity.class);
-        startActivity(intent);
-        finish();
+
+        TransPackageLoader transPackageLoader = new TransPackageLoader(this,this);
+        transPackageLoader.changeTransPackageStatus(transPackage,TransPackage.PKG_PACKED);
+
     }
 
 
@@ -264,14 +263,28 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
     @Override
     public void setData(TransPackage data) {
         Log.d("PackageCreateActivity执行了这个：","setData");
-        if(data.getStatus() == TransPackage.PKG_NEW){
-            transPackage = data;
-            packageIdView.setText(data.getID());
-            RefreshUI();
+        if(!isCreatePkg){
+            if(data.getStatus() == TransPackage.PKG_NEW){
+                isCreatePkg = true;
+                transPackage = data;
+                packageIdView.setText(data.getID());
+                RefreshUI();
+            }
+            else{
+                Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("transPackage",transPackage);
+            bundle.putSerializable("sTransNode",stransNode);
+            Intent intent = new Intent();
+            intent.putExtras(bundle);
+            //先用this
+            intent.setClass(this, ExpressPaiSongActivity.class);
+            startActivity(intent);
+            finish();
         }
-        else{
-            Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     private void RefreshUI() {
