@@ -103,6 +103,9 @@ public class ExpressInPacListAdapter extends ArrayAdapter<ExpressSheet> implemen
             case ExpressSheet.STATUS.STATUS_DELIVERIED:
                 stText="已签收";
                 break;
+            case ExpressSheet.STATUS.STATUS_DAIZHUAYUN:
+                stText="等待转运";
+                break;
             case ExpressSheet.STATUS.STATUS_PAISONG:
                 stText="派送中";
                 break;
