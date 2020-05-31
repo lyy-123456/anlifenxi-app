@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.util.Date;
 
 import extrace.loader.PackageRouteLoader;
+import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
 import extrace.loader.UserPackageLoader;
@@ -208,8 +209,7 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
                             //得到id 判断包裹是否存在如果存在那么
                             tLoader = new TransPackageLoader(this,this);
                             tLoader.Load(id);
-
-
+                            packageIdView.setText(id);
                         }
                         break;
                         //源点邮编
@@ -244,23 +244,65 @@ public class PackageCreateActivity extends AppCompatActivity implements IDataAda
         return transPackage;
     }
 
+    class InTransNode implements IDataAdapter<TransNode>{
+
+        private  String type;
+        InTransNode(String etype){
+            type = etype;
+        }
+        @Override
+        public TransNode getData() {
+            if(type.equals("sTransNode")) return stransNode;
+            else return etransNode;
+        }
+
+        @Override
+        public void setData(TransNode data) {
+            if(type.equals("sTransNode"))  stransNode= data;
+            else if(type.equals("eTransNode")) etransNode = data;
+            RefreshUI();
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     @Override
     public void setData(TransPackage data) {
         Log.d("PackageCreateActivity执行了这个：","setData");
         if(data.getStatus() == TransPackage.PKG_NEW){
             transPackage = data;
             packageIdView.setText(data.getID());
+
+            //获取整个包裹的源站和目的站点的信息
+
+            TransNodeLoader transNodeLoader = new TransNodeLoader(new InTransNode("sTransNode"),this);
+            transNodeLoader.Load(transPackage.getSourceNode());
+
+            TransNodeLoader transNodeLoader1 = new TransNodeLoader(new InTransNode("eTransNode"),this);
+            transNodeLoader1.Load(transPackage.getTargetNode());
             RefreshUI();
         }
         else{
+            packageIdView.setText("");
             Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
         }
     }
 
     private void RefreshUI() {
-        packageIdView.setText(transPackage.getID());
-        sourcePostCodeView.setText(transPackage.getSourceNode());
-        endPostCodeView.setText(transPackage.getTargetNode());
+        if(transPackage != null){
+            packageIdView.setText(transPackage.getID());
+            sourcePostCodeView.setText(transPackage.getSourceNode());
+            endPostCodeView.setText(transPackage.getTargetNode());
+        }
+
+        if(stransNode != null){
+            sourceName.setText(stransNode.getNodeName());
+        }
+        if(etransNode != null){
+            endName.setText(etransNode.getNodeName());
+        }
     }
 
     @Override

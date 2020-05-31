@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+import extrace.loader.TransNodeLoader;
 import extrace.loader.TransPackageLoader;
 import extrace.loader.UserInfoLoader;
 import extrace.loader.UserPackageLoader;
@@ -54,17 +55,25 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_package_create);
+        setContentView(R.layout.activity_pai_song_pkg);
+        initView();
+        initListener();
+        initData();
 
-        sourceName =(EditText)findViewById(R.id.sourceName);
-        endName=(EditText)findViewById(R.id.endName);
+    }
+
+    private void initView() {
+//        sourceName =(EditText)findViewById(R.id.sourceName);
+//        endName=(EditText)findViewById(R.id.endName);
         packageIdView = (EditText) findViewById(R.id.packageId);
-        sourcePostCodeView = (EditText)findViewById(R.id.sourcePostCode);
-        sourcePostCodeBtnView = (ImageButton) findViewById(R.id.sourcePostCodeBtn);
-        endPostCodeView = (EditText)findViewById(R.id.endPostCode);
-        endPostCodeBtnView = (ImageButton)findViewById(R.id.endPostCodeBtn);
+//        sourcePostCodeView = (EditText)findViewById(R.id.sourcePostCode);
+//        sourcePostCodeBtnView = (ImageButton) findViewById(R.id.sourcePostCodeBtn);
+//        endPostCodeView = (EditText)findViewById(R.id.endPostCode);
+//        endPostCodeBtnView = (ImageButton)findViewById(R.id.endPostCodeBtn);
         create_pkg_Btn = (Button)findViewById(R.id.create_pkg_Btn);
+    }
 
+    private void initListener() {
         findViewById(R.id.action_pk_exp_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,21 +81,21 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
                 StartCapture();
             }
         });
-        sourcePostCodeBtnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("packagecreate","点击选择始发站按钮");
-                getSourceRegion();
-            }
-        });
-        endPostCodeBtnView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("packagecreate","点击选择终点站按钮");
-                getEndRegion();
-
-            }
-        });
+//        sourcePostCodeBtnView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("packagecreate","点击选择始发站按钮");
+//                getSourceRegion();
+//            }
+//        });
+//        endPostCodeBtnView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("packagecreate","点击选择终点站按钮");
+//                getEndRegion();
+//
+//            }
+//        });
         create_pkg_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,38 +103,65 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
                 createPkg();
             }
         });
-
-        isCreatePkg = false;
     }
 
+    private void initData() {
+        isCreatePkg = false;
+
+        //初始化得到原站点的信息
+        String snode = ((ExTraceApplication)getApplication()).getLoginUser().getDptID();   //得到所在站点的id
+        TransNodeLoader transNodeLoader = new TransNodeLoader(new InTransNode(),this);
+        transNodeLoader.Load(snode);
+    }
+
+    class InTransNode implements IDataAdapter<TransNode>{
+
+        @Override
+        public TransNode getData() {
+            return stransNode;
+        }
+
+        @Override
+        public void setData(TransNode data) {
+            stransNode = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     //创建一个包裹，并跳转到包裹内部页面
     private  void createPkg(){
-
+        if(stransNode == null){
+            Toast.makeText(this,"员工信息获取失败！请退出页面重试",Toast.LENGTH_SHORT).show();
+            return;
+        }
         ExTraceApplication app = (ExTraceApplication)this.getApplication();
         String pkgId = packageIdView.getText().toString();
-        String sourcePostCode = sourcePostCodeView.getText().toString();
-        String endPostCode = endPostCodeView.getText().toString();
+//        String sourcePostCode = sourcePostCodeView.getText().toString();
+//        String endPostCode = endPostCodeView.getText().toString();
         if("".equals(pkgId)) {
             Toast.makeText(this,"包裹ID不能为空！",Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if( "".equals(sourcePostCode)){
-            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if("".equals(endPostCode)){
-            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
-            return ;
-        }
+//
+//        if( "".equals(sourcePostCode)){
+//            Toast.makeText(this,"发送地邮编不能为空！",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        if("".equals(endPostCode)){
+//            Toast.makeText(this,"终点站邮编不能为空！",Toast.LENGTH_SHORT).show();
+//            return ;
+//        }
         if(transPackage == null){
             //如果包裹不存在 新建包裹
             tLoader = new TransPackageLoader(this,this);
             transPackage = new TransPackage();
             transPackage.setID(pkgId);
-            transPackage.setSourceNode(sourcePostCode);
-            transPackage.setTargetNode(endPostCode);
+            transPackage.setSourceNode(stransNode.getID());
+            transPackage.setTargetNode(stransNode.getID());
             transPackage.setStatus(TransPackage.PKG_NEW);
             transPackage.setCreateTime(new Date());
             tLoader.New(transPackage);
@@ -197,19 +233,19 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
         startActivityForResult(intent, REQUEST_CAPTURE);
     }
 
-    //得到源站的网点编号
-    private void getSourceRegion() {
-        Intent intent = new Intent();
-        intent.setClass(this, TransNodeListActivity.class);
-        startActivityForResult(intent, REQUEST_SPOSTCODE);
-    }
-
-    //得到终点站的邮编
-    private void getEndRegion() {
-        Intent intent = new Intent();
-        intent.setClass(this, TransNodeListActivity.class);
-        startActivityForResult(intent, REQUEST_EPOSTCODE);
-    }
+//    //得到源站的网点编号
+//    private void getSourceRegion() {
+//        Intent intent = new Intent();
+//        intent.setClass(this, TransNodeListActivity.class);
+//        startActivityForResult(intent, REQUEST_SPOSTCODE);
+//    }
+//
+//    //得到终点站的邮编
+//    private void getEndRegion() {
+//        Intent intent = new Intent();
+//        intent.setClass(this, TransNodeListActivity.class);
+//        startActivityForResult(intent, REQUEST_EPOSTCODE);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -224,26 +260,26 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
                             //得到id 判断包裹是否存在如果存在那么
                             tLoader = new TransPackageLoader(this,this);
                             tLoader.Load(id);
-                            //packageIdView.setText(id);
+                            packageIdView.setText(id);
 
                         }
                         break;
-                    //源点邮编
-                    case REQUEST_SPOSTCODE:
-                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
-                        Bundle bundle = data.getExtras();
-                        stransNode = (TransNode) bundle.getSerializable("TransNode");
-                        sourcePostCodeView.setText(stransNode.getID());
-                        sourceName.setText(stransNode.getNodeName());
-                        break;
-                    //终点邮编
-                    case REQUEST_EPOSTCODE:
-                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
-                        Bundle bundle1 = data.getExtras();
-                        etransNode = (TransNode) bundle1.getSerializable("TransNode");
-                        endPostCodeView.setText(etransNode.getID());
-                        endName.setText(etransNode.getNodeName());
-                        break;
+//                    //源点邮编
+//                    case REQUEST_SPOSTCODE:
+//                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
+//                        Bundle bundle = data.getExtras();
+//                        stransNode = (TransNode) bundle.getSerializable("TransNode");
+//                        sourcePostCodeView.setText(stransNode.getID());
+//                        sourceName.setText(stransNode.getNodeName());
+//                        break;
+//                    //终点邮编
+//                    case REQUEST_EPOSTCODE:
+//                        Log.d("PackageCreateActivity执行了这个：onActivityResult返回了：","sd");
+//                        Bundle bundle1 = data.getExtras();
+//                        etransNode = (TransNode) bundle1.getSerializable("TransNode");
+//                        endPostCodeView.setText(etransNode.getID());
+//                        endName.setText(etransNode.getNodeName());
+//                        break;
 
                 }
                 break;
@@ -271,6 +307,7 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
                 RefreshUI();
             }
             else{
+                packageIdView.setText("");
                 Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
             }
         }else{
@@ -289,8 +326,8 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
 
     private void RefreshUI() {
         packageIdView.setText(transPackage.getID());
-        sourcePostCodeView.setText(transPackage.getSourceNode());
-        endPostCodeView.setText(transPackage.getTargetNode());
+//        sourcePostCodeView.setText(transPackage.getSourceNode());
+//        endPostCodeView.setText(transPackage.getTargetNode());
     }
 
     @Override
