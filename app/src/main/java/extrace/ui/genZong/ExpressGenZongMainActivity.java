@@ -330,7 +330,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
         // mPloyline 折线对象
         Overlay mPolyline = mBaiduMap.addOverlay(mOverlayOptions);
 
-        //showLineMarker();
+        showLineMarker();
         //比较选出集合中最大经纬度
         getMax();
         //计算两个Marker之间的距离
@@ -339,6 +339,7 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
         getLevel();
         //计算中心点经纬度，将其设为启动时地图中心
         setCenter();
+
         setMarkerClick();
     }
 
@@ -347,18 +348,15 @@ public class ExpressGenZongMainActivity extends AppCompatActivity implements IDa
      */
     private void showLineMarker() {
         //构建marker图标
-        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.transnode);
-
-        for (int i = 0; i < points.size(); i++) {
-            //构建MarkerOption，用于在地图上添加Marker
-            MarkerOptions option = new MarkerOptions().icon(bitmap).position(points.get(i));
-            //生长动画
-            option.animateType(MarkerOptions.MarkerAnimateType.grow);
-            //在地图上添加Marker，并显示
-            mBaiduMap.addOverlay(option);
-            //设置Marker覆盖物的ZIndex
-            option.zIndex(i);
-        }
+        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.start);
+        //构建MarkerOption，用于在地图上添加Marker
+        MarkerOptions option = new MarkerOptions().icon(bitmap).position(points.get(0));
+        //生长动画
+        option.animateType(MarkerOptions.MarkerAnimateType.grow);
+        //在地图上添加Marker，并显示
+        mBaiduMap.addOverlay(option);
+        //设置Marker覆盖物的ZIndex
+        option.zIndex(0);
     }
 
     /**
