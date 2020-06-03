@@ -106,7 +106,7 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
     }
 
     private void initData() {
-        isCreatePkg = false;
+        //isCreatePkg = false;
 
         //初始化得到原站点的信息
         String snode = ((ExTraceApplication)getApplication()).getLoginUser().getDptID();   //得到所在站点的id
@@ -185,8 +185,16 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
         UserInfoLoader userInfoLoader = new UserInfoLoader(new InUserInfo(),this);
         userInfoLoader.save(userInfo);
 
-        TransPackageLoader transPackageLoader = new TransPackageLoader(this,this);
-        transPackageLoader.changeTransPackageStatus(transPackage,TransPackage.PKG_PACKED);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("transPackage",transPackage);
+        bundle.putSerializable("sTransNode",stransNode);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        //先用this
+        intent.setClass(this, ExpressPaiSongActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 
@@ -299,28 +307,17 @@ public class PaiSongPkgActivity extends AppCompatActivity implements IDataAdapte
     @Override
     public void setData(TransPackage data) {
         Log.d("PackageCreateActivity执行了这个：","setData");
-        if(!isCreatePkg){
-            if(data.getStatus() == TransPackage.PKG_NEW){
-                isCreatePkg = true;
-                transPackage = data;
-                packageIdView.setText(data.getID());
-                RefreshUI();
-            }
-            else{
-                packageIdView.setText("");
-                Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("transPackage",transPackage);
-            bundle.putSerializable("sTransNode",stransNode);
-            Intent intent = new Intent();
-            intent.putExtras(bundle);
-            //先用this
-            intent.setClass(this, ExpressPaiSongActivity.class);
-            startActivity(intent);
-            finish();
+        if(data.getStatus() == TransPackage.PKG_NEW){
+            isCreatePkg = true;
+            transPackage = data;
+            packageIdView.setText(data.getID());
+            RefreshUI();
         }
+        else{
+            packageIdView.setText("");
+            Toast.makeText(this,"包裹状态已存在且该状态不可以打包"+data.getStatus(),Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

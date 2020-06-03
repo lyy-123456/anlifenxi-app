@@ -37,6 +37,7 @@ import extrace.ui.main.ExTraceApplication;
 import extrace.ui.main.MainActivity;
 import extrace.ui.main.R;
 import extrace.ui.packages.ExpressInPacListAdapter;
+import extrace.ui.qianShou.QianshouBacklocation;
 import zxing.util.CaptureActivity;
 
 public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAdapter<ExpressSheet> {
@@ -118,6 +119,12 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
         listTransPackage.getTransPackageList().add(transPackage);
         TransPackageListLoader transPackageListLoader= new TransPackageListLoader(inTransPackageList,this);
         transPackageListLoader.changeExpressStatusInTransPackageList(listTransPackage,ExpressSheet.STATUS.STATUS_DAIPAISONG,ExpressSheet.STATUS.STATUS_PAISONG);
+
+        //修改包裹状态
+        TransPackageLoader transPackageLoader = new TransPackageLoader(new InTransPackage(),this);
+        transPackageLoader.changeTransPackageStatus(transPackage,TransPackage.PKG_PACKED);
+        Toast.makeText(this,"开始派送，已开启后台定位！",Toast.LENGTH_SHORT).show();
+
         //2开启后台定位
         Intent startIntent = new Intent(ExpressPaiSongActivity.this, BackLocationService.class);
         Bundle bundle = new Bundle();
@@ -125,7 +132,6 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
         startIntent.putExtras(bundle);
         startService(startIntent);
 
-        Toast.makeText(this,"开始派送，已开启后台定位！",Toast.LENGTH_SHORT).show();
 
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 //        Notification.Builder builder1 = new Notification.Builder(this);
@@ -174,6 +180,23 @@ public class ExpressPaiSongActivity extends AppCompatActivity implements IDataAd
         isPaiSong = true;
     }
 
+    class InTransPackage implements  IDataAdapter<TransPackage>{
+
+        @Override
+        public TransPackage getData() {
+            return transPackage;
+        }
+
+        @Override
+        public void setData(TransPackage data) {
+            transPackage = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+
+        }
+    }
     class InTransPackageList implements  IDataAdapter<List<TransPackage>>{
 
         @Override
